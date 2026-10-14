@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Pendaftaran Les | Suryantara Education
+    </title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header class="navbar">
+
+    <div class="container nav-container">
+
+        <a
+            href="index-revisi.html"
+            class="logo"
+        >
+
+            <img
+                src="SE.png"
+                alt="Suryantara Education"
+            >
+
+            <div class="logo-text">
+
+                <strong>
+                    SURYANTARA
+                </strong>
+
+                <span>
+                    EDUCATION
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- PROGRESS -->
+
+        <div class="nav-progress">
+
+            <a href="index-revisi.html">
+                Home
+            </a>
+
+            <span>›</span>
+
+            <span class="current">
+                Pendaftaran
+            </span>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<main>
+
+
+<!-- HERO -->
+
+<section class="registration-hero">
+
+    <div class="container">
+
+        <span class="section-label">
+            PENDAFTARAN
+        </span>
+
+        <h1>
+            Mulai Perjalanan
+            <span>Belajar Bersama</span>
+        </h1>
+
+        <p>
+            Isi formulir berikut untuk mendaftarkan
+            putra-putri Anda mengikuti program belajar
+            bersama Suryantara Education
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- FORM -->
+
+<section class="registration-section">
+
+    <div class="container">
+
+
+        <div class="registration-wrapper">
+
+
+
+
+            <!-- FORM -->
+
+            <div class="registration-card">
+
+                <form id="registrationForm">
+
+
+                    <h3>
+                        Formulir Pendaftaran
+                    </h3>
+
+                    <p class="form-intro">
+                        Silakan isi data dengan benar
+                    </p>
+
+
+                    <!-- DATA WALI -->
+
+                    <div class="form-group">
+
+                        <label for="parentName">
+                            Nama Wali Murid
+                        </label>
+
+                        <input
+                            type="text"
+                            id="parentName"
+                            placeholder="Nama lengkap wali murid"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="parentPhone">
+                            Nomor WhatsApp
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="parentPhone"
+                            placeholder="08xxxxxxxxxx"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- DATA SISWA -->
+
+                    <div class="form-group">
+
+                        <label for="studentName">
+                            Nama Siswa
+                        </label>
+
+                        <input
+                            type="text"
+                            id="studentName"
+                            placeholder="Nama lengkap siswa"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-row">
+
+
+                        <div class="form-group">
+
+                            <label for="level">
+                                Jenjang
+                            </label>
+
+                            <select
+                                id="level"
+                                required
+                            >
+
+                                <option value="">
+                                    Pilih jenjang
+                                </option>
+
+                                <option>
+                                    SD
+                                </option>
+
+                                <option>
+                                    SMP
+                                </option>
+
+                                <option>
+                                    SMA
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="class">
+                                Kelas
+                            </label>
+
+                            <select
+                                id="class"
+                                required
+                            >
+
+                                <option value="">
+                                    Pilih kelas
+                                </option>
+
+                                <option>
+                                    Kelas 1
+                                </option>
+
+                                <option>
+                                    Kelas 2
+                                </option>
+
+                                <option>
+                                    Kelas 3
+                                </option>
+
+                                <option>
+                                    Kelas 4
+                                </option>
+
+                                <option>
+                                    Kelas 5
+                                </option>
+
+                                <option>
+                                    Kelas 6
+                                </option>
+
+                                <option>
+                                    Kelas 7
+                                </option>
+
+                                <option>
+                                    Kelas 8
+                                </option>
+
+                                <option>
+                                    Kelas 9
+                                </option>
+
+                                <option>
+                                    Kelas X
+                                </option>
+
+                                <option>
+                                    Kelas XI
+                                </option>
+
+                                <option>
+                                    Kelas XII
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- PROGRAM -->
+
+                    <div class="form-group">
+
+                        <label for="subject">
+                            Mata Pelajaran
+                        </label>
+
+                        <select
+                            id="subject"
+                            required
+                        >
+
+                            <option value="">
+                                Pilih mata pelajaran
+                            </option>
+
+                            <option>
+                                Matematika
+                            </option>
+
+                            <option>
+                                Fisika
+                            </option>
+
+                            <option>
+                                Kimia
+                            </option>
+
+                            <option>
+                                Bahasa Indonesia
+                            </option>
+
+                            <option>
+                                Bahasa Inggris
+                            </option>
+
+                            <option>
+                                TKA
+                            </option>
+
+                            <option>
+                                OSN
+                            </option>
+
+                            <option>
+                                Lainnya
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="learningType">
+                            Pilihan Belajar
+                        </label>
+
+                        <select
+                            id="learningType"
+                            required
+                        >
+
+                            <option value="">
+                                Pilih program
+                            </option>
+
+                            <option>
+                                Les Privat Online
+                            </option>
+
+                            <option>
+                                Les Privat / Home Visit
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="package">
+                            Pilihan Paket
+                        </label>
+
+                        <select
+                            id="package"
+                            required
+                        >
+
+                            <option value="">
+                                Pilih paket
+                            </option>
+
+                            <option>
+                                2 Sesi/minggu
+                            </option>
+
+                            <option>
+                                3 Sesi/minggu
+                            </option>
+
+                            <option>
+                                4 Sesi/minggu
+                            </option>
+
+                            <option>
+                                Belum menentukan
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- CATATAN -->
+
+                    <div class="form-group">
+
+                        <label for="notes">
+                            Kebutuhan Belajar
+                        </label>
+
+                        <textarea
+                            id="notes"
+                            rows="4"
+                            placeholder="Contoh: persiapan TKA, kesulitan pada materi tertentu, persiapan OSN, dan sebagainya"
+                        ></textarea>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="registration-button"
+                    >
+                        Kirim Pendaftaran
+                        <span>→</span>
+                    </button>
+
+
+                    <p class="form-note">
+                        Setelah formulir dikirim,
+                        Anda akan diarahkan ke WhatsApp
+                        untuk melanjutkan konfirmasi.
+                    </p>
+
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+    <div class="container footer-container">
+
+
+        <!-- BRAND -->
+
+        <div class="footer-brand">
+
+            <a
+                href="index-revisi.html"
+                class="footer-logo"
+            >
+
+
+                <strong>
+                    SURYANTARA
+                </strong>
+
+                <small>
+                    EDUCATION
+                </small>
+
+            </a>
+
+            <p>
+                Belajar Hari Ini, Bersinar Esok Hari.
+            </p>
+
+        </div>
+
+
+
+        <!-- NAVIGASI -->
+
+        <div class="footer-links">
+
+            <h4>
+                Navigasi
+            </h4>
+
+            <a href="index-revisi.html">
+                Home
+            </a>
+
+            <a href="ruang-belajar.html">
+                Ruang Belajar
+            </a>
+
+            <a href="index-revisi.html#testimoni">
+                Testimoni
+            </a>
+
+            <a href="index-revisi.html#kontak">
+                Kontak
+            </a>
+
+        </div>
+
+
+
+        <!-- PROGRAM -->
+
+        <div class="footer-links">
+
+            <h4>
+                Program
+            </h4>
+
+            <a href="ruang-belajar.html">
+                SD
+            </a>
+
+            <a href="ruang-belajar.html">
+                SMP
+            </a>
+
+            <a href="ruang-belajar-SMA.html">
+                SMA
+            </a>
+
+            <a href="ruang-belajar.html">
+                OSN
+            </a>
+
+            <a href="ruang-belajar.html">
+                TKA
+            </a>
+
+        </div>
+
+
+
+        <!-- TERHUBUNG -->
+
+        <div class="footer-links">
+
+            <h4>
+                Terhubung
+            </h4>
+
+            <a href="https://instagram.com/suryantara.education">
+                Instagram
+            </a>
+
+            <a href="https://www.tiktok.com/@suryantara.education">
+                TikTok
+            </a>
+
+            <a href="https://www.threads.net/@suryantara.education">
+                Threads
+            </a>
+
+            <a href="mailto:suryantara.education@gmail.com">
+                Email
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- FOOTER BOTTOM -->
+
+    <div class="container">
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 Suryantara Education.
+                All rights reserved.
+            </p>
+
+            <p>
+                Belajar Hari Ini, Bersinar Esok Hari.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+document
+    .getElementById("registrationForm")
+    .addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+
+        const parentName =
+            document.getElementById("parentName").value;
+
+        const parentPhone =
+            document.getElementById("parentPhone").value;
+
+        const studentName =
+            document.getElementById("studentName").value;
+
+        const level =
+            document.getElementById("level").value;
+
+        const studentClass =
+            document.getElementById("class").value;
+
+        const subject =
+            document.getElementById("subject").value;
+
+        const learningType =
+            document.getElementById("learningType").value;
+
+        const packageName =
+            document.getElementById("package").value;
+
+        const notes =
+            document.getElementById("notes").value;
+
+
+        const message =
+`Halo Suryantara Education 👋
+
+Saya ingin mendaftarkan anak saya untuk mengikuti program belajar.
+
+DATA WALI
+Nama: ${parentName}
+WhatsApp: ${parentPhone}
+
+DATA SISWA
+Nama: ${studentName}
+Jenjang: ${level}
+Kelas: ${studentClass}
+
+PROGRAM
+Mata Pelajaran: ${subject}
+Pilihan Belajar: ${learningType}
+Paket: ${packageName}
+
+Kebutuhan Belajar:
+${notes || "-"}
+
+Mohon informasi selanjutnya mengenai jadwal dan pembayaran.
+
+Terima kasih.`;
+
+
+        /*
+        ==========================================
+        GANTI NOMOR WHATSAPP ADMIN DI SINI
+        ==========================================
+
+        Format:
+        628xxxxxxxxxx
+
+        Contoh:
+        const adminNumber = "6281234567890";
+        */
+        
+    fetch("https://script.google.com/macros/s/AKfycbxFl-XGK1OXOxoKAXnNBqjRzQz7hkBr7JFDydTkfU-g2bm9d3rVmIvVBUd2oiASUGxk/exec", {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify({
+        action: "addStudent",
+        data: {
+            studentName: studentName,
+            level: level,
+            studentClass: studentClass,
+            subject: subject,
+            learningType: learningType,
+            packageName: packageName,
+            parentName: parentName,
+            parentPhone: parentPhone,
+            notes: notes
+        }
+    })
+});
+
+        const adminNumber = "6282321883731";
+
+
+        if (
+            adminNumber ===
+            "GANTI_DENGAN_NOMOR_ADMIN"
+        ) {
+
+            alert(
+                "Form sudah siap. Nomor WhatsApp admin belum diatur."
+            );
+
+            return;
+
+        }
+
+
+        const whatsappURL =
+            "https://wa.me/" +
+            adminNumber +
+            "?text=" +
+            encodeURIComponent(message);
+
+
+        window.open(
+            whatsappURL,
+            "_blank"
+        );
+
+    });
+
+</script>
+
+
+</body>
+
+</html>
