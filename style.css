@@ -3,7 +3,7 @@
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);background:var(--light);font-family:Inter,Arial,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}button,input,select,textarea{font:inherit}button,a{-webkit-tap-highlight-color:transparent}a{color:inherit}.container{width:min(1120px,calc(100% - 40px));margin-inline:auto}
 
 .navbar .logo img {
-  width: 75px;
+  width: 5px;
   height: auto;
   max-width: 100%;
   object-fit: contain;
