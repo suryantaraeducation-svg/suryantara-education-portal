@@ -68,7 +68,65 @@ function normalizeStatus(v){const s=String(v||"").trim().toLowerCase();if(s==="a
 function updateStats(){document.getElementById("totalCount").textContent=students.length;document.getElementById("pendingCount").textContent=students.filter(s=>normalizeStatus(s.status)==="Pendaftar Baru").length;document.getElementById("activeCount").textContent=students.filter(s=>normalizeStatus(s.status)==="Aktif").length;}
 async function loadStudents(){list.innerHTML='<div class="empty"><strong>Memuat data siswa…</strong>Mohon tunggu sebentar.</div>';try{const r=await fetch(API_URL+"?action=getStudents");if(!r.ok)throw Error("Server merespons status "+r.status);const data=await r.json();if(!Array.isArray(data))throw Error(data.message||"Format data siswa tidak valid.");students=data.map(s=>({id:s.id??s.idSiswa??"",name:s.name??s.namaSiswa??"",level:s.level??s.jenjang??"",className:s.className??s.kelas??"",program:s.subject??s.program??s.mataPelajaran??"",parent:s.parent??s.namaWali??"",parentPhone:s.parentPhone??s.whatsappWali??"",note:s.note??s.kebutuhanBelajar??"",status:normalizeStatus(s.status),meetLink:s.meetLink??s.linkGoogleMeet??""}));updateStats();render();}catch(e){console.error(e);list.innerHTML='<div class="empty"><strong>Gagal memuat data siswa</strong>'+esc(e.message)+'<br>Periksa URL Apps Script dan endpoint getStudents.</div>';["totalCount","pendingCount","activeCount"].forEach(id=>document.getElementById(id).textContent="—");}}
 function render(){const q=document.getElementById("searchInput").value.trim().toLowerCase();const filtered=students.filter(s=>[s.name,s.id,s.level,s.className,s.program,s.parent,s.status].join(" ").toLowerCase().includes(q));list.innerHTML="";if(!filtered.length){list.innerHTML='<div class="empty"><strong>'+(students.length?"Siswa tidak ditemukan":"Belum ada data siswa")+"</strong>"+(students.length?"Coba kata kunci lain.":"Pendaftaran siswa akan tampil di sini.")+"</div>";return;}filtered.forEach(s=>{const active=normalizeStatus(s.status)==="Aktif",status=normalizeStatus(s.status),bc=active?"active":status==="Pendaftar Baru"?"pending":"other";const verify=active?'<button class="btn muted-btn" type="button" disabled>✓ Sudah Aktif</button>':'<button class="btn primary" type="button" data-verify="'+esc(s.id)+'">Verifikasi</button>';const sched=active?'<button class="btn gold" type="button" data-schedule="'+esc(s.id)+'">＋ Atur Jadwal</button>':'<button class="btn muted-btn" type="button" disabled>Atur Jadwal</button>';const card=document.createElement("article");card.className="student-card";card.innerHTML=`<div><div class="student-name">${esc(s.name||"Nama belum tersedia")}</div><div class="student-id">${esc(s.id||"ID siswa belum tersedia")}</div><div class="details"><span>🎓 ${esc(s.level||"Jenjang belum diisi")}${s.className?" · Kelas "+esc(String(s.className).replace(/^kelas\\s*/i,"")):""}</span><span>📚 ${esc(s.program||"Program belum diisi")}</span>${s.parent?"<span>👪 "+esc(s.parent)+"</span>":""}${s.parentPhone?"<span>☎ "+esc(s.parentPhone)+"</span>":""}${s.note?"<span>📝 "+esc(s.note)+"</span>":""}</div><div class="status"><span>Status</span><span class="badge ${bc}">${esc(status)}</span></div></div><div class="actions">${verify}${sched}</div>`;list.appendChild(card);});}
-async function verifyStudentPage(id){const s=students.find(x=>String(x.id)===String(id));if(!s)return;if(!confirm("Verifikasi "+s.name+" sebagai siswa aktif?"))return;try{await fetch(API_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"verifyStudent",idSiswa:id})});alert("Permintaan verifikasi dikirim. Periksa apakah status berubah menjadi Aktif.");await loadStudents();}catch(e){alert("Gagal mengirim permintaan verifikasi. Periksa koneksi.");console.error(e);}}
+async function verifyStudentPage(id) {
+  const s = students.find(x => String(x.id) === String(id));
+  if (!s) {
+    alert("Data siswa tidak ditemukan pada halaman.");
+    return;
+  }
+
+  if (!confirm("Verifikasi " + s.name + " sebagai siswa aktif?")) {
+    return;
+  }
+
+  let auth;
+
+  try {
+    auth = JSON.parse(
+      sessionStorage.getItem("suryantaraAuth") || "null"
+    );
+  } catch (e) {
+    auth = null;
+  }
+
+  if (!auth || auth.role !== "Admin" || !auth.sessionToken) {
+    alert("Sesi Admin tidak ditemukan. Silakan login kembali.");
+    return;
+  }
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        action: "verifyStudent",
+        idSiswa: id,
+        sessionToken: auth.sessionToken
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(
+        result.message || "Verifikasi ditolak oleh server."
+      );
+    }
+
+    alert(result.message || "Siswa berhasil diverifikasi.");
+
+    await loadStudents();
+
+  } catch (e) {
+    console.error("Kesalahan verifikasi:", e);
+    alert(
+      "Verifikasi belum berhasil: " + e.message +
+      "\nPeriksa koneksi, URL API, dan deployment Apps Script."
+    );
+  }
+}
 function resetDays(){document.querySelectorAll('#dayScheduleList input[name="days"]').forEach(cb=>{cb.checked=false;const item=cb.closest(".day-item");item.classList.remove("selected");item.querySelectorAll('input[type="time"]').forEach(i=>{i.value="";i.disabled=true;i.required=false;});});}
 function openSchedule(id){const s=students.find(x=>String(x.id)===String(id));if(!s){alert("Data siswa tidak ditemukan. Muat ulang halaman.");return;}if(normalizeStatus(s.status)!=="Aktif"){alert("Siswa harus berstatus Aktif sebelum jadwal diatur.");return;}selectedStudent=s;form.reset();resetDays();feedback.className="feedback";feedback.textContent="";saveButton.disabled=false;saveButton.textContent="Simpan Jadwal";document.getElementById("scheduleStudentInfo").innerHTML='Jadwal untuk: <strong>'+esc(s.name)+'</strong> · '+esc(s.program||"Program belum diisi")+'<br>ID: '+esc(s.id);overlay.classList.add("active");overlay.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";document.getElementById("scheduleTitle").focus({preventScroll:true});}
 function closeSchedule(){overlay.classList.remove("active");overlay.setAttribute("aria-hidden","true");document.body.style.overflow="";selectedStudent=null;}
