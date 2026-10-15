@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kelola Akun & Password | Suryantara Education</title>
+<style>
+:root{--navy:#0b1f3a;--navy2:#16365f;--gold:#d7aa3d;--bg:#f5f7fb;--text:#172033;--muted:#687386;--border:#e2e8f0;--white:#fff;--green:#16794b;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}header{background:var(--navy);color:#fff;padding:18px 20px}.head{max-width:1120px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:15px}.brand{font-weight:800;letter-spacing:.3px}.brand span{color:var(--gold)}.head a{color:#fff;text-decoration:none;font-size:13px}.wrap{max-width:1120px;margin:28px auto;padding:0 18px}.intro{margin-bottom:22px}.eyebrow{color:#a77b16;font-weight:800;font-size:12px;letter-spacing:1.4px;margin:0 0 8px}h1{margin:0 0 8px;color:var(--navy);font-size:29px}.intro p{color:var(--muted);line-height:1.6;margin:0}.layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr);gap:18px;align-items:start}.panel{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:0 5px 18px rgba(20,35,60,.04)}h2{font-size:17px;color:var(--navy);margin:0 0 14px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}select,input,button{font:inherit}select,input{width:100%;padding:11px 12px;border:1px solid #cfd7e3;border-radius:9px;background:#fff;color:var(--text)}.toolbar select{width:auto;min-width:150px;flex:1}.btn{border:0;border-radius:9px;padding:11px 14px;font-weight:700;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease;position:relative}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(11,31,58,.16)}
+.btn:active{transform:translateY(0);box-shadow:0 2px 5px rgba(11,31,58,.12)}
+.btn:focus-visible{outline:3px solid rgba(215,170,61,.65);outline-offset:2px}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+.primary{background:var(--navy2);color:#fff}.primary:hover{background:#204778}
+.secondary{background:#eef2f7;color:var(--navy)}.danger{background:#fff0ef;color:var(--red)}.status{display:none;margin:0 0 15px;padding:11px 13px;border-radius:9px;font-size:13px;line-height:1.5;white-space:pre-wrap}.status.show{display:block}.status.info{background:#edf4ff;color:#214c83}.status.ok{background:#eaf7ef;color:#17633d}.status.error{background:#fff0ef;color:#a32118}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:620px;font-size:13px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--border);vertical-align:top}th{color:#5c687a;background:#f8fafc;font-size:12px}td small{display:block;color:var(--muted);margin-top:4px}.tag{display:inline-block;border-radius:999px;padding:5px 8px;font-size:11px;font-weight:700;background:#eef2f7;color:#465267}.tag.active{background:#eaf7ef;color:#17633d}.tag.wait{background:#fff4d6;color:#79570d}.formrow{margin-bottom:14px}.formrow label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}.help{font-size:12px;color:var(--muted);line-height:1.5;margin:7px 0 0}.selected{padding:12px;background:#f7f9fc;border:1px solid var(--border);border-radius:9px;font-size:13px;line-height:1.5;margin-bottom:14px}.footer-actions{display:flex;gap:9px;flex-wrap:wrap}.footnote{margin-top:16px;font-size:12px;line-height:1.6;color:var(--muted)}@media(max-width:780px){.layout{grid-template-columns:1fr}.wrap{margin:22px auto}.panel{padding:16px}h1{font-size:25px}.head{align-items:flex-start;flex-direction:column}}
+
+.password-wrap{position:relative;display:flex;align-items:center}
+.password-wrap input{padding-right:48px}
+.password-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:34px;padding:0;border:0;border-radius:7px;background:transparent;color:var(--navy);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background-color .18s ease,transform .18s ease}
+.password-toggle:hover{background:#eef2f7;transform:translateY(-50%) scale(1.06);box-shadow:none}
+.password-toggle:active{transform:translateY(-50%) scale(.96)}
+.password-toggle:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+</style></head><body>
+<header><div class="head"><div class="brand">SURYANTARA <span>EDUCATION</span></div><div><a href="admin-dashboard.html">← Kembali ke Dashboard Admin</a></div></div></header>
+<main class="wrap"><section class="intro"><p class="eyebrow">PUSAT ADMINISTRASI</p><h1>Kelola Akun &amp; Password</h1><p>Lihat akun orang tua dan tentor. Admin dapat menetapkan kata sandi sementara; sistem menyimpan hash kata sandi, bukan teks aslinya.</p></section>
+<div id="notice" class="status" role="status" aria-live="polite"></div>
+<div class="layout"><section class="panel"><h2>Daftar Akun</h2><div class="toolbar"><select id="filterType" aria-label="Filter jenis akun"><option value="Semua">Semua akun</option><option value="Orang Tua">Orang tua</option><option value="Tentor">Tentor</option></select><button class="btn secondary" id="reloadBtn" type="button">Muat ulang</button></div><div class="table-wrap"><table><thead><tr><th>Nama / ID</th><th>Jenis</th><th>Identitas login</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="accountRows"><tr><td colspan="5">Memuat data akun...</td></tr></tbody></table></div><p class="footnote">Daftar ini tidak menampilkan kata sandi maupun hash kata sandi. Pilih akun melalui tombol “Pilih akun” untuk menetapkan kata sandi sementara.</p></section>
+<section class="panel"><h2>Tetapkan Kata Sandi Sementara</h2><div id="selectedAccount" class="selected">Belum ada akun yang dipilih.</div><form id="passwordForm"><div class="formrow"><label for="tempPassword">Kata sandi sementara</label><div class="password-wrap">
+<input id="tempPassword" type="password" minlength="10" maxlength="128" autocomplete="new-password" required placeholder="Minimal 10 karakter">
+<button class="password-toggle" type="button" data-target="tempPassword" aria-label="Tampilkan kata sandi" aria-pressed="false" title="Tampilkan kata sandi">👁</button>
+</div><p class="help">Gunakan kata sandi unik untuk setiap akun. Jangan gunakan kata sandi yang sama untuk semua pengguna.</p></div><div class="formrow"><label for="confirmPassword">Ulangi kata sandi sementara</label><div class="password-wrap">
+<input id="confirmPassword" type="password" minlength="10" maxlength="128" autocomplete="new-password" required placeholder="Ketik ulang kata sandi">
+<button class="password-toggle" type="button" data-target="confirmPassword" aria-label="Tampilkan kata sandi" aria-pressed="false" title="Tampilkan kata sandi">👁</button>
+</div></div><button class="btn primary" id="saveBtn" type="submit" onclick="console.log('Tombol Simpan diklik')">Simpan Kata Sandi</button></form><p class="footnote">Setelah tersimpan, sampaikan kata sandi kepada pemilik akun melalui jalur pribadi. Penanda wajib ganti kata sandi disiapkan di database, tetapi alur pemaksaan ganti kata sandi saat login merupakan tahap pengembangan berikutnya.</p></section></div></main>
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbxMuygAx_phBjIaLYLEEUBpCHffKtrqNmp1mZaOCOlP40YyS2g3VQYntCR6SXDD7QJA/exec";
+const authKey = "suryantaraAuth";
+let auth = null;
+let accounts = [];
+let selected = null;
+const notice = document.getElementById("notice");
+function showNotice(text, type="info"){notice.textContent=text;notice.className="status show "+type;}
+function readAuth(){try{return JSON.parse(sessionStorage.getItem(authKey)||"null")}catch(e){return null}}
+function requireAdmin(){auth=readAuth();if(!auth||auth.role!=="Admin"||!auth.sessionToken){showNotice("Sesi Admin tidak ditemukan. Silakan login kembali.","error");setTimeout(()=>location.href="login.html",1300);return false}if(auth.sessionExpiresAt&&Date.now()>Date.parse(auth.sessionExpiresAt)){sessionStorage.removeItem(authKey);showNotice("Sesi Admin kedaluwarsa. Silakan login kembali.","error");setTimeout(()=>location.href="login.html",1300);return false}return true}
+async function api(action,data={}){const response=await fetch(API_URL,{method:"POST",body:JSON.stringify({action,sessionToken:auth.sessionToken,data:{...data,sessionToken:auth.sessionToken}})});return await response.json()}
+function statusTag(status){const s=String(status||"Belum diketahui");const tag=document.createElement("span");tag.className="tag "+(s.toLowerCase()==="aktif"?"active":(s.toLowerCase().includes("menunggu")?"wait":""));tag.textContent=s;return tag}
+function renderAccounts(){const tbody=document.getElementById("accountRows");tbody.replaceChildren();const filter=document.getElementById("filterType").value;const visible=accounts.filter(a=>filter==="Semua"||a.jenis===filter);if(!visible.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=5;td.textContent="Belum ada akun pada kategori ini.";tr.appendChild(td);tbody.appendChild(tr);return}visible.forEach(a=>{const tr=document.createElement("tr");const name=document.createElement("td");const strong=document.createElement("strong");strong.textContent=a.nama||"(Nama belum diisi)";const small=document.createElement("small");small.textContent=a.idAkun+ (a.idTerkait?" · "+a.idTerkait:"");name.append(strong,small);const type=document.createElement("td");type.textContent=a.jenis;const ident=document.createElement("td");ident.textContent=a.identitas||"—";const st=document.createElement("td");st.appendChild(statusTag(a.status));if(a.wajibGantiPassword){const smallFlag=document.createElement("small");smallFlag.textContent="Wajib ganti sandi";st.appendChild(smallFlag)}const action=document.createElement("td");const btn=document.createElement("button");btn.type="button";btn.className="btn secondary";btn.textContent="Pilih akun";btn.addEventListener("click",()=>selectAccount(a));action.appendChild(btn);tr.append(name,type,ident,st,action);tbody.appendChild(tr)})}
+function selectAccount(a){selected=a;document.getElementById("selectedAccount").textContent=a.jenis+" · "+a.nama+" · ID: "+a.idAkun;document.getElementById("tempPassword").value="";document.getElementById("confirmPassword").value="";showNotice("Akun dipilih. Masukkan kata sandi sementara minimal 10 karakter.","info")}
+async function loadAccounts(){if(!requireAdmin())return;const tbody=document.getElementById("accountRows");tbody.innerHTML=`<tr><td colspan="5">Memuat data akun...</td></tr>`;try{const result=await api("adminGetAccounts");if(!result.success){if(/sesi|login ulang|tidak aktif|kedaluwarsa/i.test(result.message||"")){sessionStorage.removeItem(authKey);showNotice(result.message||"Sesi tidak valid.","error");setTimeout(()=>location.href="login.html",1400);return}throw new Error(result.message||"Gagal memuat akun.")}accounts=Array.isArray(result.accounts)?result.accounts:[];renderAccounts();showNotice("Data akun berhasil dimuat.","ok")}catch(e){showNotice(e.message||"Tidak dapat memuat akun. Periksa koneksi dan deployment Apps Script.","error");tbody.innerHTML=`<tr><td colspan="5">Data akun gagal dimuat.</td></tr>`;}}
+document.getElementById("filterType").addEventListener("change",renderAccounts);document.getElementById("reloadBtn").addEventListener("click",loadAccounts);
+document.querySelectorAll(".password-toggle").forEach(button => {
+  button.addEventListener("click", () => {
+    const input = document.getElementById(button.dataset.target);
+    if (!input) return;
+    const show = input.type === "password";
+    input.type = show ? "text" : "password";
+    button.textContent = show ? "🙈" : "👁";
+    button.setAttribute("aria-pressed", String(show));
+    button.setAttribute("aria-label", show ? "Sembunyikan kata sandi" : "Tampilkan kata sandi");
+    button.title = show ? "Sembunyikan kata sandi" : "Tampilkan kata sandi";
+    input.focus();
+  });
+});
+document.getElementById("passwordForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  if (!requireAdmin()) return;
+
+  if (!selected) {
+    showNotice("Pilih akun terlebih dahulu.", "error");
+    return;
+  }
+
+  const password = document.getElementById("tempPassword").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  if (password.length < 10) {
+    showNotice("Kata sandi minimal 10 karakter.", "error");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showNotice("Kedua kata sandi belum sama.", "error");
+    return;
+  }
+
+  if (!window.confirm(
+    "Tetapkan kata sandi sementara untuk " +
+    selected.nama + " (" + selected.jenis + ")?"
+  )) return;
+
+  const btn = document.getElementById("saveBtn");
+  btn.disabled = true;
+  btn.textContent = "Menyimpan...";
+
+  try {
+    const result = await api("adminSetTemporaryPassword", {
+      jenis: selected.jenis,
+      idAkun: selected.idAkun,
+      password: password
+    });
+
+    if (!result.success) {
+      throw new Error(result.message || "Kata sandi gagal disimpan.");
+    }
+
+    document.getElementById("tempPassword").value = "";
+    document.getElementById("confirmPassword").value = "";
+
+    showNotice(
+      result.message || "Kata sandi berhasil disimpan.",
+      "ok"
+    );
+
+    await loadAccounts();
+  } catch (err) {
+    console.error("Gagal menyimpan kata sandi:", err);
+    showNotice(err.message || "Gagal menyimpan kata sandi.", "error");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Simpan Kata Sandi";
+  }
+});
+if(requireAdmin())loadAccounts();
+</script></body></html>
