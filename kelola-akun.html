@@ -28,6 +28,65 @@ function renderAccounts(){const tbody=document.getElementById("accountRows");tbo
 function selectAccount(a){selected=a;document.getElementById("selectedAccount").textContent=a.jenis+" · "+a.nama+" · ID: "+a.idAkun;document.getElementById("tempPassword").value="";document.getElementById("confirmPassword").value="";showNotice("Akun dipilih. Masukkan kata sandi sementara minimal 10 karakter.","info")}
 async function loadAccounts(){if(!requireAdmin())return;const tbody=document.getElementById("accountRows");tbody.innerHTML=`<tr><td colspan="5">Memuat data akun...</td></tr>`;try{const result=await api("adminGetAccounts");if(!result.success){if(/sesi|login ulang|tidak aktif|kedaluwarsa/i.test(result.message||"")){sessionStorage.removeItem(authKey);showNotice(result.message||"Sesi tidak valid.","error");setTimeout(()=>location.href="login.html",1400);return}throw new Error(result.message||"Gagal memuat akun.")}accounts=Array.isArray(result.accounts)?result.accounts:[];renderAccounts();showNotice("Data akun berhasil dimuat.","ok")}catch(e){showNotice(e.message||"Tidak dapat memuat akun. Periksa koneksi dan deployment Apps Script.","error");tbody.innerHTML=`<tr><td colspan="5">Data akun gagal dimuat.</td></tr>`;}}
 document.getElementById("filterType").addEventListener("change",renderAccounts);document.getElementById("reloadBtn").addEventListener("click",loadAccounts);
-document.getElementById("passwordForm").addEventListener("submit",async e=>{e.preventDefault();if(!requireAdmin())return;if(!selected){showNotice("Pilih akun terlebih dahulu.","error");return}const password=document.getElementById("tempPassword").value;const confirm=document.getElementById("confirmPassword").value;if(password.length<10){showNotice("Kata sandi minimal 10 karakter.","error");return}if(password!==confirm){showNotice("Kedua kata sandi belum sama.","error");return}if(!confirm("Tetapkan kata sandi sementara untuk "+selected.nama+" ("+selected.jenis+")?"))return;const btn=document.getElementById("saveBtn");btn.disabled=true;btn.textContent="Menyimpan...";try{const result=await api("adminSetTemporaryPassword",{jenis:selected.jenis,idAkun:selected.idAkun,password});if(!result.success)throw new Error(result.message||"Kata sandi gagal disimpan.");document.getElementById("tempPassword").value="";document.getElementById("confirmPassword").value="";showNotice(result.message||"Kata sandi sementara berhasil disimpan.","ok");await loadAccounts()}catch(err){showNotice(err.message||"Gagal menyimpan kata sandi.","error")}finally{btn.disabled=false;btn.textContent="Simpan Kata Sandi"}});
+document.getElementById("passwordForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  if (!requireAdmin()) return;
+
+  if (!selected) {
+    showNotice("Pilih akun terlebih dahulu.", "error");
+    return;
+  }
+
+  const password = document.getElementById("tempPassword").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  if (password.length < 10) {
+    showNotice("Kata sandi minimal 10 karakter.", "error");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showNotice("Kedua kata sandi belum sama.", "error");
+    return;
+  }
+
+  if (!window.confirm(
+    "Tetapkan kata sandi sementara untuk " +
+    selected.nama + " (" + selected.jenis + ")?"
+  )) return;
+
+  const btn = document.getElementById("saveBtn");
+  btn.disabled = true;
+  btn.textContent = "Menyimpan...";
+
+  try {
+    const result = await api("adminSetTemporaryPassword", {
+      jenis: selected.jenis,
+      idAkun: selected.idAkun,
+      password: password
+    });
+
+    if (!result.success) {
+      throw new Error(result.message || "Kata sandi gagal disimpan.");
+    }
+
+    document.getElementById("tempPassword").value = "";
+    document.getElementById("confirmPassword").value = "";
+
+    showNotice(
+      result.message || "Kata sandi berhasil disimpan.",
+      "ok"
+    );
+
+    await loadAccounts();
+  } catch (err) {
+    console.error("Gagal menyimpan kata sandi:", err);
+    showNotice(err.message || "Gagal menyimpan kata sandi.", "error");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Simpan Kata Sandi";
+  }
+});
 if(requireAdmin())loadAccounts();
 </script></body></html>
