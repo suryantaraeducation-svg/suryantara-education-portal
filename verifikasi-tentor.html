@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verifikasi Tentor | Suryantara Education</title>
+<style>
+:root{--navy:#0b1f3a;--navy2:#16365f;--gold:#d7aa3d;--bg:#f5f7fb;--text:#172033;--muted:#687386;--border:#e2e8f0;--white:#fff}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+header{background:var(--navy);color:#fff;padding:18px 24px}.header-inner{max-width:1120px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-size:20px;font-weight:800;letter-spacing:.2px}.brand span{color:var(--gold)}.header-right{font-size:13px;color:#e6edf7}
+.container{max-width:1120px;margin:30px auto;padding:0 20px}.back{display:inline-block;margin-bottom:18px;color:var(--navy2);font-weight:700;text-decoration:none;font-size:14px}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:1.5px;color:#a77b16;margin:0 0 8px}h1{font-size:30px;margin:0 0 8px;color:var(--navy)}.intro{margin:0;color:var(--muted);line-height:1.65}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:24px 0}.stat{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:0 5px 18px rgba(20,35,60,.035)}
+.stat-label{font-size:13px;color:var(--muted);margin-bottom:10px}.stat-value{font-size:27px;font-weight:800;color:var(--navy)}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 0 14px;flex-wrap:wrap}h2{font-size:18px;color:var(--navy);margin:0}
+.filters{display:flex;gap:10px;flex-wrap:wrap}input,select,button{font:inherit}input,select{min-height:42px;padding:10px 12px;border:1px solid #cfd7e3;border-radius:9px;background:#fff;color:var(--text)}input{min-width:220px}
+button{border:0;border-radius:9px;padding:11px 15px;font-weight:700;cursor:pointer}.btn-secondary{background:#fff;border:1px solid var(--border);color:var(--navy)}
+.btn-approve{background:#16794b;color:#fff;margin-top:6px}
+.btn-reject{background:#fff0ee;color:#a32118;border:1px solid #f0c7c2;margin-top:6px}
+.action-cell{min-width:125px}
+.action-cell button{display:block;width:100%;white-space:nowrap}
+button:disabled{opacity:.55;cursor:wait}
+.panel{background:#fff;border:1px solid var(--border);border-radius:15px;overflow:hidden;box-shadow:0 5px 18px rgba(20,35,60,.035)}.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:760px}th,td{text-align:left;padding:14px 16px;border-bottom:1px solid #edf0f5;font-size:13px;vertical-align:top}
+th{background:#f8fafc;color:#536176;font-size:12px;text-transform:uppercase;letter-spacing:.5px}tbody tr:last-child td{border-bottom:0}
+.empty{padding:34px 18px;text-align:center;color:var(--muted);line-height:1.6}.empty strong{display:block;color:var(--navy);font-size:15px;margin-bottom:6px}
+.note{margin-top:18px;padding:14px 16px;border:1px solid #ead9a8;background:#fffbef;border-radius:12px;color:#6f5718;font-size:13px;line-height:1.65}
+footer{text-align:center;color:#8993a3;font-size:12px;padding:28px 16px 32px}
+@media(max-width:650px){header{padding:16px}.header-inner{align-items:flex-start;flex-direction:column}.container{margin:24px auto;padding:0 15px}h1{font-size:26px}.stats{grid-template-columns:1fr;gap:10px}.stat{padding:15px}.toolbar{align-items:stretch}.filters{width:100%}.filters input,.filters select{width:100%;min-width:0}.filters button{width:100%}}
+</style>
+</head>
+<body>
+<header><div class="header-inner"><div class="brand">SURYANTARA <span>EDUCATION</span></div><div class="header-right">🔐 Area Administrasi &nbsp; • &nbsp; Verifikasi Tentor</div></div></header>
+<main class="container">
+<a class="back" href="admin-dashboard.html">← Kembali ke Dashboard Admin</a>
+<section><p class="eyebrow">PENGELOLAAN TENTOR</p><h1>Verifikasi Tentor</h1><p class="intro">Periksa data pendaftar tentor sebelum memberikan keputusan penerimaan.</p></section>
+<section class="stats" aria-label="Ringkasan pendaftar">
+<div class="stat"><div class="stat-label">Total Pendaftar</div><div class="stat-value" id="totalCount">0</div></div>
+<div class="stat"><div class="stat-label">Menunggu Verifikasi</div><div class="stat-value" id="pendingCount">0</div></div>
+<div class="stat"><div class="stat-label">Tentor Aktif</div><div class="stat-value" id="activeCount">0</div></div>
+</section>
+<div class="toolbar"><h2>Daftar Pendaftar</h2><div class="filters">
+<input id="searchInput" type="search" placeholder="Cari nama atau mata pelajaran" aria-label="Cari pendaftar">
+<select id="statusFilter" aria-label="Filter status"><option value="">Semua status</option><option>Menunggu Verifikasi</option><option>Aktif</option><option>Ditolak</option><option>Nonaktif</option></select>
+<button class="btn-secondary" id="resetButton" type="button">Reset filter</button></div></div>
+<section class="panel"><div class="table-wrap"><table>
+<thead><tr><th>Nama Tentor</th><th>Mata Pelajaran</th><th>Jenjang</th><th>Domisili</th><th>Tanggal Daftar</th><th>Status</th><th>Aksi</th></tr></thead>
+<tbody id="tentorTableBody"><tr><td colspan="7" class="empty"><strong>Database belum dihubungkan</strong>Halaman ini baru merupakan kerangka tampilan. Data nyata akan muncul setelah integrasi Apps Script selesai.</td></tr></tbody>
+</table></div></section>
+<div class="note" id="pageNotice"><strong>Memuat data...</strong> Menghubungkan halaman dengan database Suryantara Education.</div>
+</main>
+<footer>Suryantara Education · Belajar Hari Ini, Bersinar Esok Hari</footer>
+<script>
+const SCRIPT_URL ="https://script.google.com/macros/s/AKfycbxiY6rlIMdu6J7IrJgQ62UPkYUxBqLSkm5hVA_6t5erkxahPDwsRReNGwaUPQRyP-QD/exec";
+
+const searchInput = document.getElementById('searchInput');
+const statusFilter = document.getElementById('statusFilter');
+const tableBody = document.getElementById('tentorTableBody');
+const pageNotice = document.getElementById('pageNotice');
+let tentorData = [];
+
+function normalizeStatus(status) {
+  return String(status || '').trim().toLowerCase();
+}
+
+function escapeHtml(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[char]);
+}
+
+function updateSummary(data) {
+  document.getElementById('totalCount').textContent = data.length;
+  document.getElementById('pendingCount').textContent =
+    data.filter(t => normalizeStatus(t.status) === 'menunggu verifikasi').length;
+  document.getElementById('activeCount').textContent =
+    data.filter(t => normalizeStatus(t.status) === 'aktif').length;
+}
+
+function renderTentors() {
+  const query = searchInput.value.trim().toLowerCase();
+  const status = statusFilter.value.toLowerCase();
+
+  const filtered = tentorData.filter(t => {
+    const haystack = [t.nama, t.mataPelajaran, t.jenjang, t.domisili, t.email]
+      .join(' ').toLowerCase();
+    return haystack.includes(query) &&
+      (!status || normalizeStatus(t.status) === status);
+  });
+
+  if (!filtered.length) {
+    tableBody.innerHTML = '<tr><td colspan="7" class="empty"><strong>Tidak ada data yang cocok</strong>Coba ubah kata pencarian atau filter status.</td></tr>';
+    return;
+  }
+
+  tableBody.innerHTML = filtered.map(t => {
+    const statusText = String(t.status || 'Belum ditentukan');
+    return `<tr>
+      <td><strong>${escapeHtml(t.nama || '—')}</strong><br><span style="color:#687386">${escapeHtml(t.email || '')}</span></td>
+      <td>${escapeHtml(t.mataPelajaran || '—')}</td>
+      <td>${escapeHtml(t.jenjang || '—')}</td>
+      <td>${escapeHtml(t.domisili || '—')}</td>
+      <td>${escapeHtml(t.tanggalDaftar || '—')}</td>
+      <td><span class="status">${escapeHtml(statusText)}</span></td>
+      <td class="action-cell">
+        <button type="button" class="btn-secondary" data-detail="${escapeHtml(t.id)}">Detail</button>
+        ${normalizeStatus(t.status) === 'menunggu verifikasi' ? `
+          <button type="button" class="btn-approve" data-approve="${escapeHtml(t.id)}">Setujui</button>
+          <button type="button" class="btn-reject" data-reject="${escapeHtml(t.id)}">Tolak</button>
+        ` : ''}
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function updateTentorStatus(idTentor, statusBaru, button) {
+  const tentor = tentorData.find(t => String(t.id) === String(idTentor));
+  if (!tentor) {
+    alert('Data tentor tidak ditemukan. Muat ulang halaman.');
+    return;
+  }
+
+  const tindakan = statusBaru === 'Aktif' ? 'menyetujui' : 'menolak';
+  if (!confirm('Yakin ingin ' + tindakan + ' pendaftaran ' + (tentor.nama || idTentor) + '?')) {
+    return;
+  }
+
+  const tombolAwal = button.textContent;
+  button.disabled = true;
+  button.textContent = 'Memproses...';
+  pageNotice.innerHTML = '<strong>Memproses keputusan...</strong> Mohon tunggu.';
+
+  try {
+    // Gunakan text/plain dan no-cors agar permintaan POST tidak terhalang preflight CORS.
+    // Respons POST tidak bisa dibaca dalam mode no-cors, jadi verifikasi dilakukan lewat GET.
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'updateTentorStatus',
+        data: { idTentor: idTentor, status: statusBaru }
+      })
+    });
+
+    await new Promise(resolve => setTimeout(resolve, 1200));
+    await loadTentors();
+
+    const terbaru = tentorData.find(t => String(t.id) === String(idTentor));
+    if (terbaru && String(terbaru.status || '').trim().toLowerCase() === statusBaru.toLowerCase()) {
+      alert('Berhasil. Status ' + (terbaru.nama || idTentor) + ' sekarang: ' + statusBaru + '.');
+    } else {
+      alert('Status belum dapat dipastikan dari data terbaru. Periksa sheet Tentor sebelum mengulangi tindakan.');
+      button.disabled = false;
+      button.textContent = tombolAwal;
+    }
+  } catch (error) {
+    alert('Koneksi gagal: ' + error.message + '. Periksa sheet Tentor sebelum mencoba lagi.');
+    button.disabled = false;
+    button.textContent = tombolAwal;
+  }
+}
+
+async function loadTentors() {
+  pageNotice.innerHTML = '<strong>Memuat data tentor...</strong> Mohon tunggu sebentar.';
+  try {
+    const response = await fetch(SCRIPT_URL + '?action=getTentors');
+    if (!response.ok) throw new Error('Server mengembalikan HTTP ' + response.status);
+    const data = await response.json();
+    if (!Array.isArray(data)) {
+      throw new Error(data && data.message ? data.message : 'Format data dari server tidak sesuai.');
+    }
+    tentorData = data;
+    updateSummary(tentorData);
+    renderTentors();
+    pageNotice.innerHTML = '<strong>Koneksi berhasil.</strong> Data ditampilkan dari Google Sheets. Tombol keputusan penerimaan belum diaktifkan.';
+  } catch (error) {
+    tableBody.innerHTML = '<tr><td colspan="7" class="empty"><strong>Data belum dapat dimuat</strong>' +
+      escapeHtml(error.message) +
+      '<br>Jika halaman dibuka sebagai file lokal, browser mungkin membatasi koneksi. Coba gunakan alamat website yang di-hosting.</td></tr>';
+    pageNotice.innerHTML = '<strong>Koneksi belum berhasil.</strong> Periksa URL deployment, izin akses Web App, dan apakah halaman dibuka melalui hosting.';
+  }
+}
+
+searchInput.addEventListener('input', renderTentors);
+statusFilter.addEventListener('change', renderTentors);
+document.getElementById('resetButton').addEventListener('click', () => {
+  searchInput.value = '';
+  statusFilter.value = '';
+  renderTentors();
+});
+
+tableBody.addEventListener('click', event => {
+  const approveButton = event.target.closest('[data-approve]');
+  if (approveButton) {
+    updateTentorStatus(approveButton.dataset.approve, 'Aktif', approveButton);
+    return;
+  }
+
+  const rejectButton = event.target.closest('[data-reject]');
+  if (rejectButton) {
+    updateTentorStatus(rejectButton.dataset.reject, 'Ditolak', rejectButton);
+    return;
+  }
+
+  const button = event.target.closest('[data-detail]');
+  if (!button) return;
+  const tentor = tentorData.find(t => String(t.id) === button.dataset.detail);
+  if (!tentor) return;
+  alert(
+    'Detail Tentor\\n\\n' +
+    'ID: ' + (tentor.id || '-') + '\\n' +
+    'Nama: ' + (tentor.nama || '-') + '\\n' +
+    'WhatsApp: ' + (tentor.whatsapp || '-') + '\\n' +
+    'Email: ' + (tentor.email || '-') + '\\n' +
+    'Domisili: ' + (tentor.domisili || '-') + '\\n' +
+    'Pendidikan: ' + (tentor.pendidikan || '-') + '\\n' +
+    'Mata pelajaran: ' + (tentor.mataPelajaran || '-') + '\\n' +
+    'Jenjang: ' + (tentor.jenjang || '-') + '\\n' +
+    'Jenis layanan: ' + (tentor.jenisLayanan || '-') + '\\n' +
+    'Pengalaman: ' + (tentor.pengalaman || '-') + '\\n' +
+    'Status: ' + (tentor.status || '-')
+  );
+});
+
+loadTentors();
+</script>
+</body>
+</html>
