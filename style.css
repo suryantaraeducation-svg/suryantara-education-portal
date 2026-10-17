@@ -94,3 +94,25 @@
   }
 }
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+
+
+/* Efek interaktif kartu bantuan */
+a.info-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+a.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 24px rgba(15, 47, 79, 0.18);
+}
+
+a.info-card:focus-visible {
+  outline: 3px solid #d9a62e;
+  outline-offset: 3px;
+}
+
