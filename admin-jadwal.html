@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kelola Jadwal | Suryantara Education</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f5f7fb;
+  color:#172033;
+}
+
+header{
+  background:#0b1f3a;
+  color:white;
+  padding:18px 24px;
+}
+
+.header-inner{
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+}
+
+.brand{
+  font-size:20px;
+  font-weight:700;
+}
+
+.brand span{
+  color:#d7aa3d;
+}
+
+.header-link{
+  color:white;
+  text-decoration:none;
+  font-size:14px;
+}
+
+.container{
+  max-width:1100px;
+  margin:30px auto;
+  padding:0 20px;
+}
+
+.page-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  margin-bottom:25px;
+}
+
+.page-head h1{
+  margin:0 0 6px;
+  font-size:28px;
+}
+
+.page-head p{
+  margin:0;
+  color:#687386;
+}
+
+.btn{
+  border:0;
+  border-radius:9px;
+  padding:11px 17px;
+  cursor:pointer;
+  font-size:14px;
+  font-weight:600;
+}
+
+.btn.primary{
+  background:#0b1f3a;
+  color:white;
+}
+
+.btn.primary:hover{
+  background:#16365f;
+}
+
+.btn.secondary{
+  background:#eef2f7;
+  color:#172033;
+}
+
+.btn.secondary:hover{
+  background:#e1e7ef;
+}
+
+.btn.danger{
+  background:#fee2e2;
+  color:#b42318;
+}
+
+.btn.danger:hover{
+  background:#fecaca;
+}
+
+.card{
+  background:white;
+  border-radius:14px;
+  padding:20px;
+  margin-bottom:15px;
+  box-shadow:0 4px 16px rgba(20,35,60,.07);
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.student{
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:5px;
+}
+
+.program{
+  color:#c08b18;
+  font-weight:600;
+  margin-bottom:12px;
+}
+
+.details{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px 18px;
+  color:#687386;
+  font-size:14px;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  flex-shrink:0;
+}
+
+.empty{
+  background:white;
+  border-radius:14px;
+  padding:45px 20px;
+  text-align:center;
+  color:#687386;
+  box-shadow:0 4px 16px rgba(20,35,60,.05);
+}
+
+.empty strong{
+  display:block;
+  color:#172033;
+  font-size:18px;
+  margin-bottom:7px;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(5,18,38,.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:1000;
+}
+
+.overlay.active{
+  display:flex;
+}
+
+.modal{
+  width:100%;
+  max-width:650px;
+  max-height:90vh;
+  overflow-y:auto;
+  background:white;
+  border-radius:16px;
+  padding:25px;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:22px;
+}
+
+.modal-head h2{
+  margin:0;
+  font-size:22px;
+}
+
+.close{
+  width:36px;
+  height:36px;
+  border:0;
+  border-radius:50%;
+  background:#eef2f7;
+  cursor:pointer;
+  font-size:20px;
+}
+
+.form-group{
+  margin-bottom:17px;
+}
+
+.form-group label{
+  display:block;
+  margin-bottom:7px;
+  font-size:14px;
+  font-weight:600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+  width:100%;
+  border:1px solid #d8dee8;
+  border-radius:9px;
+  padding:11px 12px;
+  font-size:14px;
+  outline:none;
+  background:white;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  border-color:#0b1f3a;
+}
+
+.form-group textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+.days{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+
+.day-item{
+  border:1px solid #d8dee8;
+  border-radius:8px;
+  padding:9px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:13px;
+  cursor:pointer;
+}
+
+.day-item input{
+  width:auto;
+}
+
+.form-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:25px;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.loading{
+  text-align:center;
+  padding:30px;
+  color:#687386;
+}
+
+/* =========================
+   SISWA & JADWAL MINGGUAN
+========================= */
+.student-group{background:#fff;border-radius:14px;margin-bottom:18px;box-shadow:0 4px 16px rgba(20,35,60,.07);overflow:hidden}
+.student-group summary{list-style:none;cursor:pointer;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.student-group summary::-webkit-details-marker{display:none}
+.student-group summary .student-title{font-size:17px;font-weight:700}
+.student-group summary .student-sub{color:#687386;font-size:13px;margin-top:5px}
+.student-schedules{padding:0 16px 16px}
+.week-row{border:1px solid #e3e8f0;border-radius:11px;padding:14px;margin-top:10px;display:grid;grid-template-columns:100px 1fr;gap:12px;align-items:start}
+.week-day{font-weight:700;color:#0b1f3a}
+.week-info{display:grid;gap:8px;min-width:0}
+.week-meta{color:#687386;font-size:13px}
+.tutor-pick{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tutor-pick select{min-width:180px;flex:1;border:1px solid #d8dee8;border-radius:8px;padding:10px;background:white;font-size:14px}
+.tutor-pick .btn{white-space:nowrap}
+.notice{background:#fff7e8;color:#805719;border:1px solid #f0d7a8;border-radius:10px;padding:12px;margin-bottom:15px;font-size:13px}
+@media(max-width:520px){.week-row{grid-template-columns:1fr;gap:7px}.tutor-pick{align-items:stretch}.tutor-pick select,.tutor-pick .btn{width:100%}.student-group summary{padding:16px}}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:700px){
+
+  .header-inner{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .page-head{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .page-head .btn{
+    width:100%;
+  }
+
+  .card{
+    flex-direction:column;
+  }
+
+  .actions{
+    width:100%;
+  }
+
+  .actions .btn{
+    flex:1;
+  }
+
+  .days{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .form-row{
+    grid-template-columns:1fr;
+    gap:0;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+  <div class="header-inner">
+
+    <div class="brand">
+      SURYANTARA <span>EDUCATION</span>
+    </div>
+
+    <a href="dashboard-tutor.html" class="header-link">
+      ← Dashboard Tutor
+    </a>
+
+  </div>
+
+</header>
+
+
+<main class="container">
+
+  <div class="page-head">
+
+    <div>
+      <h1>Kelola Jadwal</h1>
+      <p>Atur jadwal belajar siswa Suryantara Education.</p>
+    </div>
+
+    <button
+      class="btn primary"
+      onclick="openModal()">
+      + Tambah Jadwal
+    </button>
+
+  </div>
+
+
+  <div class="notice">Pilih nama siswa untuk melihat jadwal mingguannya. Pilihan tentor pada setiap jadwal akan disimpan ke spreadsheet.</div>
+
+  <section id="list">
+    <div class="loading">Memuat siswa dan jadwal...</div>
+  </section>
+
+</main>
+
+
+<!-- ==================================================
+     MODAL
+================================================== -->
+
+<div class="overlay" id="overlay">
+
+  <div class="modal">
+
+    <div class="modal-head">
+
+      <h2 id="modalTitle">
+        Tambah Jadwal
+      </h2>
+
+      <button
+        class="close"
+        type="button"
+        onclick="closeModal()">
+        ×
+      </button>
+
+    </div>
+
+
+    <form id="scheduleForm">
+
+      <input
+        type="hidden"
+        id="id">
+
+
+      <!-- SISWA -->
+
+      <div class="form-group">
+
+        <label for="student">
+          Siswa
+        </label>
+
+        <select id="student" required>
+
+          <option value="">
+            Memuat siswa...
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- PROGRAM -->
+
+      <div class="form-group">
+
+        <label for="program">
+          Program / Mata Pelajaran
+        </label>
+
+        <input
+          type="text"
+          id="program"
+          readonly
+          placeholder="Otomatis mengikuti siswa">
+
+      </div>
+
+
+      <!-- TUTOR -->
+
+      <div class="form-group">
+
+        <label for="tutor">
+          Tutor
+        </label>
+
+        <select id="tutor" required>
+          <option value="">Memuat tentor aktif...</option>
+        </select>
+
+      </div>
+
+
+      <!-- HARI -->
+
+      <div class="form-group">
+
+        <label>
+          Hari Belajar
+        </label>
+
+        <div class="days">
+
+          <label class="day-item">
+            <input
+              type="checkbox"
+              name="days"
+              value="Senin">
+            Senin
+          </label>
+
+          <label class="day-item">
+            <input
+              type="checkbox"
+              name="days"
+              value="Selasa">
+            Selasa
+          </label>
+
+          <label class="day-item">
+            <input
+              type="checkbox"
+              name="days"
+              value="Rabu">
+            Rabu
+          </label>
+
+          <label class="day-item">
+            <input
+              type="checkbox"
+              name="days"
+              value="Kamis">
+            Kamis
+          </label>
+
+          <label class="day-item">
+            <input
+              type="checkbox"
+              name="days"
+              value="Jumat">
+            Jumat
+          </label>
+
+          <label class="day-item">
+            <input
+              type="checkbox"
+              name="days"
+              value="Sabtu">
+            Sabtu
+          </label>
+
+          <label class="day-item">
+            <input
+              type="checkbox"
+              name="days"
+              value="Minggu">
+            Minggu
+          </label>
+
+        </div>
+
+      </div>
+
+
+      <!-- JAM -->
+
+      <div class="form-row">
+
+        <div class="form-group">
+
+          <label for="start">
+            Jam Mulai
+          </label>
+
+          <input
+            type="time"
+            id="start"
+            required>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="end">
+            Jam Selesai
+          </label>
+
+          <input
+            type="time"
+            id="end"
+            required>
+
+        </div>
+
+      </div>
+
+
+      <!-- CATATAN -->
+
+      <div class="form-group">
+
+        <label for="note">
+          Catatan
+        </label>
+
+        <textarea
+          id="note"
+          placeholder="Catatan tambahan jika diperlukan"></textarea>
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="btn secondary"
+          onclick="closeModal()">
+          Batal
+        </button>
+
+        <button
+          type="submit"
+          class="btn primary"
+          id="saveButton">
+          Simpan Jadwal
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   API DATABASE
+===================================================== */
+
+const API_URL =
+    "https://script.google.com/macros/s/AKfycbxiY6rlIMdu6J7IrJgQ62UPkYUxBqLSkm5hVA_6t5erkxahPDwsRReNGwaUPQRyP-QD/exec";
+
+
+/* =====================================================
+   VARIABEL
+===================================================== */
+
+let schedules = [];
+
+let activeStudents = [];
+let activeTutors = [];
+let editingId = "";
+
+
+const overlay =
+  document.getElementById("overlay");
+
+const form =
+  document.getElementById("scheduleForm");
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function esc(value){
+
+  if(value === null || value === undefined){
+    return "";
+  }
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* =====================================================
+   LOAD SISWA AKTIF
+===================================================== */
+
+async function loadActiveStudents(){
+
+  try{
+
+    const response =
+      await fetch(
+        API_URL + "?action=getStudents"
+      );
+
+    const data =
+      await response.json();
+
+    if(!Array.isArray(data)){
+      throw new Error(
+        "Data siswa tidak valid."
+      );
+    }
+
+    activeStudents =
+      data.filter(
+        s => s.status === "Aktif"
+      );
+
+
+    const select =
+      document.getElementById("student");
+
+
+    select.innerHTML =
+      '<option value="">Pilih siswa</option>';
+
+
+    activeStudents.forEach(s => {
+
+      const option =
+        document.createElement("option");
+
+      /*
+       * PENTING:
+       * value = ID siswa
+       * bukan nama siswa
+       */
+
+      option.value = s.id;
+
+      option.textContent =
+        s.name;
+
+      select.appendChild(option);
+
+    });
+
+
+  }catch(error){
+
+    console.error(error);
+
+    document.getElementById("student").innerHTML =
+      '<option value="">Gagal memuat siswa</option>';
+
+  }
+
+}
+
+
+/* =====================================================
+   LOAD TENTOR AKTIF
+===================================================== */
+async function loadActiveTutors(){
+  const select = document.getElementById("tutor");
+  try{
+    const response = await fetch(API_URL + "?action=getActiveTutors");
+    const data = await response.json();
+    if(!Array.isArray(data)) throw new Error("Data tentor tidak valid.");
+    activeTutors = data;
+    select.innerHTML = '<option value="">Pilih tentor aktif</option>';
+    activeTutors.forEach(t => {
+      const option = document.createElement("option");
+      option.value = t.nama;
+      option.textContent = t.nama + (t.mataPelajaran ? " — " + t.mataPelajaran : "");
+      select.appendChild(option);
+    });
+  }catch(error){
+    console.error(error);
+    select.innerHTML = '<option value="">Gagal memuat tentor</option>';
+  }
+}
+
+/* =====================================================
+   LOAD JADWAL
+===================================================== */
+
+async function loadSchedules(){
+
+  try{
+
+    const response =
+      await fetch(
+        API_URL + "?action=getSchedules"
+      );
+
+    const data =
+      await response.json();
+
+
+    if(!Array.isArray(data)){
+
+      throw new Error(
+        "Data jadwal tidak valid."
+      );
+
+    }
+
+
+    schedules = data;
+
+    render();
+
+
+  }catch(error){
+
+    console.error(error);
+
+    document.getElementById("list").innerHTML =
+
+      '<div class="empty">' +
+
+      '<strong>Gagal memuat jadwal</strong>' +
+
+      'Periksa koneksi database.' +
+
+      '</div>';
+
+  }
+
+}
+
+
+/* =====================================================
+   RENDER JADWAL
+===================================================== */
+
+function render(){
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+  if(!schedules.length){
+    list.innerHTML = '<div class="empty"><strong>Belum ada jadwal</strong>Tambahkan jadwal siswa untuk mulai mengelola jadwal.</div>';
+    return;
+  }
+  const grouped = new Map();
+  // Tampilkan semua siswa aktif, termasuk yang belum memiliki jadwal.
+  activeStudents.forEach(st => {
+    const key = String(st.id);
+    grouped.set(key, {idSiswa:st.id, student:st.name || "Siswa tanpa nama", program:st.subject || "Program belum diisi", rows:[]});
+  });
+  schedules.forEach(s => {
+    const key = String(s.idSiswa || "tanpa-id-" + (s.student || "Siswa"));
+    if(!grouped.has(key)) grouped.set(key, {idSiswa:s.idSiswa, student:s.student || "Siswa tanpa nama", program:s.program || "Program belum diisi", rows:[]});
+    const group = grouped.get(key);
+    if(!group.program || group.program === "Program belum diisi") group.program = s.program || group.program;
+    group.rows.push(s);
+  });
+  const order = ["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"];
+  [...grouped.values()].sort((a,b)=>String(a.student).localeCompare(String(b.student),"id")).forEach(group=>{
+    group.rows.sort((a,b)=>order.indexOf(a.day)-order.indexOf(b.day));
+    const details = document.createElement("details");
+    details.className = "student-group";
+    const summary = document.createElement("summary");
+    const title = document.createElement("div");
+    title.innerHTML = `<div class="student-title">${esc(group.student)}</div><div class="student-sub">${esc(group.program)} · ${group.rows.length} jadwal per minggu</div>`;
+    const arrow = document.createElement("span"); arrow.textContent = "＋"; arrow.style.color="#c08b18"; arrow.style.fontSize="22px";
+    summary.append(title,arrow);
+    summary.addEventListener("click",()=>{ setTimeout(()=>arrow.textContent=details.open?"−":"＋",0); });
+    details.appendChild(summary);
+    const rows = document.createElement("div"); rows.className="student-schedules";
+    if(!group.rows.length){
+      const empty=document.createElement("div"); empty.className="week-meta"; empty.style.padding="14px 2px"; empty.textContent="Belum ada jadwal belajar untuk siswa ini.";
+      const add=document.createElement("button"); add.type="button"; add.className="btn primary"; add.textContent="+ Tambah jadwal siswa ini";
+      add.addEventListener("click",()=>{openModal();const studentSelect=document.getElementById("student");studentSelect.value=String(group.idSiswa);studentSelect.dispatchEvent(new Event("change"));});
+      rows.append(empty,add);
+    }
+    group.rows.forEach(s=>{
+      const row = document.createElement("div"); row.className="week-row";
+      const day = document.createElement("div"); day.className="week-day"; day.textContent=s.day || "Hari belum diatur";
+      const info = document.createElement("div"); info.className="week-info";
+      const meta = document.createElement("div"); meta.className="week-meta"; meta.textContent=`${s.start || "--:--"}–${s.end || "--:--"} · Status: ${s.status || "Belum ditentukan"}`;
+      const current = document.createElement("div"); current.className="week-meta"; current.textContent="Tentor saat ini: " + (s.tutor || "Belum dipilih");
+      const pick = document.createElement("div"); pick.className="tutor-pick";
+      const select = document.createElement("select"); select.setAttribute("aria-label","Pilih tentor untuk " + group.student + " - " + s.day);
+      select.innerHTML='<option value="">Pilih tentor aktif</option>';
+      activeTutors.forEach(t=>{const op=document.createElement("option");op.value=t.nama;op.textContent=t.nama+(t.mataPelajaran?" — "+t.mataPelajaran:"");if(t.nama===s.tutor)op.selected=true;select.appendChild(op);});
+      const save=document.createElement("button");save.type="button";save.className="btn primary";save.textContent="Simpan tentor";save.addEventListener("click",()=>assignTutor(s.id,select.value,group.student,s.day));
+      const edit=document.createElement("button");edit.type="button";edit.className="btn secondary";edit.textContent="Edit jadwal";edit.addEventListener("click",()=>openModal(String(s.id)));
+      const del=document.createElement("button");del.type="button";del.className="btn danger";del.textContent="Hapus";del.addEventListener("click",()=>removeSchedule(String(s.id)));
+      pick.append(select,save,edit,del); info.append(meta,current,pick); row.append(day,info); rows.appendChild(row);
+    });
+    details.appendChild(rows); list.appendChild(details);
+  });
+}
+
+async function assignTutor(idJadwal,namaTutor,namaSiswa,hari){
+  if(!namaTutor){alert("Pilih tentor terlebih dahulu.");return;}
+  if(!confirm(`Tetapkan ${namaTutor} untuk ${namaSiswa} pada hari ${hari}?`)) return;
+  try{
+    const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"assignTutor",idJadwal:idJadwal,data:{tutor:namaTutor}})});
+    const result=await response.json();
+    if(!result.success) throw new Error(result.message || "Gagal menyimpan pilihan tentor.");
+    alert("Tentor berhasil diperbarui.");
+    await loadSchedules();
+  }catch(error){console.error(error);alert("Gagal menyimpan tentor: "+error.message);}
+}
+
+/* =====================================================
+   SISWA DIPILIH
+===================================================== */
+
+document
+  .getElementById("student")
+  .addEventListener(
+    "change",
+    function(){
+
+      const selectedId =
+        this.value;
+
+
+      const student =
+        activeStudents.find(
+          s =>
+            String(s.id) ===
+            String(selectedId)
+        );
+
+
+      document.getElementById("program").value =
+        student
+        ? student.subject || ""
+        : "";
+
+    }
+  );
+
+
+/* =====================================================
+   OPEN MODAL
+   TAMBAH / EDIT
+===================================================== */
+
+function openModal(editId = ""){
+
+  editingId =
+    editId || "";
+
+
+  form.reset();
+
+
+  document.getElementById("id").value =
+    editingId;
+
+
+  document.getElementById("modalTitle").textContent =
+    editingId
+    ? "Edit Jadwal"
+    : "Tambah Jadwal";
+
+
+  document.getElementById("saveButton").textContent =
+    editingId
+    ? "Simpan Perubahan"
+    : "Simpan Jadwal";
+
+
+  /*
+   * Pastikan checkbox hari bersih
+   */
+
+  document
+    .querySelectorAll(
+      '[name="days"]'
+    )
+    .forEach(
+      checkbox =>
+        checkbox.checked = false
+    );
+
+
+  if(editingId){
+
+    const schedule =
+      schedules.find(
+        x =>
+          String(x.id) ===
+          String(editingId)
+      );
+
+
+    if(!schedule){
+
+      alert(
+        "Data jadwal tidak ditemukan."
+      );
+
+      return;
+
+    }
+
+
+    /*
+     * ================================
+     * SISWA
+     * ================================
+     *
+     * Gunakan idSiswa,
+     * bukan nama siswa.
+     */
+
+    document.getElementById("student").value =
+      schedule.idSiswa || "";
+
+
+    /*
+     * Jika siswa ditemukan,
+     * tampilkan programnya.
+     */
+
+    const student =
+      activeStudents.find(
+        s =>
+          String(s.id) ===
+          String(schedule.idSiswa)
+      );
+
+
+    document.getElementById("program").value =
+      student
+      ? student.subject || ""
+      : schedule.program || "";
+
+
+    /*
+     * ================================
+     * TUTOR
+     * ================================
+     */
+
+    document.getElementById("tutor").value =
+      schedule.tutor || "";
+
+
+    /*
+     * ================================
+     * JAM
+     * ================================
+     */
+
+    document.getElementById("start").value =
+      normalizeTime(schedule.start);
+
+    document.getElementById("end").value =
+      normalizeTime(schedule.end);
+
+
+    /*
+     * ================================
+     * CATATAN
+     * ================================
+     */
+
+    document.getElementById("note").value =
+      schedule.note || "";
+
+
+    /*
+     * ================================
+     * HARI
+     * ================================
+     */
+
+    let selectedDays =
+      schedule.days || [];
+
+
+    if(
+      !selectedDays.length &&
+      schedule.day
+    ){
+
+      selectedDays =
+        [schedule.day];
+
+    }
+
+
+    document
+      .querySelectorAll(
+        '[name="days"]'
+      )
+      .forEach(
+        checkbox => {
+
+          checkbox.checked =
+            selectedDays.includes(
+              checkbox.value
+            );
+
+        }
+      );
+
+  }
+
+
+  overlay.classList.add("active");
+
+  document.body.style.overflow =
+    "hidden";
+
+}
+
+
+/* =====================================================
+   NORMALIZE TIME
+===================================================== */
+
+function normalizeTime(value){
+
+  if(!value){
+    return "";
+  }
+
+
+  const text =
+    String(value);
+
+
+  const match =
+    text.match(
+      /^(\d{1,2}):(\d{2})/
+    );
+
+
+  if(!match){
+    return "";
+  }
+
+
+  return (
+    String(match[1]).padStart(2,"0") +
+    ":" +
+    match[2]
+  );
+
+}
+
+
+/* =====================================================
+   CLOSE MODAL
+===================================================== */
+
+function closeModal(){
+
+  overlay.classList.remove(
+    "active"
+  );
+
+  document.body.style.overflow =
+    "";
+
+  editingId = "";
+
+}
+
+
+/* =====================================================
+   SIMPAN TAMBAH / EDIT
+===================================================== */
+
+form.onsubmit =
+  async function(e){
+
+    e.preventDefault();
+
+
+    const days =
+      [
+        ...document.querySelectorAll(
+          '[name="days"]:checked'
+        )
+      ].map(
+        x => x.value
+      );
+
+
+    if(!days.length){
+
+      alert(
+        "Pilih minimal satu hari belajar."
+      );
+
+      return;
+
+    }
+
+
+    const studentId =
+      document.getElementById(
+        "student"
+      ).value;
+
+
+    const student =
+      activeStudents.find(
+        s =>
+          String(s.id) ===
+          String(studentId)
+      );
+
+
+    if(!student){
+
+      alert(
+        "Siswa belum dipilih."
+      );
+
+      return;
+
+    }
+
+
+    const data = {
+
+      idSiswa:
+        student.id,
+
+      namaSiswa:
+        student.name,
+
+      tutor:
+        document
+          .getElementById("tutor")
+          .value
+          .trim(),
+
+      days:
+        days,
+
+      jamMulai:
+        document
+          .getElementById("start")
+          .value,
+
+      jamSelesai:
+        document
+          .getElementById("end")
+          .value,
+
+      catatan:
+        document
+          .getElementById("note")
+          .value
+          .trim()
+
+    };
+
+
+    if(
+      !data.tutor
+    ){
+
+      alert(
+        "Nama tutor belum diisi."
+      );
+
+      return;
+
+    }
+
+
+    if(
+      !data.jamMulai ||
+      !data.jamSelesai
+    ){
+
+      alert(
+        "Jam belajar belum lengkap."
+      );
+
+      return;
+
+    }
+
+
+    /*
+     * Tentukan action:
+     *
+     * Tambah  -> addSchedule
+     * Edit    -> updateSchedule
+     */
+
+    const action =
+      editingId
+      ? "updateSchedule"
+      : "addSchedule";
+
+
+    try{
+
+      const response =
+        await fetch(
+          API_URL,
+          {
+            method:"POST",
+
+            headers:{
+              "Content-Type":
+                "text/plain;charset=utf-8"
+            },
+
+            body:
+              JSON.stringify({
+
+                action:
+                  action,
+
+                idJadwal:
+                  editingId,
+
+                data:
+                  data
+
+              })
+
+          }
+        );
+
+
+      const result =
+        await response.json();
+
+
+      if(!result.success){
+
+        throw new Error(
+          result.message ||
+          "Gagal menyimpan jadwal."
+        );
+
+      }
+
+
+      alert(
+        editingId
+        ? "Jadwal berhasil diperbarui."
+        : "Jadwal berhasil disimpan."
+      );
+
+
+      closeModal();
+
+
+      /*
+       * Ambil ulang dari database,
+       * bukan dari localStorage.
+       */
+
+      await loadSchedules();
+
+
+    }catch(error){
+
+      console.error(error);
+
+      alert(
+        "Gagal menyimpan jadwal: " +
+        error.message
+      );
+
+    }
+
+  };
+
+
+/* =====================================================
+   HAPUS JADWAL
+===================================================== */
+
+async function removeSchedule(id){
+
+  const schedule =
+    schedules.find(
+      x =>
+        String(x.id) ===
+        String(id)
+    );
+
+
+  if(!schedule){
+    return;
+  }
+
+
+  const yakin =
+    confirm(
+      "Hapus jadwal " +
+      schedule.student +
+      " pada hari " +
+      (schedule.day || "") +
+      "?"
+    );
+
+
+  if(!yakin){
+    return;
+  }
+
+
+  try{
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+          method:"POST",
+
+          headers:{
+            "Content-Type":
+              "text/plain;charset=utf-8"
+          },
+
+          body:
+            JSON.stringify({
+
+              action:
+                "deleteSchedule",
+
+              idJadwal:
+                id
+
+            })
+
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message ||
+        "Gagal menghapus jadwal."
+      );
+
+    }
+
+
+    alert(
+      "Jadwal berhasil dihapus."
+    );
+
+
+    await loadSchedules();
+
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "Gagal menghapus jadwal: " +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   TUTUP MODAL KLIK DI LUAR
+===================================================== */
+
+overlay.addEventListener(
+  "click",
+  function(e){
+
+    if(e.target === overlay){
+
+      closeModal();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   ESC UNTUK MENUTUP MODAL
+===================================================== */
+
+document.addEventListener(
+  "keydown",
+  function(e){
+
+    if(
+      e.key === "Escape" &&
+      overlay.classList.contains("active")
+    ){
+
+      closeModal();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   MULAI
+===================================================== */
+
+loadActiveTutors();
+loadActiveStudents();
+loadSchedules();
+
+</script>
+
+</body>
+</html>
