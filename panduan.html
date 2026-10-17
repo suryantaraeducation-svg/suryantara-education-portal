@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Panduan penggunaan sistem Suryantara Education untuk orang tua dan tentor.">
+  <title>Panduan Sistem | Suryantara Education</title>
+  <link rel="icon" type="image/png" href="SE-BULAT.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--navy:#12345a;--navy-dark:#0b2440;--gold:#d6a62e;--gold-light:#fff4d6;--white:#fff;--bg:#f5f7fb;--text:#26364a;--muted:#66758a;--border:#e1e7ef;--blue-light:#eaf2fc;--shadow:0 10px 30px rgba(18,52,90,.08)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:92px}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif;line-height:1.7}a{color:inherit}
+    .topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+    .nav{width:min(1120px,calc(100% - 36px));min-height:72px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:11px;text-decoration:none;min-width:0}.brand img{width:48px;height:48px;object-fit:contain}.brand-name{line-height:1.15}.brand-name strong{display:block;color:var(--navy);font:800 16px Poppins,sans-serif;letter-spacing:.4px}.brand-name span{display:block;margin-top:4px;color:#b88918;font:700 10px Poppins,sans-serif;letter-spacing:2.2px}
+    .nav-actions{display:flex;align-items:center;gap:10px}.nav-link{text-decoration:none;color:var(--navy);font-size:13px;font-weight:700;padding:9px 13px;border-radius:9px}.nav-link:hover{background:var(--blue-light)}
+    .btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:42px;padding:10px 16px;border-radius:10px;border:1px solid transparent;text-decoration:none;cursor:pointer;font:700 13px Inter,sans-serif;transition:transform .2s,box-shadow .2s,background .2s}.btn:hover{transform:translateY(-2px)}.btn-primary{background:var(--navy);color:#fff;box-shadow:0 5px 14px rgba(18,52,90,.16)}.btn-primary:hover{background:var(--navy-dark)}.btn-outline{color:var(--navy);border-color:var(--border);background:#fff}
+    .hero{color:#fff;background:linear-gradient(125deg,var(--navy-dark),var(--navy) 70%,#1b527e);padding:62px 18px 70px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;border:1px solid rgba(255,255,255,.12);right:-70px;top:-115px;box-shadow:0 0 0 35px rgba(255,255,255,.025),0 0 0 70px rgba(255,255,255,.025)}.hero-inner{width:min(920px,100%);margin:auto;position:relative;z-index:1}
+    .eyebrow{display:inline-block;padding:6px 11px;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.08);border-radius:999px;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase}
+    h1,h2,h3{font-family:Poppins,Inter,sans-serif;line-height:1.3}h1{max-width:760px;margin:18px 0 14px;font-size:clamp(30px,5vw,46px);letter-spacing:-.8px}.hero p{max-width:680px;margin:0;color:#e1eaf5;font-size:15px}.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:25px}.hero .btn-primary{background:var(--gold);color:var(--navy-dark)}.hero .btn-primary:hover{background:#e5b83f}.hero .btn-outline{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);color:#fff}
+    .wrap{width:min(1120px,calc(100% - 36px));margin:0 auto}.quick-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:-28px;position:relative;z-index:2}.quick-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow);text-decoration:none;transition:transform .2s,box-shadow .2s}.quick-card:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(18,52,90,.12)}.quick-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:var(--blue-light);font-size:21px;margin-bottom:13px}.quick-card strong{display:block;color:var(--navy);font:700 15px Poppins,sans-serif}.quick-card span{display:block;color:var(--muted);font-size:12px;margin-top:5px}
+    .content-layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;align-items:start;padding:42px 0 64px}.sidebar{position:sticky;top:94px;background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px}.sidebar h2{margin:0 0 12px;font-size:14px;color:var(--navy)}.sidebar a{display:block;text-decoration:none;padding:9px 10px;margin:2px 0;border-radius:8px;color:var(--muted);font-size:12px;font-weight:600}.sidebar a:hover{color:var(--navy);background:var(--blue-light)}.main-content{min-width:0}.section{margin-bottom:28px;scroll-margin-top:94px}.section-heading{margin-bottom:15px}.section-heading .kicker{color:#ad811a;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}.section-heading h2{color:var(--navy);margin:4px 0 7px;font-size:clamp(21px,3vw,27px)}.section-heading p{color:var(--muted);margin:0;font-size:13px}
+    .panel{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:0 4px 18px rgba(18,52,90,.035)}.steps{display:grid;gap:16px}.step{display:grid;grid-template-columns:38px minmax(0,1fr);gap:13px;align-items:start}.step-num{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:var(--blue-light);color:var(--navy);font-weight:800;font-size:13px}.step h3{margin:2px 0 5px;font-size:14px;color:var(--navy)}.step p{margin:0;color:var(--muted);font-size:12px}.note{border-left:4px solid var(--gold);background:var(--gold-light);border-radius:0 10px 10px 0;padding:13px 15px;color:#654c13;font-size:12px;margin-top:18px}
+    .feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.feature{border:1px solid var(--border);border-radius:13px;padding:16px;background:#fff}.feature .symbol{font-size:21px}.feature h3{margin:7px 0 5px;font-size:13px;color:var(--navy)}.feature p{margin:0;color:var(--muted);font-size:12px}.feature small{display:inline-block;margin-top:9px;color:#7b5c14;font-size:10px;font-weight:700}
+    .checklist{list-style:none;padding:0;margin:0;display:grid;gap:10px}.checklist li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:9px;font-size:12px;color:var(--muted)}.check{color:#18834a;font-weight:900}.faq-list{display:grid;gap:10px}details{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px}summary{cursor:pointer;color:var(--navy);font-weight:700;font-size:13px}details p{color:var(--muted);font-size:12px;margin:10px 0 0}
+    .contact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.contact-card{display:flex;gap:12px;align-items:center;padding:16px;border-radius:13px;border:1px solid var(--border);background:#fff;text-decoration:none;transition:transform .2s,box-shadow .2s}.contact-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}.contact-card .contact-icon{font-size:23px}.contact-card strong{display:block;color:var(--navy);font-size:13px}.contact-card span{display:block;color:var(--muted);font-size:11px;overflow-wrap:anywhere}
+    footer{background:#091e35;color:#dbe5f1;padding:28px 18px;text-align:center}footer strong{font:700 13px Poppins,sans-serif}footer p{color:#aebfd1;font-size:11px;margin:7px 0 0}.back-top{display:inline-block;margin-top:12px;color:#f0c24e;font-size:11px;text-decoration:none}
+    @media(max-width:850px){.content-layout{grid-template-columns:1fr;gap:20px}.sidebar{position:static}.sidebar nav{display:flex;flex-wrap:wrap;gap:4px}.sidebar a{margin:0}}
+    @media(max-width:620px){.nav{width:min(100% - 24px,1120px);min-height:64px}.brand img{width:40px;height:40px}.brand-name strong{font-size:13px}.brand-name span{font-size:8px;letter-spacing:1.7px}.nav-link{display:none}.nav-actions .btn{min-height:38px;padding:8px 11px;font-size:11px}.hero{padding:46px 0 58px}.hero p{font-size:13px}.quick-grid{grid-template-columns:1fr;gap:10px;margin-top:-22px}.quick-card{display:grid;grid-template-columns:42px minmax(0,1fr);column-gap:12px;padding:14px;align-items:center}.quick-icon{grid-row:span 2;margin:0}.quick-card strong{align-self:end;font-size:13px}.quick-card span{align-self:start;margin-top:2px}.content-layout{padding:30px 0 44px}.wrap{width:min(100% - 24px,1120px)}.panel{padding:17px}.feature-grid,.contact-grid{grid-template-columns:1fr}.section-heading h2{font-size:22px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+  </style>
+</head>
+<body id="top">
+  <header class="topbar">
+    <div class="nav">
+      <a class="brand" href="index.html" aria-label="Suryantara Education - Beranda">
+        <img src="SE-BULAT.png" alt="Logo Suryantara Education" onerror="this.style.display='none'">
+        <span class="brand-name"><strong>SURYANTARA</strong><span>EDUCATION</span></span>
+      </a>
+      <div class="nav-actions">
+        <a class="nav-link" href="#orang-tua">Orang Tua</a>
+        <a class="nav-link" href="#tentor">Tentor</a>
+        <a class="btn btn-primary" href="login.html">Masuk Sistem ↗</a>
+      </div>
+    </div>
+  </header>
+  <main>
+    <section class="hero"><div class="hero-inner">
+      <span class="eyebrow">Pusat Bantuan Resmi</span>
+      <h1>Panduan Sistem<br>Suryantara Education</h1>
+      <p>Temukan panduan untuk masuk ke akun, memahami dashboard, memantau pembelajaran, dan menjaga keamanan akun Anda.</p>
+      <div class="hero-actions"><a class="btn btn-primary" href="#mulai">Mulai Membaca ↓</a><a class="btn btn-outline" href="login.html">Kembali ke Login</a></div>
+    </div></section>
+    <div class="wrap">
+      <section class="quick-grid" aria-label="Pilih panduan">
+        <a class="quick-card" href="#orang-tua"><div class="quick-icon">👨‍👩‍👧</div><strong>Panduan Orang Tua</strong><span>Login dan pemantauan kegiatan belajar.</span></a>
+        <a class="quick-card" href="#tentor"><div class="quick-icon">🧑‍🏫</div><strong>Panduan Tentor</strong><span>Login dan informasi pembelajaran.</span></a>
+        <a class="quick-card" href="#kendala"><div class="quick-icon">🛟</div><strong>Bantuan Akun</strong><span>Solusi awal untuk kendala yang umum.</span></a>
+      </section>
+      <div class="content-layout" id="mulai">
+        <aside class="sidebar"><h2>Daftar Isi</h2><nav aria-label="Daftar isi panduan">
+          <a href="#sebelum-login">Sebelum Login</a><a href="#orang-tua">Untuk Orang Tua</a><a href="#tentor">Untuk Tentor</a><a href="#dashboard">Mengenal Dashboard</a><a href="#keamanan">Keamanan Akun</a><a href="#kendala">Mengatasi Kendala</a><a href="#kontak">Hubungi Admin</a>
+        </nav></aside>
+        <div class="main-content">
+          <section class="section" id="sebelum-login">
+            <div class="section-heading"><span class="kicker">01 · Persiapan</span><h2>Sebelum Masuk ke Sistem</h2><p>Pastikan akun Anda sudah disiapkan oleh admin Suryantara Education.</p></div>
+            <div class="panel"><div class="steps">
+              <div class="step"><div class="step-num">1</div><div><h3>Pastikan pendaftaran telah diproses</h3><p>Orang tua mendaftarkan siswa, sedangkan tentor mendaftarkan diri melalui alur pendaftaran yang disediakan. Akun perlu diverifikasi atau diaktifkan oleh admin.</p></div></div>
+              <div class="step"><div class="step-num">2</div><div><h3>Siapkan username dan kata sandi</h3><p>Gunakan informasi akun yang diberikan atau disiapkan melalui proses resmi Suryantara Education. Jika belum menerima informasi akun, hubungi admin.</p></div></div>
+              <div class="step"><div class="step-num">3</div><div><h3>Buka halaman login</h3><p>Kunjungi halaman login Suryantara Education, masukkan data akun sesuai petunjuk, lalu tekan tombol masuk.</p></div></div>
+            </div><div class="note"><strong>Catatan:</strong> Jangan membagikan kata sandi atau token pengaturan kata sandi kepada orang lain, termasuk melalui grup percakapan.</div></div>
+          </section>
+          <section class="section" id="orang-tua">
+            <div class="section-heading"><span class="kicker">02 · Akun Orang Tua</span><h2>Panduan untuk Orang Tua</h2><p>Gunakan portal orang tua untuk mengakses informasi pembelajaran siswa yang terhubung dengan akun Anda.</p></div>
+            <div class="panel"><div class="steps">
+              <div class="step"><div class="step-num">1</div><div><h3>Masuk menggunakan akun orang tua</h3><p>Buka halaman login dan masukkan username serta kata sandi akun orang tua. Pastikan tidak ada spasi tambahan saat memasukkan data.</p></div></div>
+              <div class="step"><div class="step-num">2</div><div><h3>Periksa informasi pada dashboard</h3><p>Setelah berhasil masuk, baca informasi yang ditampilkan dan gunakan menu yang tersedia pada akun Anda.</p></div></div>
+              <div class="step"><div class="step-num">3</div><div><h3>Pantau informasi pembelajaran</h3><p>Jika fitur terkait tersedia pada dashboard Anda, gunakan informasi tersebut untuk mengikuti kegiatan belajar siswa. Hubungi admin jika data tampak tidak sesuai.</p></div></div>
+              <div class="step"><div class="step-num">4</div><div><h3>Keluar setelah selesai</h3><p>Terutama saat memakai perangkat bersama, akhiri sesi melalui fitur keluar jika tersedia dan tutup halaman akun.</p></div></div>
+            </div><div class="note"><strong>Privasi siswa:</strong> Gunakan akun Anda sendiri. Jangan membagikan tangkapan layar atau informasi siswa kepada pihak yang tidak berkepentingan.</div></div>
+          </section>
+          <section class="section" id="tentor">
+            <div class="section-heading"><span class="kicker">03 · Akun Tentor</span><h2>Panduan untuk Tentor</h2><p>Langkah dasar untuk mengakses sistem sebagai tentor Suryantara Education.</p></div>
+            <div class="panel"><div class="steps">
+              <div class="step"><div class="step-num">1</div><div><h3>Pastikan akun telah diaktifkan</h3><p>Setelah pendaftaran diproses, admin akan mengaktifkan akun tentor sesuai prosedur yang berlaku. Jika belum dapat login, pastikan status akun terlebih dahulu kepada admin.</p></div></div>
+              <div class="step"><div class="step-num">2</div><div><h3>Login menggunakan akun tentor</h3><p>Masukkan username dan kata sandi yang terkait dengan akun tentor Anda pada halaman login.</p></div></div>
+              <div class="step"><div class="step-num">3</div><div><h3>Pelajari menu yang tersedia</h3><p>Gunakan menu yang benar-benar muncul pada dashboard Anda. Ketersediaan fitur dapat berbeda sesuai tahap pengembangan dan hak akses akun.</p></div></div>
+              <div class="step"><div class="step-num">4</div><div><h3>Laporkan ketidaksesuaian</h3><p>Jika informasi jadwal atau data pembelajaran tidak sesuai, catat detail masalahnya dan hubungi admin. Hindari mengubah data di luar kewenangan akun.</p></div></div>
+            </div><div class="note"><strong>Ingat:</strong> Gunakan akun pribadi dan jangan membagikan akses kepada tentor lain.</div></div>
+          </section>
+          <section class="section" id="dashboard">
+            <div class="section-heading"><span class="kicker">04 · Navigasi</span><h2>Mengenal Dashboard dan Fitur</h2><p>Dashboard adalah halaman utama setelah login. Bagian berikut merupakan panduan umum; gunakan fitur sesuai yang benar-benar tersedia pada akun Anda.</p></div>
+            <div class="feature-grid">
+              <article class="feature"><div class="symbol">👤</div><h3>Informasi Akun</h3><p>Periksa identitas atau informasi akun yang ditampilkan. Laporkan jika ada data yang keliru.</p><small>Jika tersedia di dashboard</small></article>
+              <article class="feature"><div class="symbol">📚</div><h3>Informasi Pembelajaran</h3><p>Gunakan informasi kegiatan belajar yang ditampilkan untuk memahami aktivitas pembelajaran.</p><small>Jika tersedia di dashboard</small></article>
+              <article class="feature"><div class="symbol">🗓️</div><h3>Jadwal</h3><p>Periksa jadwal yang tersedia dan konfirmasikan perubahan kepada admin jika diperlukan.</p><small>Jika tersedia di dashboard</small></article>
+              <article class="feature"><div class="symbol">🔔</div><h3>Pemberitahuan</h3><p>Perhatikan informasi atau pengumuman yang ditampilkan melalui sistem maupun kanal resmi.</p><small>Jika tersedia di dashboard</small></article>
+            </div>
+          </section>
+          <section class="section" id="keamanan">
+            <div class="section-heading"><span class="kicker">05 · Keamanan</span><h2>Jaga Keamanan Akun</h2><p>Kebiasaan sederhana untuk membantu menjaga akun dan data pembelajaran.</p></div>
+            <div class="panel"><ul class="checklist">
+              <li><span class="check">✓</span><span>Gunakan kata sandi yang tidak mudah ditebak dan tidak digunakan bersama orang lain.</span></li>
+              <li><span class="check">✓</span><span>Jangan pernah mengirim kata sandi atau token pengaturan kata sandi melalui ruang publik.</span></li>
+              <li><span class="check">✓</span><span>Pastikan alamat halaman login benar sebelum memasukkan informasi akun.</span></li>
+              <li><span class="check">✓</span><span>Hindari menyimpan kata sandi di perangkat umum atau perangkat milik orang lain.</span></li>
+              <li><span class="check">✓</span><span>Jika merasa akun diakses orang lain, segera hubungi admin untuk meminta bantuan.</span></li>
+            </ul></div>
+          </section>
+          <section class="section" id="kendala">
+            <div class="section-heading"><span class="kicker">06 · Pemecahan Masalah</span><h2>Mengatasi Kendala Umum</h2><p>Pilih pertanyaan untuk melihat langkah pemeriksaan awal.</p></div>
+            <div class="faq-list">
+              <details><summary>Saya tidak bisa login. Apa yang harus dilakukan?</summary><p>Periksa kembali username dan kata sandi, pastikan tidak ada spasi tambahan, lalu coba lagi. Jika masih gagal, hubungi admin dan sampaikan pesan kesalahan yang muncul tanpa mengirim kata sandi.</p></details>
+              <details><summary>Saya belum menerima akun atau kata sandi.</summary><p>Pastikan pendaftaran sudah diproses dan akun telah diverifikasi atau diaktifkan. Hubungi admin untuk memeriksa status akun Anda.</p></details>
+              <details><summary>Saya diminta mengganti kata sandi.</summary><p>Ikuti petunjuk resmi yang muncul pada sistem. Jangan membagikan tautan atau token pengaturan kata sandi. Jika petunjuk tidak muncul atau token kedaluwarsa, hubungi admin.</p></details>
+              <details><summary>Dashboard kosong atau informasi tidak sesuai.</summary><p>Coba muat ulang halaman dan pastikan Anda masuk menggunakan akun yang benar. Jika masalah berlanjut, kirimkan deskripsi masalah dan tangkapan layar yang tidak menampilkan kata sandi, token, atau data pribadi yang tidak perlu.</p></details>
+              <details><summary>Halaman tidak tampil dengan benar di HP.</summary><p>Coba muat ulang halaman atau buka melalui browser terbaru. Jika masih bermasalah, sebutkan jenis perangkat, browser, dan bagian halaman yang tidak tampil.</p></details>
+            </div>
+          </section>
+          <section class="section" id="kontak">
+            <div class="section-heading"><span class="kicker">07 · Kontak Bantuan</span><h2>Masih Membutuhkan Bantuan?</h2><p>Hubungi admin Suryantara Education melalui kanal berikut.</p></div>
+            <div class="contact-grid">
+              <a class="contact-card" href="https://wa.me/6282321883731?text=Halo%20Admin%20Suryantara%20Education%2C%20saya%20membutuhkan%20bantuan%20terkait%20sistem." target="_blank" rel="noopener noreferrer"><div class="contact-icon">📱</div><div><strong>Hubungi WhatsApp</strong><span>0823-2188-3731</span></div></a>
+              <a class="contact-card" href="mailto:suryantara.education@gmail.com?subject=Bantuan%20Sistem%20Suryantara%20Education"><div class="contact-icon">✉️</div><div><strong>Kirim Email</strong><span>suryantara.education@gmail.com</span></div></a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer><strong>SURYANTARA EDUCATION</strong><p>Belajar Hari Ini, Bersinar Esok Hari</p><a class="back-top" href="#top">↑ Kembali ke atas</a></footer>
+</body>
+</html>
