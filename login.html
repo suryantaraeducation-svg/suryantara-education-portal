@@ -41,25 +41,6 @@
 .info-card strong{display:block;margin-bottom:5px;color:var(--navy);font-family:Poppins,sans-serif;font-size:13px}
 .info-card span{color:var(--muted);font-size:12px;line-height:1.6}
 
-a.info-card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-a.info-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(15, 47, 79, 0.12);
-}
-
-a.info-card:focus-visible {
-  outline: 3px solid #d9a62e;
-  outline-offset: 3px;
-}
-
-
 /* LOGIN MODAL */
 .login-modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(7,24,42,.62);backdrop-filter:blur(4px)}
 .login-modal.show{display:flex}
