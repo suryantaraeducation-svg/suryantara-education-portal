@@ -394,9 +394,16 @@ form.addEventListener("submit", async function(e) {
 
 e.preventDefault();
 
-const username =
-document.getElementById("loginUsername").value.trim();
+let username =
+  document.getElementById("loginUsername").value.trim();
 
+if (selectedRole === "Orang Tua") {
+  username = username.replace(/\D/g, "");
+
+  if (username.startsWith("0")) {
+    username = username.slice(1);
+  }
+}
 const password =
 document.getElementById("loginPassword").value;
 
