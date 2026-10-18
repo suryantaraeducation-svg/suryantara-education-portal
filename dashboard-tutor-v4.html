@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#102542">
+<title>Dashboard Tutor | Suryantara Education</title>
+<link rel="stylesheet" href="style.css">
+<style>
+:root{--navy:#102542;--navy2:#194875;--gold:#d8ad49;--ink:#172b45;--muted:#667085;--line:#e5eaf0;--bg:#f4f6fa;--green:#176b40}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Arial,sans-serif}button,input,textarea{font:inherit}button{cursor:pointer}
+.header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line)}.header-inner{max-width:1180px;margin:auto;padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--navy)}.brand-mark{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:var(--navy);color:var(--gold);font-weight:900}.brand strong,.brand small{display:block}.brand strong{font-size:14px;letter-spacing:.04em}.brand small{font-size:11px;letter-spacing:.12em;color:var(--muted)}
+.header-actions{display:flex;align-items:center;gap:12px}.user-label{text-align:right;color:var(--muted);font-size:12px}.user-label strong{display:block;color:var(--navy);font-size:13px}.logout{border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--navy);font-weight:700;padding:10px 13px;display:flex;align-items:center;gap:7px}.logout svg{width:17px;height:17px}
+.shell{max-width:1180px;margin:auto;padding:27px 22px 42px}.hero{background:linear-gradient(125deg,var(--navy),var(--navy2));border-radius:22px;padding:29px 30px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:18px;box-shadow:0 12px 28px #10254216}.eyebrow{margin:0 0 9px;color:var(--gold);font-size:11px;font-weight:800;letter-spacing:.18em}.hero h1{font-size:clamp(26px,4vw,36px);line-height:1.15;margin:0 0 8px;color:white}.hero p:last-child{margin:0;color:#dbe5f0;font-size:14px;line-height:1.6}.hero-icon{width:60px;height:60px;border:1px solid #ffffff35;border-radius:17px;background:#ffffff12;color:var(--gold);display:grid;place-items:center;flex:none}.hero-icon svg{width:32px;height:32px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:21px}.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 16px #10254206;min-width:0}.stat-icon{width:42px;height:42px;border-radius:13px;background:#edf2f8;color:var(--navy);display:grid;place-items:center;flex:none}.stat-icon.gold{background:#fff5dc;color:#946c17}.stat-icon svg{width:22px;height:22px}.stat-label{font-size:12px;color:var(--muted);margin:0 0 5px}.stat-value{font-size:27px;font-weight:800;color:var(--navy);line-height:1;margin:0}
+.panel{background:#fff;border:1px solid var(--line);border-radius:19px;padding:22px;box-shadow:0 5px 20px #10254208;margin-bottom:19px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.panel-head h2{font-size:21px;margin:0 0 5px;color:var(--navy)}.panel-head p{font-size:13px;color:var(--muted);line-height:1.5;margin:0}.date-pill{background:#fff3d5;color:#73551a;border-radius:999px;padding:9px 12px;font-size:11px;font-weight:800;white-space:nowrap}
+.schedule-list{display:flex;flex-direction:column;gap:12px}.schedule{border:1px solid var(--line);background:#fbfcfe;border-radius:15px;padding:15px;display:grid;grid-template-columns:90px minmax(0,1fr);gap:14px;align-items:center}.time{border-right:1px solid #e0e6ed;padding-right:12px}.time strong{display:block;color:var(--navy);font-size:18px}.time span{display:block;color:var(--muted);font-size:11px;margin-top:5px}.student{font-size:16px;font-weight:800;color:var(--navy);margin:0 0 5px;overflow-wrap:anywhere}.program{font-size:13px;color:var(--muted);margin:0;line-height:1.5}.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}.chip{display:inline-flex;background:#edf2f7;color:#45566c;border-radius:7px;padding:5px 8px;font-size:11px;font-weight:700}
+.actions{grid-column:1/-1;display:flex;gap:9px;flex-wrap:wrap;padding-top:12px;border-top:1px solid #e8edf2}.btn{border:0;border-radius:10px;min-height:42px;padding:11px 14px;font-size:13px;font-weight:800;display:inline-flex;justify-content:center;align-items:center;gap:8px;text-decoration:none}.btn svg{width:17px;height:17px;flex:none}.btn-primary{background:var(--navy);color:#fff;flex:1}.btn-primary:hover{background:var(--navy2)}.btn-meet{background:#e9f5ee;color:var(--green);border:1px solid #c8e7d5;flex:1}.btn-meet:hover{background:#d9efe2}.btn-meet:disabled{background:#edf0f4;color:#8490a0;border-color:#e2e6ec;cursor:not-allowed}.btn-done{background:#e8f5ed;color:var(--green);cursor:default}
+.empty{border:1px dashed #ccd6e1;border-radius:14px;background:#f9fbfd;text-align:center;padding:28px 18px;color:var(--muted);font-size:13px;line-height:1.6}.empty strong{display:block;color:var(--navy);font-size:15px;margin-bottom:4px}
+.history{display:none;scroll-margin-top:90px}.history.active{display:block}.history-info{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin:18px 0 21px}.info-box{background:#f7f9fc;border:1px solid var(--line);border-radius:11px;padding:12px;min-width:0}.info-box span{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.info-box strong{display:block;color:var(--navy);font-size:12px;line-height:1.45;overflow-wrap:anywhere}.form{display:grid;gap:15px}.field label{display:block;font-size:13px;font-weight:800;color:var(--navy);margin-bottom:7px}.field input,.field textarea{width:100%;border:1px solid #d7dfe8;border-radius:10px;padding:12px 13px;color:var(--ink);background:#fff;outline:none;font-size:14px}.field textarea{min-height:95px;resize:vertical;line-height:1.55}.field input:focus,.field textarea:focus{border-color:#456b91;box-shadow:0 0 0 3px #173e6712}.form-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap}.btn-cancel{background:#eef1f5;color:#344054}.message{display:none;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.5;margin-top:13px}.success{background:#eaf7ef;border:1px solid #b9e2c7;color:#176b35}.error{background:#fff1f1;border:1px solid #efb4b4;color:#a12828}.footer{max-width:1180px;margin:auto;padding:0 22px 24px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.footer strong{color:var(--navy)}
+@media(min-width:850px){.schedule{grid-template-columns:100px minmax(0,1fr)}.actions{grid-column:2;grid-row:1;align-self:center;justify-content:flex-end;border-top:0;padding-top:0}.btn-primary,.btn-meet{flex:0 0 auto;min-width:150px}}
+@media(max-width:760px){.header-inner{padding:11px 14px}.user-label{display:none}.shell{padding:20px 14px 34px}.hero{padding:23px 20px;border-radius:18px}.hero-icon{width:48px;height:48px}.stats{gap:8px}.stat{display:block;padding:12px 10px}.stat-icon{width:35px;height:35px;margin-bottom:9px}.stat-value{font-size:23px}.stat-label{font-size:11px;min-height:27px}.panel{padding:16px;border-radius:16px}.panel-head h2{font-size:19px}.history-info{grid-template-columns:repeat(2,minmax(0,1fr))}.info-box:last-child{grid-column:1/-1}.footer{padding:0 14px 20px}}
+@media(max-width:420px){.brand-mark{width:35px;height:35px}.brand strong{font-size:12px}.brand small{font-size:10px}.logout{padding:9px 10px;font-size:12px}.hero-icon{display:none}.date-pill{font-size:10px;padding:8px}.schedule{grid-template-columns:1fr}.time{border-right:0;border-bottom:1px solid #e0e6ed;padding:0 0 10px}.actions{display:grid;grid-template-columns:1fr}.btn{width:100%}.stat{padding:10px 8px}.stat-value{font-size:21px}}
+</style>
+</head>
+<body>
+<header class="header"><div class="header-inner">
+  <a class="brand" href="index.html"><span class="brand-mark">SE</span><span><strong>SURYANTARA</strong><small>EDUCATION</small></span></a>
+  <div class="header-actions"><div class="user-label">Akun tutor<strong id="headerTutorName">Memuat akun...</strong></div><button type="button" class="logout" id="logoutButton">Logout <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M21 4v16"/></svg></button></div>
+</div></header>
+<main class="shell">
+  <section class="hero"><div><p class="eyebrow">RUANG KERJA TUTOR</p><h1>Dashboard Tutor</h1><p id="heroGreeting">Selamat datang. Mari dampingi perjalanan belajar siswa hari ini.</p></div><div class="hero-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 9-4 9 4-9 4-9-4Z"/><path d="M7 10v5c3 2.5 7 2.5 10 0v-5"/><path d="M21 9v5"/></svg></div></section>
+  <section class="stats" aria-label="Ringkasan jadwal">
+    <article class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></div><div><p class="stat-label">Jadwal hari ini</p><p class="stat-value" id="todayScheduleCount">—</p></div></article>
+    <article class="stat"><div class="stat-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></div><div><p class="stat-label">Belum dicatat</p><p class="stat-value" id="pendingCount">—</p></div></article>
+    <article class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><p class="stat-label">Siswa aktif</p><p class="stat-value" id="activeStudentCount">—</p></div></article>
+  </section>
+  <section class="panel"><div class="panel-head"><div><h2>Jadwal Mengajar</h2><p>Pilih sesi untuk membuka Google Meet atau mencatat hasil pembelajaran.</p></div><span class="date-pill" id="todayBadge">MEMUAT TANGGAL</span></div><div class="schedule-list" id="scheduleList"><div class="empty"><strong>Memuat jadwal...</strong>Mohon tunggu sebentar.</div></div></section>
+  <section class="panel history" id="historyCard"><div class="panel-head"><div><h2>Riwayat Pembelajaran</h2><p id="historySubtitle">Isi catatan setelah sesi selesai.</p></div></div>
+    <div class="history-info"><div class="info-box"><span>Siswa</span><strong id="infoStudent">—</strong></div><div class="info-box"><span>Program</span><strong id="infoProgram">—</strong></div><div class="info-box"><span>Tanggal</span><strong id="infoDate">—</strong></div><div class="info-box"><span>Waktu</span><strong id="infoTime">—</strong></div><div class="info-box"><span>Durasi</span><strong id="infoDuration">—</strong></div></div>
+    <form id="historyForm" class="form"><div class="field"><label for="topic">Topik pembelajaran</label><input id="topic" required placeholder="Contoh: Persamaan Linear"></div><div class="field"><label for="activities">Aktivitas pembelajaran</label><textarea id="activities" required placeholder="Tuliskan aktivitas selama pembelajaran..."></textarea></div><div class="field"><label for="result">Hasil pembelajaran</label><textarea id="result" required placeholder="Tuliskan hasil atau perkembangan belajar siswa..."></textarea></div><div class="field"><label for="tutorNote">Catatan tutor</label><textarea id="tutorNote" placeholder="Catatan tambahan untuk tindak lanjut..."></textarea></div><div class="form-actions"><button type="button" class="btn btn-cancel" id="cancelHistory">Batal</button><button type="submit" class="btn btn-primary" id="saveHistoryButton">Simpan Riwayat</button></div></form>
+    <div class="message success" id="successMessage" role="status"></div><div class="message error" id="errorMessage" role="alert"></div>
+  </section>
+</main>
+<footer class="footer"><strong>Suryantara Education</strong><span>Belajar Hari Ini, Bersinar Esok Hari · © 2026</span></footer>
+<script>
+"use strict";
+const API_URL="https://script.google.com/macros/s/AKfycbxiY6rlIMdu6J7IrJgQ62UPkYUxBqLSkm5hVA_6t5erkxahPDwsRReNGwaUPQRyP-QD/exec";
+const $=id=>document.getElementById(id);
+function getAuth(){try{const a=JSON.parse(sessionStorage.getItem("suryantaraAuth")||"null");return a&&a.role==="Tentor"&&a.username?a:null}catch(e){return null}}
+const auth=getAuth();
+if(!auth){sessionStorage.removeItem("suryantaraAuth");window.location.replace("login.html")}
+let schedules=[],currentItem=null,meetLinksByStudent={};
+const days=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+const months=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const tutorName=()=>auth?.name||auth?.nama||auth?.username||"Tentor";
+const pad=n=>String(n).padStart(2,"0");
+const todayKey=()=>{const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`};
+const todayName=()=>days[new Date().getDay()];
+const todayLabel=()=>{const d=new Date();return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`};
+const esc=v=>String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+function field(o,keys,fallback=""){for(const k of keys)if(o&&o[k]!==undefined&&o[k]!==null&&String(o[k]).trim()!=="")return o[k];return fallback}
+function durMins(a,b){const x=String(a||"").split(":").map(Number),y=String(b||"").split(":").map(Number);if(x.length===2&&y.length===2&&x.every(Number.isFinite)&&y.every(Number.isFinite)){let n=y[0]*60+y[1]-x[0]*60-x[1];if(n<0)n+=1440;if(n>0)return n}return 60}
+function durText(n){n=Number(n);if(!Number.isFinite(n)||n<=0)n=60;const h=Math.floor(n/60),m=n%60;return h?(m?`${h} jam ${m} menit`:`${h} jam`):`${m} menit`}
+function program(s){const p=String(field(s,["program","subject","mataPelajaran"],"Program")).trim(),c=String(field(s,["className","kelas","class"],"")).trim();if(!c)return p;if(/kelas/i.test(p))return p;return `${p||"Program"} · Kelas ${c.replace(/^Kelas\s+/i,"")}`}
+function normalizeMeet(raw){let v=String(raw||"").trim();if(!v)return "";if(!/^https?:\/\//i.test(v))v="https://"+v;try{const u=new URL(v);return u.hostname==="meet.google.com"||u.hostname.endsWith(".meet.google.com")?u.href:""}catch(e){return ""}}
+function mins(t){const m=String(t||"").match(/^(\d{1,2}):(\d{2})/);return m?Number(m[1])*60+Number(m[2]):NaN}
+function meetLink(s){return normalizeMeet(field(s,["meetLink","meet_link","googleMeet","linkMeet"],"")||meetLinksByStudent[String(field(s,["idSiswa","studentId","id_siswa"],""))]||"")}
+function meetIsOpen(s){const a=mins(field(s,["start","jamMulai","jam_mulai"],"")),b=mins(field(s,["end","jamSelesai","jam_selesai"],""));if(!Number.isFinite(a)||!Number.isFinite(b))return false;const d=new Date(),now=d.getHours()*60+d.getMinutes();let end=b,current=now;if(end<a)end+=1440;if(end>=1440&&now<a)current+=1440;return current>=a-5&&current<=end}
+async function request(url,options){const r=await fetch(url,options);const d=await r.json();if(!r.ok)throw new Error(d.message||`Permintaan gagal (${r.status})`);return d}
+$("headerTutorName").textContent=tutorName();$("heroGreeting").textContent=`Selamat datang, ${tutorName()}. Mari dampingi perjalanan belajar siswa hari ini.`;$("todayBadge").textContent=todayLabel().toUpperCase();
+$("logoutButton").addEventListener("click",()=>{sessionStorage.removeItem("suryantaraAuth");window.location.replace("login.html")});
+async function loadMeetLinks(items){const ids=[...new Set(items.map(s=>String(field(s,["idSiswa","studentId","id_siswa"],"")).trim()).filter(Boolean))];await Promise.all(ids.map(async id=>{try{const d=await request(`${API_URL}?action=getParentPortal&idSiswa=${encodeURIComponent(id)}`);if(d?.success&&d.student){const l=normalizeMeet(field(d.student,["meetLink","meet_link","googleMeet"],""));if(l)meetLinksByStudent[id]=l}}catch(e){console.warn("Meet link siswa tidak termuat",id,e)}}))}
+async function loadSchedules(){
+  const list=$("scheduleList");
+  list.innerHTML='<div class="empty"><strong>Memuat jadwal...</strong>Mohon tunggu sebentar.</div>';
+  try{
+    const data=await request(`${API_URL}?action=getSchedules`);
+    if(!Array.isArray(data)) throw new Error(data.message||"Format data jadwal tidak valid.");
+    schedules=data;
+    await loadMeetLinks(schedules);
+    const today=todayName().toLowerCase();
+    const items=schedules.filter(s=>{
+      const day=String(field(s,["day","hari"],"")).trim().toLowerCase();
+      const status=String(field(s,["status"],"Aktif")).trim().toLowerCase();
+      const assigned=String(field(s,["tutor","namaTutor","teacher"],"")).trim();
+      const tutorMatch=!assigned || assigned.toLowerCase()===tutorName().toLowerCase() || assigned.toLowerCase()===String(auth.username).toLowerCase();
+      return day===today && status!=="dibatalkan" && tutorMatch;
+    }).sort((a,b)=>{
+      const startA=String(field(a,["start","jamMulai","jam_mulai"],""));
+      const startB=String(field(b,["start","jamMulai","jam_mulai"],""));
+      return startA.localeCompare(startB);
+    });
+    render(items);
+    $("todayScheduleCount").textContent=items.length;
+    $("todayBadge").textContent=todayLabel().toUpperCase();
+    await loadStudentCount();
+  }catch(e){
+    console.error(e);
+    list.innerHTML=`<div class="empty"><strong>Jadwal belum dapat dimuat</strong>${esc(e.message)}<br>Periksa koneksi dan endpoint Apps Script.</div>`;
+    $("todayScheduleCount").textContent="0";
+    $("pendingCount").textContent="0";
+    $("activeStudentCount").textContent="—";
+  }
+}
+function render(items){const list=$("scheduleList");list.innerHTML="";if(!items.length){list.innerHTML='<div class="empty"><strong>Belum ada jadwal hari ini</strong>Jadwal mengajar aktif akan muncul otomatis di sini.</div>';updatePending();return}
+items.forEach(s=>{const start=String(field(s,["start","jamMulai","jam_mulai"],"—")),end=String(field(s,["end","jamSelesai","jam_selesai"],"")),student=String(field(s,["student","namaSiswa","name"],"Siswa")),prog=program(s),time=end?`${start} – ${end}`:start,duration=durMins(start,end),id=String(field(s,["id","idJadwal","id_jadwal"],""));const item=document.createElement("article");item.className="schedule";Object.assign(item.dataset,{id,idSiswa:String(field(s,["idSiswa","studentId","id_siswa"],"")),student,program:prog,tutor:String(field(s,["tutor","namaTutor","teacher"],tutorName())),time,duration:String(duration),date:todayKey(),start,end});const link=meetLink(s),ready=Boolean(link&&meetIsOpen(s));item.innerHTML=`<div class="time"><strong>${esc(start)}</strong><span>${esc(durText(duration))}</span></div><div><p class="student">${esc(student)}</p><p class="program">${esc(prog)}</p><div class="chips"><span class="chip">${esc(time)}</span><span class="chip">${esc(tutorName())}</span></div></div><div class="actions"><button type="button" class="btn btn-primary history-open">Isi Riwayat</button><button type="button" class="btn btn-meet meet-open" ${ready?"":"disabled"}>${ready?"▶ Mulai Google Meet":link?"Meet belum dimulai":"Tautan Meet belum tersedia"}</button></div>`;item.querySelector(".history-open").addEventListener("click",()=>openHistory(item));const mb=item.querySelector(".meet-open");if(ready)mb.addEventListener("click",()=>{const safe=meetLink(s);if(safe&&meetIsOpen(s))window.open(safe,"_blank","noopener,noreferrer")});list.appendChild(item)});updatePending();restoreDone();setIntervalMeet()}
+async function loadStudentCount(){try{const data=await request(`${API_URL}?action=getStudents`);if(!Array.isArray(data))throw new Error("Data siswa tidak valid");$("activeStudentCount").textContent=data.filter(s=>String(s.status||"").trim().toLowerCase()==="aktif").length}catch(e){console.warn(e);$("activeStudentCount").textContent="—"}}
+function updatePending(){let n=0;document.querySelectorAll(".schedule").forEach(i=>{const b=i.querySelector(".history-open");if(b&&!b.classList.contains("btn-done"))n++});$("pendingCount").textContent=n}
+function openHistory(item){currentItem=item;$("infoStudent").textContent=item.dataset.student;$("infoProgram").textContent=item.dataset.program;$("infoDate").textContent=formatDate(item.dataset.date);$("infoTime").textContent=item.dataset.time;$("infoDuration").textContent=durText(item.dataset.duration);$("historySubtitle").textContent=`${item.dataset.student} · ${item.dataset.program} · ${item.dataset.time}`;hideMessages();$("historyCard").classList.add("active");$("historyCard").scrollIntoView({behavior:"smooth",block:"start"})}
+function formatDate(v){const d=new Date(`${v}T00:00:00`);return Number.isNaN(d.getTime())?v:`${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`}
+function hideMessages(){$("successMessage").style.display="none";$("errorMessage").style.display="none"}
+function showMessage(id,text){$(id).textContent=text;$(id).style.display="block"}
+$("cancelHistory").addEventListener("click",()=>{$("historyCard").classList.remove("active");$("historyForm").reset();currentItem=null;hideMessages()});
+function restoreDone(){let saved=[];try{saved=JSON.parse(localStorage.getItem("suryantaraLessons")||"[]");if(!Array.isArray(saved))saved=[]}catch(e){}document.querySelectorAll(".schedule").forEach(item=>{const done=saved.some(l=>String(l.idSiswa||"")===item.dataset.idSiswa&&l.date===item.dataset.date&&l.status==="completed");if(done){const b=item.querySelector(".history-open");b.textContent="✓ Riwayat tersimpan";b.classList.add("btn-done");b.disabled=true}});updatePending()}
+function setIntervalMeet(){document.querySelectorAll(".schedule").forEach(item=>{const s=schedules.find(x=>String(field(x,["id","idJadwal","id_jadwal"],""))===item.dataset.id&&item.dataset.id);if(!s)return;const b=item.querySelector(".meet-open"),link=meetLink(s),ready=Boolean(link&&meetIsOpen(s));b.disabled=!ready;b.textContent=ready?"▶ Mulai Google Meet":link?"Meet belum dimulai":"Tautan Meet belum tersedia"})}
+async function sendHistory(data){const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"addHistory",data})});try{const d=await r.json();if(d&&d.success===false)throw new Error(d.message||"Riwayat gagal disimpan");return d}catch(e){if(e instanceof SyntaxError)return {success:true};throw e}}
+$("historyForm").addEventListener("submit",async e=>{e.preventDefault();if(!currentItem)return;hideMessages();const button=$("saveHistoryButton");button.disabled=true;button.textContent="Menyimpan...";const i=currentItem;const data={idSiswa:i.dataset.idSiswa,namaSiswa:i.dataset.student,tutor:i.dataset.tutor||tutorName(),tanggal:i.dataset.date,jam:i.dataset.time,durasi:durText(i.dataset.duration),topik:$("topic").value.trim(),aktivitas:$("activities").value.trim(),hasil:$("result").value.trim(),catatan:$("tutorNote").value.trim()};if(!data.idSiswa){showMessage("errorMessage","ID siswa tidak ditemukan pada jadwal. Riwayat belum dikirim.");button.disabled=false;button.textContent="Simpan Riwayat";return}try{const r=await sendHistory(data);if(r&&r.success===false)throw new Error(r.message||"Riwayat gagal disimpan");let saved=[];try{saved=JSON.parse(localStorage.getItem("suryantaraLessons")||"[]");if(!Array.isArray(saved))saved=[]}catch(e){}saved.push({id:"lesson-"+Date.now(),idSiswa:data.idSiswa,student:data.namaSiswa,program:i.dataset.program,date:data.tanggal,time:data.jam,duration:data.durasi,topic:data.topik,activities:data.aktivitas,result:data.hasil,tutorNote:data.catatan,status:"completed"});localStorage.setItem("suryantaraLessons",JSON.stringify(saved));const b=i.querySelector(".history-open");b.textContent="✓ Riwayat tersimpan";b.classList.add("btn-done");b.disabled=true;updatePending();showMessage("successMessage","Permintaan riwayat telah dikirim. Periksa tab Riwayat di Google Sheets untuk memastikan data tersimpan.");$("historyForm").reset()}catch(err){console.error(err);showMessage("errorMessage",`Riwayat belum dapat dipastikan tersimpan: ${err.message||"Periksa koneksi dan Apps Script."}`)}finally{button.disabled=false;button.textContent="Simpan Riwayat"}});
+setInterval(setIntervalMeet,20000);
+if(auth)loadSchedules();
+</script>
+</body>
+</html>
