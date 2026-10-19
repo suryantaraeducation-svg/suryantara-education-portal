@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rumah Digital Orang Tua | Suryantara Education</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+.parent-portal-page{background:var(--light)}
+.portal-hero{padding:55px 0 35px;background:var(--cream)}
+.portal-hero h1{margin:8px 0;color:var(--navy);font-family:Poppins,sans-serif;font-size:clamp(30px,4vw,44px);line-height:1.2}
+.portal-hero h1 span{color:var(--gold)}
+.portal-hero p{max-width:700px;margin:0;color:var(--muted);font-size:15px;line-height:1.7}
+.student-card{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
+.student-info{padding:22px 24px;background:var(--white);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow)}
+.student-info span{display:block;margin-bottom:6px;color:var(--gold);font-size:11px;font-weight:800;letter-spacing:2px}
+.student-info strong{color:var(--navy);font-family:Poppins,sans-serif;font-size:18px}
+.portal-calendar-section{padding:55px 0 75px}
+.calendar-heading{margin-bottom:22px}
+.calendar-heading h2{margin:0 0 6px;color:var(--navy);font-family:Poppins,sans-serif;font-size:28px}
+.calendar-heading p{margin:0;color:var(--muted);font-size:14px}
+.calendar-card{max-width:900px;margin:auto;padding:25px;background:var(--white);border:1px solid var(--border);border-radius:22px;box-shadow:var(--shadow)}
+.calendar-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.calendar-top h3{margin:0;color:var(--navy);font-family:Poppins,sans-serif;font-size:22px}
+.calendar-nav{display:flex;gap:8px}
+.calendar-nav button{width:38px;height:38px;border:1px solid var(--border);border-radius:10px;background:var(--white);color:var(--navy);cursor:pointer;font-size:18px;font-weight:700}
+.calendar-nav button:hover{background:var(--navy);color:var(--white)}
+.calendar-weekdays,.calendar-days{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.calendar-weekdays{margin-bottom:7px}
+.calendar-weekdays div{padding:8px 3px;color:var(--muted);font-size:11px;font-weight:800;text-align:center}
+.calendar-day{position:relative;min-height:72px;padding:9px;border:1px solid #edf0f4;border-radius:12px;background:#fff;color:var(--text);cursor:pointer;transition:.2s ease}
+.calendar-day:hover{border-color:var(--gold);transform:translateY(-2px)}
+.calendar-day.empty{background:transparent;border-color:transparent;cursor:default}
+/* Jadwal mendatang: hijau transparan */
+.calendar-day.has-schedule{background:rgba(76,175,80,.10);border-color:rgba(76,175,80,.28)}
+/* Les sudah selesai: hijau + bulatan gold */
+.calendar-day.completed{background:rgba(76,175,80,.10);border-color:rgba(76,175,80,.28)}
+.calendar-day.completed:after{content:"";position:absolute;bottom:8px;left:50%;width:7px;height:7px;transform:translateX(-50%);border-radius:50%;background:var(--gold)}
+/* Hari ini: kotak/outline navy */
+.calendar-day.today{box-shadow:inset 0 0 0 2px var(--navy)}
+.calendar-day.selected{border-color:var(--navy);background:var(--navy);color:#fff}
+.calendar-day.selected.completed{background:var(--navy)}
+.calendar-day.selected:after{background:var(--gold)}
+.day-number{font-family:Poppins,sans-serif;font-size:13px;font-weight:700}
+.day-time{display:block;margin-top:9px;color:var(--muted);font-size:9px;line-height:1.3}
+.calendar-day.selected .day-time{color:rgba(255,255,255,.78)}
+.calendar-help{margin-top:18px;color:var(--muted);font-size:12px;text-align:center}
+.calendar-legend{display:flex;justify-content:center;align-items:center;gap:18px;margin-top:15px;color:var(--muted);font-size:11px}
+.legend-item{display:inline-flex;align-items:center;gap:7px}
+.legend-schedule{width:12px;height:12px;border-radius:4px;background:rgba(76,175,80,.16);border:1px solid rgba(76,175,80,.30)}
+.legend-completed{position:relative;width:12px;height:12px;border-radius:4px;background:rgba(76,175,80,.16);border:1px solid rgba(76,175,80,.30)}
+.legend-completed:after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:var(--gold);left:50%;top:50%;transform:translate(-50%,-50%)}
+.legend-today{width:12px;height:12px;border-radius:4px;background:#fff;box-shadow:inset 0 0 0 2px var(--navy)}
+.history-panel{display:none;max-width:900px;margin:20px auto 0;padding:25px;background:var(--white);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:18px;box-shadow:var(--shadow)}
+.history-panel.show{display:block}
+.history-date{margin-bottom:4px;color:var(--gold);font-size:12px;font-weight:800;letter-spacing:1.5px}
+.history-panel h3{margin:0 0 5px;color:var(--navy);font-family:Poppins,sans-serif;font-size:22px}
+.history-time{margin-bottom:20px;color:var(--muted);font-size:13px}
+.history-content{display:grid;grid-template-columns:minmax(0,0.9fr) minmax(0,1.6fr);gap:14px}
+.history-box{padding:20px;border-radius:14px}
+.history-box.result{background:#f0faf4}.history-box.note{background:#fff8e9}
+.history-box strong{display:block;margin-bottom:12px;color:var(--navy);font-family:Poppins,sans-serif;font-size:14px}
+.history-box ul{margin:0;padding-left:18px}.history-box li{margin:0 0 8px;color:var(--text);font-size:14px;line-height:1.7}.history-box p{margin:0;color:var(--text);font-size:18px;line-height:1.75;font-weight:500}
+.history-box .schedule-meta{margin:0 0 10px;color:var(--text);font-size:14px;line-height:1.7}.history-box .schedule-meta strong{display:inline;margin:0;font-family:Inter,sans-serif;font-size:14px}.history-box .status-badge{display:inline-block;margin-top:8px;padding:5px 10px;border-radius:999px;background:rgba(76,175,80,.12);color:#3f7d44;font-size:12px;font-weight:800}
+.schedule-list{margin:0;padding:0;list-style:none}.schedule-list li{padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.5}.schedule-list li:last-child{border-bottom:0;padding-bottom:0}
+.schedule-time{color:var(--navy);font-weight:800}.schedule-tutor{color:var(--muted)}
+.history-footer{display:flex;justify-content:space-between;gap:15px;margin-top:16px;padding-top:15px;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
+.portal-note{max-width:900px;margin:20px auto 0;color:var(--muted);font-size:12px;text-align:center}
+.loading-state,.error-state{max-width:900px;margin:15px auto 0;padding:12px 15px;border-radius:12px;text-align:center;font-size:12px}.loading-state{color:var(--muted);background:#fff}.error-state{color:#8a3b12;background:#fff5eb;border:1px solid #f0d2b8}
+.footer-logo{display:flex;flex-direction:column;text-decoration:none;line-height:1}.footer-logo strong{font-family:Poppins,sans-serif;font-size:25px;letter-spacing:1px;color:var(--white)}.footer-logo small{display:block;margin-top:6px;color:var(--gold);font-size:14px;font-weight:700;letter-spacing:4px}
+
+.portal-account{display:flex;align-items:center;gap:10px;margin-left:18px}.portal-nav-title{color:var(--navy);font-weight:800;white-space:nowrap}.portal-user{color:var(--muted);font-size:12px;font-weight:700;white-space:nowrap}.logout-btn{border:1px solid var(--border);border-radius:10px;background:var(--white);color:var(--navy);padding:9px 13px;font:700 12px Poppins,sans-serif;cursor:pointer;transition:.2s ease}.logout-btn:hover{background:var(--navy);color:var(--white)}
+
+.account-identity{
+  margin-top:24px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:15px 18px;
+  max-width:360px;
+  background:rgba(255,255,255,.78);
+  border:1px solid var(--border);
+  border-radius:16px;
+}
+.account-identity-icon{
+  width:42px;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 42px;
+  border-radius:50%;
+  background:rgba(231,199,125,.18);
+  color:var(--gold);
+  font-size:20px;
+}
+.account-identity-label{
+  margin:0 0 3px;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+.account-identity-name{
+  margin:0;
+  color:var(--navy);
+  font-family:Poppins,sans-serif;
+  font-size:15px;
+  font-weight:700;
+}
+.account-identity-role{
+  margin:2px 0 0;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.logout-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    height: 42px;
+    padding: 0 14px;
+
+    border: 1px solid #e1e5eb;
+    border-radius: 10px;
+
+    background: #ffffff;
+    color: #102542;
+
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+
+    white-space: nowrap;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.logout-btn svg {
+    width: 18px;
+    height: 18px;
+
+    flex: 0 0 18px;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.logout-btn span {
+    line-height: 1;
+    color: #102542;
+}
+
+
+/* Tombol utama Mulai Belajar pada portal orang tua */
+.meet-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    min-height: 56px;
+    padding: 16px 28px;
+
+    background: #F2BD4B;
+    color: #102542;
+
+    border: 2px solid #F2BD4B;
+    border-radius: 14px;
+
+    font-family: Poppins, sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.3;
+    text-decoration: none;
+    text-align: center;
+
+    box-shadow: 0 5px 14px rgba(16, 37, 66, 0.18);
+    cursor: pointer;
+    box-sizing: border-box;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.meet-button svg {
+    width: 23px;
+    height: 23px;
+    flex: 0 0 23px;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.meet-button span {
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+.meet-button:hover {
+    background: #FFD36A;
+    border-color: #FFD36A;
+    box-shadow: 0 7px 18px rgba(16, 37, 66, 0.24);
+    transform: translateY(-2px);
+}
+
+.meet-button:focus-visible {
+    outline: 3px solid #173D63;
+    outline-offset: 4px;
+}
+
+.meet-button:active {
+    transform: translateY(0);
+}
+
+/* Penyesuaian untuk HP */
+@media (max-width: 600px) {
+    .meet-button {
+        width: 100%;
+        min-height: 56px;
+        padding: 15px 20px;
+        font-size: 16px;
+        border-radius: 12px;
+    }
+}
+
+@media(max-width:768px){.portal-hero{padding:45px 0 30px}.student-card{grid-template-columns:1fr}.portal-calendar-section{padding:40px 0 55px}.calendar-card{padding:15px}.calendar-day{min-height:62px;padding:7px}.day-time{font-size:8px}.history-content{grid-template-columns:1fr}.history-panel{padding:20px}.history-box p{font-size:17px;line-height:1.7}.portal-account{margin-left:0;margin-top:0}.nav-progress{flex-wrap:wrap;justify-content:flex-end;gap:10px}.portal-user{display:inline;font-size:11px}}
+@media(max-width:480px){.calendar-top h3{font-size:18px}.calendar-weekdays,.calendar-days{gap:4px}.calendar-weekdays div{font-size:9px}.calendar-day{min-height:52px;border-radius:9px}.day-number{font-size:11px}.day-time{display:none}.calendar-day.completed:after{bottom:6px}.calendar-legend{gap:10px;font-size:10px}.history-footer{flex-direction:column;gap:5px}}
+
+/* =========================================================
+   PORTAL HOME / RUMAH DIGITAL ORANG TUA
+   ========================================================= */
+
+.portal-home-intro{
+    padding:10px 0 34px;
+    background:var(--cream);
+}
+
+.portal-home-intro h1{
+    margin:8px 0 8px;
+    color:var(--navy);
+    font-family:Poppins,sans-serif;
+    font-size:clamp(30px,4vw,44px);
+    line-height:1.2;
+}
+
+.portal-home-intro h1 span{color:var(--gold)}
+
+.portal-home-intro p{
+    max-width:720px;
+    margin:0;
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.7;
+}
+
+.parent-welcome{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-top:25px;
+    padding:16px 20px;
+    max-width:520px;
+    background:rgba(255,255,255,.82);
+    border:1px solid var(--border);
+    border-radius:16px;
+}
+
+.parent-welcome-icon{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:44px;
+    height:44px;
+    flex:0 0 44px;
+    border-radius:50%;
+    background:rgba(214,166,60,.14);
+    font-size:21px;
+}
+
+.parent-welcome-label{
+    margin:0 0 2px;
+    color:var(--muted);
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+}
+
+.parent-welcome-name{
+    margin:0;
+    color:var(--navy);
+    font-family:Poppins,sans-serif;
+    font-size:16px;
+    font-weight:700;
+}
+
+.parent-home-section{
+    padding:42px 0 20px;
+    background:var(--light);
+}
+
+.home-section-title{
+    margin:0 0 6px;
+    color:var(--navy);
+    font-family:Poppins,sans-serif;
+    font-size:26px;
+}
+
+.home-section-subtitle{
+    margin:0 0 22px;
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.6;
+}
+
+.quick-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.quick-card{
+    display:block;
+    min-height:145px;
+    padding:20px;
+    border:1px solid var(--border);
+    border-radius:18px;
+    background:var(--white);
+    box-shadow:var(--shadow);
+    text-decoration:none;
+    transition:.2s ease;
+}
+
+.quick-card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(214,166,60,.45);
+}
+
+.quick-icon{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:42px;
+    height:42px;
+    margin-bottom:13px;
+    border-radius:12px;
+    background:rgba(16,50,85,.08);
+    font-size:20px;
+}
+
+.quick-card h3{
+    margin:0 0 5px;
+    color:var(--navy);
+    font-family:Poppins,sans-serif;
+    font-size:15px;
+}
+
+.quick-card p{
+    margin:0;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.55;
+}
+
+.next-session-card {
+    width: calc(100% - 48px);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    box-sizing: border-box;
+
+    background: #102542;
+    color: #ffffff;
+
+    border-radius: 24px;
+}
+
+.portal-calendar-section{
+    padding-top:35px;
+}
+
+.next-session-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.next-session-info {
+    flex: 1;
+}
+
+.next-session-card .summary-label {
+    color: #d8a83e;
+}
+
+.next-session-card .summary-value {
+    color: #ffffff;
+}
+
+.next-session-card .summary-detail {
+    color: #d7deea;
+}
+
+.meet-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 13px 20px;
+
+    background: #ffffff;
+    color: #102542;
+
+    border: none;
+    border-radius: 12px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    text-decoration: none;
+    white-space: nowrap;
+
+    transition: all 0.2s ease;
+}
+
+.meet-button svg {
+    width: 20px;
+    height: 20px;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.meet-button:hover {
+    transform: translateY(-2px);
+}
+
+@media(max-width:900px){
+    .quick-grid{grid-template-columns:repeat(2,1fr)}
+    .summary-grid{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:600px){
+    .portal-home-intro{padding:40px 0 28px}
+    .parent-welcome{max-width:none}
+    .quick-grid{grid-template-columns:1fr 1fr;gap:10px}
+    .quick-card{min-height:132px;padding:16px}
+    .summary-grid{grid-template-columns:1fr}
+    .home-section-title{font-size:23px}
+    
+}
+
+@media (max-width: 700px) {
+
+    .next-session-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .meet-button {
+        width: 100%;
+    }
+    
+    .next-session-card {
+        width: calc(100% - 32px);
+    }
+
+}
+
+
+/* Penegasan visual tombol sesi belajar: ditempatkan paling akhir agar menang dari aturan duplikat */
+.meet-button {
+    min-height: 56px;
+    padding: 15px 24px;
+    gap: 10px;
+    border: 2px solid #F2BD4B;
+    border-radius: 14px;
+    background: #F2BD4B;
+    color: #102542;
+    font-family: Poppins, sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.3;
+    box-shadow: 0 5px 14px rgba(16, 37, 66, .2);
+    box-sizing: border-box;
+}
+.meet-button svg { width: 23px; height: 23px; flex: 0 0 23px; }
+.meet-button span { color: inherit; font-size: inherit; font-weight: inherit; }
+.meet-button.meet-button-ready { background: #F2BD4B; color: #102542; }
+.meet-button.meet-button-ready:hover {
+    background: #FFD36A;
+    border-color: #FFD36A;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 18px rgba(16, 37, 66, .25);
+}
+.meet-button[aria-disabled="true"] { filter: grayscale(.25); box-shadow: none; }
+@media (max-width: 700px) {
+    .next-session-card { align-items: stretch; }
+    .meet-button { width: 100%; min-height: 58px; justify-content: center; font-size: 16px; }
+}
+
+</style>
+</head>
+<body class="parent-portal-page">
+<header class="navbar">
+<div class="container nav-container">
+<a href="index-revisi.html" class="logo"><img src="SE.png" alt="Suryantara Education"><div class="logo-text"><strong>SURYANTARA</strong><span>EDUCATION</span></div></a>
+<div class="nav-progress">
+<span class="current portal-nav-title">Portal Orang Tua</span>
+<div class="portal-account">
+
+</div>
+
+<button id="logoutBtn" class="logout-btn">
+    <span>Logout</span>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+    >
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+        <polyline points="16 17 21 12 16 7"></polyline>
+        <line x1="21" y1="12" x2="9" y2="12"></line>
+    </svg>
+</button>
+
+</div>
+</div>
+</header>
+
+<main>
+
+<section class="portal-home-intro">
+<div class="container">
+
+<div class="parent-welcome">
+<div class="parent-welcome-icon">👋</div>
+<div>
+<p class="parent-welcome-label">Hallo, Ayah/Bunda</p><p class="parent-welcome-name" id="welcomeStudentName">Memuat nama siswa...</p>
+</div>
+</div>
+
+</div>
+</section>
+
+<div class="next-session-card">
+
+    <div class="next-session-info">
+        <p class="summary-label">Sesi Belajar Berikutnya</p>
+
+        <p class="summary-value" id="nextSession">
+            Memuat jadwal...
+        </p>
+
+        <p class="summary-detail" id="nextSessionDetail">
+            Jadwal berikutnya akan tampil di sini.
+        </p>
+    </div>
+
+    <a
+        id="meetButton"
+        class="meet-button"
+        href="#"
+        target="_blank"
+        rel="noopener"
+        style="display:none;"
+    >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="6" width="13" height="12" rx="2"></rect>
+            <path d="M16 10l5-3v10l-5-3z"></path>
+        </svg>
+
+        <span>Mulai Belajar</span>
+    </a>
+
+</div>
+
+
+
+
+<section class="portal-calendar-section" id="jadwal">
+<div class="container">
+
+<div class="calendar-heading">
+<h2>Jadwal &amp; Riwayat Belajar</h2>
+<p>
+Hijau menandakan jadwal les, sedangkan bulatan gold menandakan
+sesi yang sudah dilaksanakan.
+</p>
+</div>
+
+<div id="loadingState" class="loading-state">
+Memuat jadwal belajar...
+</div>
+
+<div id="errorState" class="error-state" style="display:none"></div>
+
+<div class="calendar-card">
+
+<div class="calendar-top">
+<h3 id="calendarMonth">Oktober 2026</h3>
+
+<div class="calendar-nav">
+<button type="button" id="prevMonth" aria-label="Bulan sebelumnya">‹</button>
+<button type="button" id="nextMonth" aria-label="Bulan berikutnya">›</button>
+</div>
+</div>
+
+
+<div class="calendar-weekdays">
+<div>MIN</div>
+<div>SEN</div>
+<div>SEL</div>
+<div>RAB</div>
+<div>KAM</div>
+<div>JUM</div>
+<div>SAB</div>
+</div>
+
+<div class="calendar-days" id="calendarDays"></div>
+
+<div class="calendar-help">
+Klik tanggal yang memiliki jadwal untuk melihat detail kegiatan belajar.
+</div>
+
+<div class="calendar-legend">
+<span class="legend-item"><i class="legend-schedule"></i> Jadwal les</span>
+<span class="legend-item"><i class="legend-completed"></i> Sudah dilaksanakan</span>
+<span class="legend-item"><i class="legend-today"></i> Hari ini</span>
+</div>
+
+</div>
+
+
+<div class="history-panel" id="historyPanel">
+
+<div class="history-date" id="historyDate"></div>
+
+<h3 id="historyTitle"></h3>
+
+<div class="history-time" id="historyTime"></div>
+
+<div class="history-content" id="detailContent"></div>
+
+</div>
+
+
+<div class="portal-note">
+Riwayat belajar diperbarui setelah kegiatan pembelajaran selesai
+dan dicatat oleh tutor.
+</div>
+
+</div>
+</section>
+
+</main>
+
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycby8kXDMF9cTI27fwN95EhB46IK78-feCBpvjf7RMSeh9Xax3RWNsJc5o5w4jBam00Jy/exec";
+const months=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const dayNames=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+const calendarDays=document.getElementById("calendarDays");
+const calendarMonth=document.getElementById("calendarMonth");
+const historyPanel=document.getElementById("historyPanel");
+const loadingState=document.getElementById("loadingState");
+const errorState=document.getElementById("errorState");
+let current=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+let schedules=[];
+let histories=[];
+let meetLink="";
+let selectedKey="";
+
+function getAuth(){
+    try{
+        const raw=sessionStorage.getItem("suryantaraAuth");
+        if(raw){
+            const auth=JSON.parse(raw);
+            if(auth && auth.idSiswa) return auth;
+        }
+    }catch(e){console.error(e)}
+    const params=new URLSearchParams(window.location.search);
+    const idSiswa=params.get("idSiswa");
+    return idSiswa ? {idSiswa:idSiswa} : null;
+}
+
+const auth=getAuth();
+
+// =====================================================
+// PROTEKSI PORTAL ORANG TUA
+// Hanya sesi dengan role "Orang Tua" yang boleh masuk.
+// =====================================================
+if(!auth || !auth.idSiswa || auth.role !== "Orang Tua"){
+    sessionStorage.removeItem("suryantaraAuth");
+    window.location.replace("login.html");
+}
+
+const portalUser=document.getElementById("portalUser");
+if(portalUser && auth){
+    portalUser.textContent = auth.namaSiswa || auth.studentName || "Memuat nama siswa...";
+}
+
+function logout(){
+    sessionStorage.removeItem("suryantaraAuth");
+    window.location.replace("login.html");
+}
+
+document.getElementById("logoutBtn").addEventListener("click",logout);
+
+function normalizeId(value){return String(value??"").trim();}
+
+function dateKey(value){
+    if(value===null || value===undefined || value==="") return "";
+    const s=String(value).trim();
+    if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    let m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+    if(m) return `${m[3]}-${String(m[2]).padStart(2,"0")}-${String(m[1]).padStart(2,"0")}`;
+    const d=new Date(s);
+    if(!Number.isNaN(d.getTime())) return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+    return "";
+}
+
+function todayKey(){
+    const d=new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+
+function timeText(start,end){
+    if(start && end) return `${start} – ${end}`;
+    if(start) return String(start);
+    return "Waktu belum ditentukan";
+}
+
+function sameDayOfWeek(scheduleDay, date){
+    const target=String(scheduleDay||"").trim().toLowerCase();
+    return target===dayNames[date.getDay()].toLowerCase();
+}
+
+function schedulesForDate(key){
+    const date=new Date(key+"T00:00:00");
+    return schedules.filter(s=>{
+        // Jika jadwal memiliki tanggal khusus, cocokkan tanggalnya.
+        // Jika tanggal kosong, perlakukan sebagai jadwal rutin berdasarkan hari.
+        const scheduledDate=dateKey(s.date || s.tanggal || s.scheduleDate || "");
+        if(scheduledDate) return scheduledDate===key;
+        return sameDayOfWeek(s.day || s.hari,date);
+    });
+}
+
+function historiesForDate(key){
+    return histories.filter(h=>dateKey(h.date)===key);
+}
+
+function renderCalendar(){
+    calendarDays.innerHTML="";
+    const year=current.getFullYear();
+    const month=current.getMonth();
+    calendarMonth.textContent=`${months[month]} ${year}`;
+    const firstDay=new Date(year,month,1).getDay();
+    const totalDays=new Date(year,month+1,0).getDate();
+    const today=todayKey();
+
+    for(let i=0;i<firstDay;i++){
+        const empty=document.createElement("div");
+        empty.className="calendar-day empty";
+        calendarDays.appendChild(empty);
+    }
+
+    for(let day=1;day<=totalDays;day++){
+        const key=`${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+        const el=document.createElement("div");
+        el.className="calendar-day";
+        el.innerHTML=`<div class="day-number">${day}</div>`;
+
+        const daySchedules=schedulesForDate(key);
+        const dayHistories=historiesForDate(key);
+        const hasSchedule=daySchedules.length>0;
+        const completed=dayHistories.length>0;
+
+        if(hasSchedule) el.classList.add("has-schedule");
+        if(completed) el.classList.add("completed");
+        if(key===today) el.classList.add("today");
+        if(key===selectedKey) el.classList.add("selected");
+
+        if(hasSchedule){
+            const times=[...new Set(daySchedules.map(s=>timeText(s.start || s.jamMulai,s.end || s.jamSelesai)))];
+            el.innerHTML+=`<span class="day-time">${times.slice(0,2).map(escapeHTML).join("<br>")}</span>`;
+        }
+        // Semua tanggal bisa dipilih; tanggal kosong akan menampilkan pesan yang sesuai.
+        el.setAttribute("role","button");
+        el.setAttribute("tabindex","0");
+        el.setAttribute("aria-label",`Lihat kegiatan ${key}`);
+        el.addEventListener("click",()=>showDetails(key));
+        el.addEventListener("keydown",event=>{
+            if(event.key==="Enter" || event.key===" "){
+                event.preventDefault();
+                showDetails(key);
+            }
+        });
+        calendarDays.appendChild(el);
+    }
+}
+
+function escapeHTML(value){
+    return String(value ?? "").replace(/[&<>"']/g, char=>({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#39;"
+    }[char]));
+}
+
+function firstValue(object, keys, fallback=""){
+    for(const key of keys){
+        const value=object && object[key];
+        if(value!==undefined && value!==null && String(value).trim()!=="") return value;
+    }
+    return fallback;
+}
+
+function showDetails(key){
+    selectedKey=key;
+    renderCalendar();
+    const date=new Date(key+"T00:00:00");
+    const daySchedules=schedulesForDate(key);
+    const dayHistories=historiesForDate(key);
+    const completed=dayHistories.length>0;
+    const dateLabel=date.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+
+    document.getElementById("historyDate").textContent=dateLabel.toUpperCase();
+    document.getElementById("historyTitle").textContent=daySchedules.length || completed ? "Detail Kegiatan Belajar" : "Tidak Ada Kegiatan Belajar";
+
+    const times=[...new Set(daySchedules.map(s=>timeText(s.start || s.jamMulai,s.end || s.jamSelesai)))];
+    document.getElementById("historyTime").textContent=times.length ? times.join(" • ") : "Belum ada jadwal atau riwayat pada tanggal ini";
+
+    let html="";
+    if(!daySchedules.length && !dayHistories.length){
+        html+=`<div class="history-box result" style="grid-column:1/-1"><strong>📅 Belum ada kegiatan</strong><p style="font-size:14px">Tidak ada jadwal les atau riwayat pembelajaran yang tercatat pada tanggal ini.</p></div>`;
+    }
+
+    if(daySchedules.length){
+        html+=`<div class="history-box result"><strong>📅 Jadwal Belajar</strong>`;
+        daySchedules.forEach(s=>{
+            const start=firstValue(s,["start","jamMulai","jam_mulai","startTime"],"");
+            const end=firstValue(s,["end","jamSelesai","jam_selesai","endTime"],"");
+            const program=firstValue(s,["program","subject","mataPelajaran","mata_pelajaran"],"Les");
+            const tutor=firstValue(s,["tutor","namaTutor","nama_tutor"],"Belum ditentukan");
+            const status=firstValue(s,["status","scheduleStatus"],completed?"Sudah dilaksanakan":"Terjadwal");
+            const link=firstValue(s,["meetLink","linkGoogleMeet","link_google_meet","meetUrl"],meetLink);
+            html+=`<div class="schedule-meta"><strong>${escapeHTML(timeText(start,end))}</strong><br><b>Mata pelajaran:</b> ${escapeHTML(program)}<br><b>Tutor:</b> ${escapeHTML(tutor)}<br><b>Status:</b> ${escapeHTML(status)}`;
+            if(link && /^https:\/\//i.test(String(link))){
+                html+=`<br><a class="meet-button" style="margin-top:10px;padding:9px 12px" href="${escapeHTML(link)}" target="_blank" rel="noopener">Buka Google Meet</a>`;
+            }
+            html+=`</div>`;
+        });
+        html+=`</div>`;
+    }
+
+    if(dayHistories.length){
+        html+=`<div class="history-box note"><strong>📘 Riwayat & Catatan Tutor</strong>`;
+        dayHistories.forEach((h,index)=>{
+            const topic=firstValue(h,["topic","topik","topikBelajar","topik_belajar"],"");
+            const activity=firstValue(h,["activity","aktivitas","kegiatan"],"");
+            const result=firstValue(h,["result","hasil","hasilBelajar","hasil_belajar"],"");
+            const note=firstValue(h,["tutorNote","note","catatan","catatanTutor","catatan_tutor"],"");
+            const subject=firstValue(h,["program","subject","mataPelajaran","mata_pelajaran"],"");
+            html+=`<div class="schedule-meta">${dayHistories.length>1?`<strong>Sesi ${index+1}</strong><br>`:""}`;
+            if(subject) html+=`<b>Mata pelajaran:</b> ${escapeHTML(subject)}<br>`;
+            if(topic) html+=`<b>Topik:</b> ${escapeHTML(topic)}<br>`;
+            if(activity) html+=`<b>Aktivitas:</b> ${escapeHTML(activity)}<br>`;
+            if(result) html+=`<b>Hasil belajar:</b> ${escapeHTML(result)}<br>`;
+            if(note) html+=`<b>Catatan tutor:</b> ${escapeHTML(note)}<br>`;
+            if(!topic && !activity && !result && !note && !subject) html+=`Riwayat sesi tercatat, tetapi detailnya belum tersedia.`;
+            html+=`</div>`;
+        });
+        html+=`</div>`;
+    }else if(daySchedules.length){
+        html+=`<div class="history-box note"><strong>📝 Catatan Tutor</strong><p style="font-size:14px">Catatan, aktivitas, dan hasil belajar akan tampil setelah tutor menyelesaikan sesi dan menyimpan riwayatnya.</p></div>`;
+    }
+
+    document.getElementById("detailContent").innerHTML=html;
+    historyPanel.classList.add("show");
+    setTimeout(()=>historyPanel.scrollIntoView({behavior:"smooth",block:"start"}),50);
+}
+async function fetchJSON(url){
+    const response=await fetch(url,{method:"GET"});
+    if(!response.ok) throw new Error(`Server mengembalikan status ${response.status}`);
+    return await response.json();
+}
+
+
+function renderHomeSummary(){
+    const welcome = document.getElementById("welcomeStudentName");
+    const summaryStudent = document.getElementById("summaryStudent");
+    const summaryProgram = document.getElementById("summaryProgram");
+    const summaryCompleted = document.getElementById("summaryCompleted");
+    const summarySchedule = document.getElementById("summarySchedule");
+    const summaryScheduleDetail = document.getElementById("summaryScheduleDetail");
+
+    if(summaryCompleted){
+        summaryCompleted.textContent = `${histories.length} sesi`;
+    }
+
+    const uniqueDays = [...new Set(
+        schedules
+            .map(s => String(s.day || "").trim())
+            .filter(Boolean)
+    )];
+
+    if(summarySchedule){
+        summarySchedule.textContent = `${uniqueDays.length} hari`;
+    }
+
+    if(summaryScheduleDetail){
+        summaryScheduleDetail.textContent =
+            uniqueDays.length
+            ? uniqueDays.join(" • ")
+            : "Belum ada jadwal aktif.";
+    }
+
+    renderNextSession();
+}
+
+function renderNextSession(){
+    const nextEl = document.getElementById("nextSession");
+    const detailEl = document.getElementById("nextSessionDetail");
+    const meetButton = document.getElementById("meetButton");
+
+    if(!nextEl || !detailEl || !meetButton) return;
+
+    const now = new Date();
+    const todayIndex = now.getDay();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    function setMeetButton({enabled=false, link="", label="Belum Dimulai"} = {}){
+        meetButton.innerHTML = `
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="6" width="13" height="12" rx="2"></rect>
+                <path d="M16 10l5-3v10l-5-3z"></path>
+            </svg>
+            <span>${escapeHTML(label)}</span>
+        `;
+        meetButton.removeAttribute("href");
+        meetButton.onclick = null;
+        meetButton.setAttribute("aria-disabled", enabled ? "false" : "true");
+
+        if(enabled && /^https:\/\/\S+/i.test(String(link || "").trim())){
+            meetButton.href = String(link).trim();
+            meetButton.target = "_blank";
+            meetButton.rel = "noopener noreferrer";
+            meetButton.style.setProperty("pointer-events", "auto", "important");
+            meetButton.style.setProperty("cursor", "pointer", "important");
+            meetButton.style.setProperty("opacity", "1", "important");
+            meetButton.classList.add("meet-button-ready");
+            meetButton.title = "Klik untuk masuk ke Google Meet";
+        }else{
+            meetButton.style.setProperty("pointer-events", "none", "important");
+            meetButton.style.setProperty("cursor", "not-allowed", "important");
+            meetButton.style.setProperty("opacity", "0.62", "important");
+            meetButton.classList.remove("meet-button-ready");
+            meetButton.title = enabled
+                ? "Link Google Meet belum tersedia"
+                : "Tombol aktif mulai 5 menit sebelum sesi hingga 2 menit setelah sesi berakhir";
+        }
+        meetButton.style.display = "inline-flex";
+    }
+
+    if(!schedules.length){
+        nextEl.textContent = "Belum ada jadwal";
+        detailEl.textContent = "Jadwal berikutnya akan tampil setelah jadwal aktif tersedia.";
+        meetButton.style.display = "none";
+        return;
+    }
+
+    const dayOrder = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+    let activeSession = null;
+    const upcomingSessions = [];
+
+    schedules.forEach(s => {
+        const day = String(s.day || s.hari || "").trim();
+        const idx = dayOrder.findIndex(d => d.toLowerCase() === day.toLowerCase());
+        if(idx < 0) return;
+
+        const startText = String(s.start || s.jamMulai || s.jam_mulai || "00:00").trim();
+        const endText = String(s.end || s.jamSelesai || s.jam_selesai || "23:59").trim();
+        const startParts = startText.split(":");
+        const endParts = endText.split(":");
+        const startHour = Number(startParts[0]);
+        const startMinute = Number(startParts[1] || 0);
+        const endHour = Number(endParts[0]);
+        const endMinute = Number(endParts[1] || 0);
+
+        if(!Number.isFinite(startHour) || !Number.isFinite(startMinute) ||
+           !Number.isFinite(endHour) || !Number.isFinite(endMinute)) return;
+
+        const startMinutes = startHour * 60 + startMinute;
+        const endMinutes = endHour * 60 + endMinute;
+        const activeFrom = startMinutes - 5;
+        const activeUntil = endMinutes + 2;
+        const diff = (idx - todayIndex + 7) % 7;
+
+        if(diff === 0){
+            if(currentMinutes >= activeFrom && currentMinutes <= activeUntil){
+                const candidate = {
+                    schedule: s, diff: 0, startMinutes, endMinutes,
+                    active: true, activeFrom, activeUntil
+                };
+                if(!activeSession ||
+                   Math.abs(currentMinutes - startMinutes) <
+                   Math.abs(currentMinutes - activeSession.startMinutes)){
+                    activeSession = candidate;
+                }
+                return;
+            }
+
+            if(currentMinutes < activeFrom){
+                upcomingSessions.push({
+                    schedule: s, diff: 0, startMinutes, endMinutes,
+                    active: false, activeFrom, activeUntil
+                });
+            }
+            return;
+        }
+
+        upcomingSessions.push({
+            schedule: s, diff, startMinutes, endMinutes,
+            active: false, activeFrom, activeUntil
+        });
+    });
+
+    let selectedSession = activeSession;
+    if(!selectedSession){
+        upcomingSessions.sort((a,b) => {
+            if(a.diff !== b.diff) return a.diff - b.diff;
+            return a.startMinutes - b.startMinutes;
+        });
+        selectedSession = upcomingSessions[0] || null;
+    }
+
+    if(!selectedSession){
+        nextEl.textContent = "Belum ada jadwal";
+        detailEl.textContent = "Tidak ada sesi berikutnya yang dapat ditampilkan.";
+        meetButton.style.display = "none";
+        return;
+    }
+
+    const next = selectedSession.schedule;
+    const diff = selectedSession.diff;
+    let dayText = "Hari ini";
+    if(diff === 1) dayText = "Besok";
+    else if(diff > 1) dayText = dayOrder[(todayIndex + diff) % 7];
+
+    const startText = next.start || next.jamMulai || next.jam_mulai || "";
+    const endText = next.end || next.jamSelesai || next.jam_selesai || "";
+    nextEl.textContent = `${dayText} • ${timeText(startText, endText)}`;
+    detailEl.textContent = `${next.program || next.subject || next.mataPelajaran || "Program les"}${
+        (next.tutor || next.namaTutor || next.nama_tutor)
+            ? " • Tutor: " + (next.tutor || next.namaTutor || next.nama_tutor)
+            : ""
+    }`;
+
+    const link = firstValue(next, [
+        "meetLink", "linkGoogleMeet", "link_google_meet", "meetUrl",
+        "Link_Google_Meet", "linkMeet"
+    ], meetLink);
+
+    const withinAccessWindow =
+        diff === 0 &&
+        currentMinutes >= selectedSession.activeFrom &&
+        currentMinutes <= selectedSession.activeUntil;
+
+    if(withinAccessWindow){
+        if(/^https:\/\/\S+/i.test(String(link || "").trim())){
+            setMeetButton({enabled:true, link, label:"Mulai Belajar"});
+        }else{
+            setMeetButton({enabled:false, label:"Link Meet Belum Tersedia"});
+        }
+    }else{
+        setMeetButton({enabled:false, label:"Belum Dimulai"});
+    }
+}
+
+setInterval(() => {
+    renderNextSession();
+}, 20000);
+
+
+async function loadData(){
+    if(!auth || !auth.idSiswa){
+        loadingState.style.display="none";
+        errorState.style.display="block";
+        errorState.textContent="Sesi login tidak ditemukan. Silakan login kembali sebagai Orang Tua.";
+        return;
+    }
+
+    try{
+        /*
+         * SEKARANG PORTAL HANYA MEMINTA DATA UNTUK
+         * SATU ID SISWA YANG SEDANG LOGIN.
+         */
+        const data = await fetchJSON(
+            `${API_URL}?action=getParentPortal&idSiswa=${encodeURIComponent(auth.idSiswa)}`
+        );
+
+        if(!data || !data.success){
+            throw new Error(
+                data && data.message
+                    ? data.message
+                    : "Data portal tidak dapat dimuat."
+            );
+        }
+
+        const student = data.student || {};
+        meetLink = student.meetLink || "";
+
+        schedules =
+            Array.isArray(data.schedules)
+                ? data.schedules
+                : [];
+
+        histories =
+            Array.isArray(data.histories)
+                ? data.histories
+                : [];
+
+        // -------------------------------------------------
+        // IDENTITAS SISWA
+        // Tidak lagi menunggu data jadwal untuk mengetahui
+        // nama siswa.
+        // -------------------------------------------------
+
+        const nama =
+            student.name ||
+            auth.namaSiswa ||
+            auth.studentName ||
+            "Siswa";
+
+        const program =
+            [
+                student.subject,
+                student.level,
+                student.className
+            ]
+            .filter(Boolean)
+            .join(" · ") ||
+            "Program les";
+
+        const welcome =
+            document.getElementById("welcomeStudentName");
+
+        const summaryStudent =
+            document.getElementById("summaryStudent");
+
+        const summaryProgram =
+            document.getElementById("summaryProgram");
+
+        if(welcome){
+            welcome.textContent = nama;
+        }
+
+        if(summaryStudent){
+            summaryStudent.textContent = nama;
+        }
+
+        if(summaryProgram){
+            summaryProgram.textContent = program;
+        }
+
+        if(portalUser){
+            portalUser.textContent = nama;
+        }
+
+        renderCalendar();
+        renderHomeSummary();
+        const meetButton = document.getElementById("meetButton");
+
+        if (meetButton && meetLink) {
+    meetButton.href = meetLink;
+    meetButton.style.display = "inline-flex";
+}
+
+        loadingState.style.display="none";
+
+        if(!schedules.length){
+            errorState.style.display="block";
+            errorState.textContent =
+                "Belum ada jadwal les untuk akun siswa ini.";
+        }else{
+            errorState.style.display="none";
+        }
+
+    }catch(error){
+
+        console.error(
+            "Gagal memuat portal:",
+            error
+        );
+
+        loadingState.style.display="none";
+        errorState.style.display="block";
+
+        errorState.textContent =
+            "Data portal belum dapat dimuat. " +
+            "Periksa koneksi atau Apps Script, lalu coba lagi.";
+    }
+}
+
+
+document.getElementById("prevMonth").addEventListener("click",()=>{
+    current.setMonth(current.getMonth()-1);
+    historyPanel.classList.remove("show");
+    selectedKey="";
+    renderCalendar();
+});
+
+document.getElementById("nextMonth").addEventListener("click",()=>{
+    current.setMonth(current.getMonth()+1);
+    historyPanel.classList.remove("show");
+    selectedKey="";
+    renderCalendar();
+});
+
+loadData();
+</script>
+</body>
+</html>
