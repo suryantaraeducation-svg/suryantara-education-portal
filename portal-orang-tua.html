@@ -159,6 +159,86 @@
     line-height: 1;
     color: #102542;
 }
+
+
+/* Tombol utama Mulai Belajar pada portal orang tua */
+.meet-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    min-height: 56px;
+    padding: 16px 28px;
+
+    background: #F2BD4B;
+    color: #102542;
+
+    border: 2px solid #F2BD4B;
+    border-radius: 14px;
+
+    font-family: Poppins, sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.3;
+    text-decoration: none;
+    text-align: center;
+
+    box-shadow: 0 5px 14px rgba(16, 37, 66, 0.18);
+    cursor: pointer;
+    box-sizing: border-box;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.meet-button svg {
+    width: 23px;
+    height: 23px;
+    flex: 0 0 23px;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.meet-button span {
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+.meet-button:hover {
+    background: #FFD36A;
+    border-color: #FFD36A;
+    box-shadow: 0 7px 18px rgba(16, 37, 66, 0.24);
+    transform: translateY(-2px);
+}
+
+.meet-button:focus-visible {
+    outline: 3px solid #173D63;
+    outline-offset: 4px;
+}
+
+.meet-button:active {
+    transform: translateY(0);
+}
+
+/* Penyesuaian untuk HP */
+@media (max-width: 600px) {
+    .meet-button {
+        width: 100%;
+        min-height: 56px;
+        padding: 15px 20px;
+        font-size: 16px;
+        border-radius: 12px;
+    }
+}
+
 @media(max-width:768px){.portal-hero{padding:45px 0 30px}.student-card{grid-template-columns:1fr}.portal-calendar-section{padding:40px 0 55px}.calendar-card{padding:15px}.calendar-day{min-height:62px;padding:7px}.day-time{font-size:8px}.history-content{grid-template-columns:1fr}.history-panel{padding:20px}.history-box p{font-size:17px;line-height:1.7}.portal-account{margin-left:0;margin-top:0}.nav-progress{flex-wrap:wrap;justify-content:flex-end;gap:10px}.portal-user{display:inline;font-size:11px}}
 @media(max-width:480px){.calendar-top h3{font-size:18px}.calendar-weekdays,.calendar-days{gap:4px}.calendar-weekdays div{font-size:9px}.calendar-day{min-height:52px;border-radius:9px}.day-number{font-size:11px}.day-time{display:none}.calendar-day.completed:after{bottom:6px}.calendar-legend{gap:10px;font-size:10px}.history-footer{flex-direction:column;gap:5px}}
 
