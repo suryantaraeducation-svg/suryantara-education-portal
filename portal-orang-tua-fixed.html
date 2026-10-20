@@ -425,17 +425,22 @@
 
 .parent-welcome {
     display: flex !important;
-  flex-direction: row !important;
+    flex-direction: row !important;
     align-items: center!important;
     justify-content: space-between !important;
-    gap: 16px;
+    gap: 12px;
     width: 100%;
     max-width: 520px;
     box-sizing: border-box;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
 }
 
 .parent-welcome-info {
-    flex: 1;
+    flex: 1 1 auto;
     min-width: 0;
 }
 
@@ -445,22 +450,18 @@
 
 .parent-welcome .logout-btn {
     display: inline-flex !important;
-    flex: 0 0 auto;
-    align-items: center;
-    justify-content: center;
     margin: 0 0 0 auto !important;
-    white-space: nowrap;
 }
 
 /* Penyesuaian untuk HP */
 @media (max-width: 480px) {
     .parent-welcome {
-        gap: 10px;
+        gap: 8px;
         padding: 14px;
     }
 
     .parent-welcome .logout-btn {
-        padding: 0 10px;
+        padding: 0 9px;
         font-size: 12px;
     }
 }
