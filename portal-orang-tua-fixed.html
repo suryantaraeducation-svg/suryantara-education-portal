@@ -462,6 +462,43 @@
     transform: translateY(-2px);
 }
 
+.parent-welcome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    max-width: 520px;
+    box-sizing: border-box;
+}
+
+.parent-welcome-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.parent-welcome-name {
+    overflow-wrap: anywhere;
+}
+
+.parent-welcome .logout-btn {
+    flex: 0 0 auto;
+    margin-left: auto;
+}
+
+/* Penyesuaian untuk HP */
+@media (max-width: 480px) {
+    .parent-welcome {
+        gap: 10px;
+        padding: 14px;
+    }
+
+    .parent-welcome .logout-btn {
+        padding: 0 10px;
+        font-size: 12px;
+    }
+}
+  
 @media(max-width:900px){
     .quick-grid{grid-template-columns:repeat(2,1fr)}
     .summary-grid{grid-template-columns:1fr 1fr}
@@ -539,7 +576,7 @@
 <div>
 <p class="parent-welcome-label">Hallo, Ayah/Bunda</p><p class="parent-welcome-name" id="welcomeStudentName">Memuat nama siswa...</p>
 <button id="logoutBtn" class="logout-btn">
-    <span>Logout</span>
+    <span>Keluar</span>
     <svg
         xmlns="http://www.w3.org/2000/svg"
         width="18"
