@@ -526,6 +526,28 @@
     .meet-button { width: 100%; min-height: 58px; justify-content: center; font-size: 16px; }
 }
 
+.parent-logout-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 9px 16px;
+    border: 1px solid #dc2626;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #dc2626;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.parent-logout-btn:hover {
+    background: #dc2626;
+    color: #ffffff;
+}
+  
 </style>
 </head>
 <body class="parent-portal-page">
@@ -537,6 +559,10 @@
 <div class="parent-welcome">
 <div>
 <p class="parent-welcome-label">Hallo, Ayah/Bunda</p><p class="parent-welcome-name" id="welcomeStudentName">Memuat nama siswa...</p>
+<button type="button" id="logoutBtn" class="parent-logout-btn">
+    <i class="fas fa-sign-out-alt"></i>
+    <span>Keluar</span>
+</button>
 </div>
 </div>
 
@@ -695,12 +721,16 @@ if(portalUser && auth){
     portalUser.textContent = auth.namaSiswa || auth.studentName || "Memuat nama siswa...";
 }
 
-function logout(){
+function logout() {
     sessionStorage.removeItem("suryantaraAuth");
     window.location.replace("login.html");
 }
 
-document.getElementById("logoutBtn").addEventListener("click",logout);
+const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", logout);
+}  
 
 function normalizeId(value){return String(value??"").trim();}
 
