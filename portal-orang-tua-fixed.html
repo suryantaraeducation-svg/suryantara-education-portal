@@ -860,11 +860,6 @@ function showDetails(key){
             const program=firstValue(s,["program","subject","mataPelajaran","mata_pelajaran"],"Les");
             const tutor=firstValue(s,["tutor","namaTutor","nama_tutor"],"Belum ditentukan");
             const status=firstValue(s,["status","scheduleStatus"],completed?"Sudah dilaksanakan":"Terjadwal");
-            const link=firstValue(s,["meetLink","linkGoogleMeet","link_google_meet","meetUrl"],meetLink);
-            html+=`<div class="schedule-meta"><strong>${escapeHTML(timeText(start,end))}</strong><br><b>Mata pelajaran:</b> ${escapeHTML(program)}<br><b>Tutor:</b> ${escapeHTML(tutor)}<br><b>Status:</b> ${escapeHTML(status)}`;
-            if(link && /^https:\/\//i.test(String(link))){
-                html+=`<br><a class="meet-button" style="margin-top:10px;padding:9px 12px" href="${escapeHTML(link)}" target="_blank" rel="noopener">Buka Google Meet</a>`;
-            }
             html+=`</div>`;
         });
         html+=`</div>`;
