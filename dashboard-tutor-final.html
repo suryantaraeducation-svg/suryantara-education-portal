@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#102542">
+<title>Dashboard Tentor | Suryantara Education</title>
+<link rel="stylesheet" href="style.css">
+<style>
+:root{--navy:#102542;--navy2:#194875;--gold:#d8ad49;--ink:#172b45;--muted:#667085;--line:#e5eaf0;--bg:#f4f6fa;--green:#176b40}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Arial,sans-serif}button,input,textarea{font:inherit}button{cursor:pointer}
+.header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line)}.header-inner{max-width:1180px;margin:auto;padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--navy)}.brand-mark{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:var(--navy);color:var(--gold);font-weight:900}.brand strong,.brand small{display:block}.brand strong{font-size:14px;letter-spacing:.04em}.brand small{font-size:11px;letter-spacing:.12em;color:var(--muted)}
+.header-actions{display:flex;align-items:center;gap:12px}.user-label{text-align:right;color:var(--muted);font-size:12px}.user-label strong{display:block;color:var(--navy);font-size:13px}.logout{border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--navy);font-weight:700;padding:10px 13px;display:flex;align-items:center;gap:7px}.logout svg{width:17px;height:17px}
+.shell{max-width:1180px;margin:auto;padding:27px 22px 42px}.hero{background:linear-gradient(125deg,var(--navy),var(--navy2));border-radius:22px;padding:29px 30px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:18px;box-shadow:0 12px 28px #10254216}.eyebrow{margin:0 0 9px;color:var(--gold);font-size:11px;font-weight:800;letter-spacing:.18em}.hero h1{font-size:clamp(26px,4vw,36px);line-height:1.15;margin:0 0 8px;color:white}.hero p:last-child{margin:0;color:#dbe5f0;font-size:14px;line-height:1.6}.hero-icon{width:60px;height:60px;border:1px solid #ffffff35;border-radius:17px;background:#ffffff12;color:var(--gold);display:grid;place-items:center;flex:none}.hero-icon svg{width:32px;height:32px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:21px}.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 16px #10254206;min-width:0}.stat-icon{width:42px;height:42px;border-radius:13px;background:#edf2f8;color:var(--navy);display:grid;place-items:center;flex:none}.stat-icon.gold{background:#fff5dc;color:#946c17}.stat-icon svg{width:22px;height:22px}.stat-label{font-size:12px;color:var(--muted);margin:0 0 5px}.stat-value{font-size:27px;font-weight:800;color:var(--navy);line-height:1;margin:0}
+.panel{background:#fff;border:1px solid var(--line);border-radius:19px;padding:22px;box-shadow:0 5px 20px #10254208;margin-bottom:19px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.panel-head h2{font-size:21px;margin:0 0 5px;color:var(--navy)}.panel-head p{font-size:13px;color:var(--muted);line-height:1.5;margin:0}.date-pill{background:#fff3d5;color:#73551a;border-radius:999px;padding:9px 12px;font-size:11px;font-weight:800;white-space:nowrap}
+.schedule-list{display:flex;flex-direction:column;gap:12px}.schedule{border:1px solid var(--line);background:#fbfcfe;border-radius:15px;padding:15px;display:grid;grid-template-columns:90px minmax(0,1fr);gap:14px;align-items:center}.time{border-right:1px solid #e0e6ed;padding-right:12px}.time strong{display:block;color:var(--navy);font-size:18px}.time span{display:block;color:var(--muted);font-size:11px;margin-top:5px}.student{font-size:16px;font-weight:800;color:var(--navy);margin:0 0 5px;overflow-wrap:anywhere}.program{font-size:13px;color:var(--muted);margin:0;line-height:1.5}.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}.chip{display:inline-flex;background:#edf2f7;color:#45566c;border-radius:7px;padding:5px 8px;font-size:11px;font-weight:700}
+.actions{grid-column:1/-1;display:flex;gap:9px;flex-wrap:wrap;padding-top:12px;border-top:1px solid #e8edf2}.btn{border:0;border-radius:10px;min-height:42px;padding:11px 14px;font-size:13px;font-weight:800;display:inline-flex;justify-content:center;align-items:center;gap:8px;text-decoration:none}.btn svg{width:17px;height:17px;flex:none}.btn-primary{background:var(--navy);color:#fff;flex:1}.btn-remind{background:#e8f7ee;color:#176b40;border:1px solid #bde5cc;flex:1}.btn-primary:hover{background:var(--navy2)}.btn-meet{background:#e9f5ee;color:var(--green);border:1px solid #c8e7d5;flex:1}.btn-meet:hover{background:#d9efe2}.btn-meet:disabled{background:#edf0f4;color:#8490a0;border-color:#e2e6ec;cursor:not-allowed}.btn-done{background:#e8f5ed;color:var(--green);cursor:default}
+.empty{border:1px dashed #ccd6e1;border-radius:14px;background:#f9fbfd;text-align:center;padding:28px 18px;color:var(--muted);font-size:13px;line-height:1.6}.empty strong{display:block;color:var(--navy);font-size:15px;margin-bottom:4px}
+.history{display:none;scroll-margin-top:90px}.history.active{display:block}.history-info{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin:18px 0 21px}.info-box{background:#f7f9fc;border:1px solid var(--line);border-radius:11px;padding:12px;min-width:0}.info-box span{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.info-box strong{display:block;color:var(--navy);font-size:12px;line-height:1.45;overflow-wrap:anywhere}.form{display:grid;gap:15px}.field label{display:block;font-size:13px;font-weight:800;color:var(--navy);margin-bottom:7px}.field input,.field textarea{width:100%;border:1px solid #d7dfe8;border-radius:10px;padding:12px 13px;color:var(--ink);background:#fff;outline:none;font-size:14px}.field textarea{min-height:95px;resize:vertical;line-height:1.55}.field input:focus,.field textarea:focus{border-color:#456b91;box-shadow:0 0 0 3px #173e6712}.form-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap}.btn-cancel{background:#eef1f5;color:#344054}.message{display:none;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.5;margin-top:13px}.success{background:#eaf7ef;border:1px solid #b9e2c7;color:#176b35}.error{background:#fff1f1;border:1px solid #efb4b4;color:#a12828}.footer{max-width:1180px;margin:auto;padding:0 22px 24px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.footer strong{color:var(--navy)}
+@media(min-width:850px){.schedule{grid-template-columns:100px minmax(0,1fr)}.actions{grid-column:2;grid-row:1;align-self:center;justify-content:flex-end;border-top:0;padding-top:0}.btn-primary,.btn-meet{flex:0 0 auto;min-width:150px}}
+@media(max-width:760px){.header-inner{padding:11px 14px}.user-label{display:none}.shell{padding:20px 14px 34px}.hero{padding:23px 20px;border-radius:18px}.hero-icon{width:48px;height:48px}.stats{gap:8px}.stat{display:block;padding:12px 10px}.stat-icon{width:35px;height:35px;margin-bottom:9px}.stat-value{font-size:23px}.stat-label{font-size:11px;min-height:27px}.panel{padding:16px;border-radius:16px}.panel-head h2{font-size:19px}.history-info{grid-template-columns:repeat(2,minmax(0,1fr))}.info-box:last-child{grid-column:1/-1}.footer{padding:0 14px 20px}}
+@media(max-width:420px){.brand-mark{width:35px;height:35px}.brand strong{font-size:12px}.brand small{font-size:10px}.logout{padding:9px 10px;font-size:12px}.hero-icon{display:none}.date-pill{font-size:10px;padding:8px}.schedule{grid-template-columns:1fr}.time{border-right:0;border-bottom:1px solid #e0e6ed;padding:0 0 10px}.actions{display:grid;grid-template-columns:1fr}.btn{width:100%}.stat{padding:10px 8px}.stat-value{font-size:21px}}
+
+/* Kalender tutor mengikuti pola kalender portal orang tua */
+.tutor-calendar-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:25px;box-shadow:0 5px 20px #10254208}.tutor-calendar-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.tutor-calendar-top h3{margin:0;color:var(--navy);font-size:22px}.tutor-calendar-nav{display:flex;gap:8px}.tutor-calendar-nav button{width:38px;height:38px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--navy);font-size:18px;font-weight:700}.tutor-calendar-nav button:hover{background:var(--navy);color:#fff}.tutor-calendar-weekdays,.tutor-calendar-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}.tutor-calendar-weekdays{margin-bottom:7px}.tutor-calendar-weekdays div{padding:8px 3px;color:var(--muted);font-size:11px;font-weight:800;text-align:center}.tutor-calendar-day{position:relative;min-width:0;min-height:72px;padding:9px;border:1px solid #edf0f4;border-radius:12px;background:#fff;color:var(--ink);text-align:left;transition:.2s ease}.tutor-calendar-day:hover{border-color:var(--gold);transform:translateY(-2px)}.tutor-calendar-day.empty{background:transparent;border-color:transparent;cursor:default}.tutor-calendar-day.has-schedule,.tutor-calendar-day.completed{background:rgba(76,175,80,.10);border-color:rgba(76,175,80,.32)}.tutor-calendar-day.completed:after{content:"";position:absolute;bottom:8px;left:50%;width:7px;height:7px;transform:translateX(-50%);border-radius:50%;background:var(--gold)}.tutor-calendar-day.today{box-shadow:inset 0 0 0 2px var(--navy)}.tutor-calendar-day.selected{border-color:var(--navy);background:var(--navy);color:#fff}.tutor-calendar-day.selected:after{background:var(--gold)}.tutor-day-number{font-size:13px;font-weight:800}.tutor-day-time{display:block;margin-top:9px;color:var(--muted);font-size:9px;line-height:1.3;overflow-wrap:anywhere}.tutor-calendar-day.selected .tutor-day-time{color:rgba(255,255,255,.8)}.tutor-calendar-help{margin-top:18px;color:var(--muted);font-size:12px;text-align:center}.tutor-calendar-legend{display:flex;justify-content:center;align-items:center;gap:18px;flex-wrap:wrap;margin-top:15px;color:var(--muted);font-size:11px}.tutor-legend-item{display:inline-flex;align-items:center;gap:7px}.tutor-legend-schedule,.tutor-legend-completed,.tutor-legend-today{position:relative;width:12px;height:12px;border-radius:4px;flex:none}.tutor-legend-schedule,.tutor-legend-completed{background:rgba(76,175,80,.16);border:1px solid rgba(76,175,80,.3)}.tutor-legend-completed:after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:var(--gold);left:50%;top:50%;transform:translate(-50%,-50%)}.tutor-legend-today{background:#fff;box-shadow:inset 0 0 0 2px var(--navy)}@media(max-width:760px){.tutor-calendar-card{padding:15px}.tutor-calendar-weekdays,.tutor-calendar-days{gap:4px}.tutor-calendar-day{min-height:62px;padding:7px}.tutor-day-time{font-size:8px}}@media(max-width:480px){.tutor-calendar-top h3{font-size:18px}.tutor-calendar-weekdays div{font-size:9px}.tutor-calendar-day{min-height:52px;border-radius:9px;padding:6px}.tutor-day-number{font-size:11px}.tutor-day-time{display:none}.tutor-calendar-day.completed:after{bottom:6px}.tutor-calendar-legend{gap:10px;font-size:10px}}
+
+/* Penyempurnaan dashboard tentor */
+.shell{padding-top:22px}
+.student-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.student-card{border:1px solid var(--line);background:#fbfcfe;border-radius:14px;padding:15px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.student-card h3{font-size:15px;color:var(--navy);margin:0;overflow-wrap:anywhere}
+.student-card p{font-size:12px;line-height:1.5;color:var(--muted);margin:0}
+.student-card .btn{width:100%;margin-top:auto}
+.student-detail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:4px 0 20px}
+.form-hint{font-size:12px;color:var(--muted);line-height:1.6;margin:0}
+[hidden]{display:none!important}
+@media(max-width:650px){.student-grid{grid-template-columns:1fr}.student-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.shell{padding-top:14px}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <section class="hero"><div><p class="eyebrow">RUANG KERJA TENTOR</p><h1>Dashboard TENTOR</h1><p id="heroGreeting">Selamat datang. Mari dampingi perjalanan belajar siswa hari ini.</p></div><div class="hero-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 9-4 9 4-9 4-9-4Z"/><path d="M7 10v5c3 2.5 7 2.5 10 0v-5"/><path d="M21 9v5"/></svg></div></section>
+  <section class="stats" aria-label="Ringkasan jadwal">
+    <article class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></div><div><p class="stat-label">Jadwal hari ini</p><p class="stat-value" id="todayScheduleCount">—</p></div></article>
+    <article class="stat"><div class="stat-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></div><div><p class="stat-label">Belum dicatat</p><p class="stat-value" id="pendingCount">—</p></div></article>
+    <article class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><p class="stat-label">Siswa aktif</p><p class="stat-value" id="activeStudentCount">—</p></div></article>
+  </section>
+  <section class="panel"><div class="panel-head"><div><h2>Jadwal Mengajar</h2><p>Pilih tanggal untuk melihat sesi, membuka Google Meet, atau mencatat hasil pembelajaran.</p></div><span class="date-pill" id="todayBadge">MEMUAT TANGGAL</span></div><div class="tutor-calendar-card"><div class="tutor-calendar-top"><h3 id="tutorCalendarMonth">Memuat kalender...</h3><div class="tutor-calendar-nav"><button type="button" id="tutorPrevMonth" aria-label="Bulan sebelumnya">‹</button><button type="button" id="tutorNextMonth" aria-label="Bulan berikutnya">›</button></div></div><div class="tutor-calendar-weekdays"><div>MIN</div><div>SEN</div><div>SEL</div><div>RAB</div><div>KAM</div><div>JUM</div><div>SAB</div></div><div class="tutor-calendar-days" id="tutorCalendarDays"><div class="empty">Memuat kalender...</div></div><div class="tutor-calendar-help">Klik tanggal yang memiliki jadwal untuk melihat detail sesi mengajar.</div><div class="tutor-calendar-legend"><span class="tutor-legend-item"><i class="tutor-legend-schedule"></i> Jadwal mengajar</span><span class="tutor-legend-item"><i class="tutor-legend-completed"></i> Sudah dicatat</span><span class="tutor-legend-item"><i class="tutor-legend-today"></i> Hari ini</span></div></div></section><section class="panel" id="selectedDayPanel"><div class="panel-head"><div><h2 id="selectedDayTitle">Pilih tanggal kalender</h2><p id="selectedDaySubtitle">Sesi pada tanggal yang dipilih akan muncul di sini.</p></div></div><div class="schedule-list" id="scheduleList"><div class="empty"><strong>Memuat jadwal...</strong>Mohon tunggu sebentar.</div></div></section><section class="panel" id="studentsPanel">
+  <div class="panel-head"><div><h2>Siswa Binaan</h2><p>Pilih siswa yang terdaftar pada jadwal mengajarmu untuk melihat detail dan mengatur link Google Meet.</p></div></div>
+  <div class="student-grid" id="tutorStudentList"><div class="empty"><strong>Memuat siswa binaan...</strong>Mohon tunggu sebentar.</div></div>
+</section>
+<section class="panel" id="studentDetailPanel" hidden>
+  <div class="panel-head"><div><h2 id="studentDetailTitle">Detail Siswa</h2><p id="studentDetailSubtitle">Informasi siswa binaan.</p></div><button type="button" class="btn btn-cancel" id="closeStudentDetail">Tutup</button></div>
+  <div class="student-detail-grid">
+    <div class="info-box"><span>Nama siswa</span><strong id="detailStudentName">—</strong></div>
+    <div class="info-box"><span>Program</span><strong id="detailStudentProgram">—</strong></div>
+    <div class="info-box"><span>Kelas</span><strong id="detailStudentClass">—</strong></div>
+    <div class="info-box"><span>Nama orang tua</span><strong id="detailParentName">—</strong></div>
+    <div class="info-box"><span>WhatsApp orang tua</span><strong id="detailParentPhone">—</strong></div>
+  </div>
+  <form id="meetLinkForm" class="form">
+    <div class="field"><label for="studentMeetLink">Link Google Meet</label><input id="studentMeetLink" type="url" inputmode="url" placeholder="https://meet.google.com/xxx-xxxx-xxx" required></div>
+    <p class="form-hint">Buat rapat menggunakan akun Google milik tentor, lalu tempelkan link rapat di sini. Setelah disimpan, link ini akan digunakan di portal orang tua.</p>
+    <div class="form-actions"><button type="submit" class="btn btn-primary" id="saveMeetLinkButton">Simpan Link Meet</button></div>
+  </form>
+  <div class="message success" id="meetSuccessMessage" role="status"></div><div class="message error" id="meetErrorMessage" role="alert"></div>
+</section>
+  <section class="panel history" id="historyCard"><div class="panel-head"><div><h2>Riwayat Pembelajaran</h2><p id="historySubtitle">Isi catatan setelah sesi selesai.</p></div></div>
+    <div class="history-info"><div class="info-box"><span>Siswa</span><strong id="infoStudent">—</strong></div><div class="info-box"><span>Program</span><strong id="infoProgram">—</strong></div><div class="info-box"><span>Tanggal</span><strong id="infoDate">—</strong></div><div class="info-box"><span>Waktu</span><strong id="infoTime">—</strong></div><div class="info-box"><span>Durasi</span><strong id="infoDuration">—</strong></div></div>
+    <form id="historyForm" class="form"><div class="field"><label for="topic">Topik pembelajaran</label><input id="topic" required placeholder="Contoh: Persamaan Linear"></div><div class="field"><label for="activities">Aktivitas pembelajaran</label><textarea id="activities" required placeholder="Tuliskan aktivitas selama pembelajaran..."></textarea></div><div class="field"><label for="result">Hasil pembelajaran</label><textarea id="result" required placeholder="Tuliskan hasil atau perkembangan belajar siswa..."></textarea></div><div class="field"><label for="tutorNote">Catatan Tentor</label><textarea id="tutorNote" placeholder="Catatan tambahan untuk tindak lanjut..."></textarea></div><div class="form-actions"><button type="button" class="btn btn-cancel" id="cancelHistory">Batal</button><button type="submit" class="btn btn-primary" id="saveHistoryButton">Simpan Riwayat</button></div></form>
+    <div class="message success" id="successMessage" role="status"></div><div class="message error" id="errorMessage" role="alert"></div>
+  </section>
+</main>
+<footer class="footer"><strong>Suryantara Education</strong><span>Belajar Hari Ini, Bersinar Esok Hari · © 2026</span></footer>
+<script>
+"use strict";
+const API_URL="https://script.google.com/macros/s/AKfycby8kXDMF9cTI27fwN95EhB46IK78-feCBpvjf7RMSeh9Xax3RWNsJc5o5w4jBam00Jy/exec";
+const $=id=>document.getElementById(id);
+function getAuth(){try{const a=JSON.parse(sessionStorage.getItem("suryantaraAuth")||"null");return a&&a.role==="Tentor"&&a.username?a:null}catch(e){return null}}
+const auth=getAuth();
+if(!auth){sessionStorage.removeItem("suryantaraAuth");window.location.replace("login.html")}
+let schedules=[],currentItem=null,meetLinksByStudent={},studentDetailsById={},currentDetailStudentId="";
+const days=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+const months=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const tutorName=()=>auth?.name||auth?.nama||auth?.username||"Tentor";
+const pad=n=>String(n).padStart(2,"0");
+const todayKey=()=>{const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`};
+let calendarCurrent=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+let selectedDateKey=todayKey();
+const todayName=()=>days[new Date().getDay()];
+const todayLabel=()=>{const d=new Date();return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`};
+const esc=v=>String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+function field(o,keys,fallback=""){for(const k of keys)if(o&&o[k]!==undefined&&o[k]!==null&&String(o[k]).trim()!=="")return o[k];return fallback}
+function durMins(a,b){const x=String(a||"").split(":").map(Number),y=String(b||"").split(":").map(Number);if(x.length===2&&y.length===2&&x.every(Number.isFinite)&&y.every(Number.isFinite)){let n=y[0]*60+y[1]-x[0]*60-x[1];if(n<0)n+=1440;if(n>0)return n}return 60}
+function durText(n){n=Number(n);if(!Number.isFinite(n)||n<=0)n=60;const h=Math.floor(n/60),m=n%60;return h?(m?`${h} jam ${m} menit`:`${h} jam`):`${m} menit`}
+function program(s){const p=String(field(s,["program","subject","mataPelajaran"],"Program")).trim(),c=String(field(s,["className","kelas","class"],"")).trim();if(!c)return p;if(/kelas/i.test(p))return p;return `${p||"Program"} · Kelas ${c.replace(/^Kelas\s+/i,"")}`}
+function normalizeMeet(raw){let v=String(raw||"").trim();if(!v)return "";if(!/^https?:\/\//i.test(v))v="https://"+v;try{const u=new URL(v);return u.hostname==="meet.google.com"||u.hostname.endsWith(".meet.google.com")?u.href:""}catch(e){return ""}}
+function mins(t){const m=String(t||"").match(/^(\d{1,2}):(\d{2})/);return m?Number(m[1])*60+Number(m[2]):NaN}
+function meetLink(s){return normalizeMeet(field(s,["meetLink","meet_link","googleMeet","linkMeet"],"")||meetLinksByStudent[String(field(s,["idSiswa","studentId","id_siswa"],""))]||"")}
+function meetIsOpen(s){const a=mins(field(s,["start","jamMulai","jam_mulai"],"")),b=mins(field(s,["end","jamSelesai","jam_selesai"],""));if(!Number.isFinite(a)||!Number.isFinite(b))return false;const d=new Date(),now=d.getHours()*60+d.getMinutes();let end=b,current=now;if(end<a)end+=1440;if(end>=1440&&now<a)current+=1440;return current>=a-5&&current<=end}
+async function request(url,options){const r=await fetch(url,options);const d=await r.json();if(!r.ok)throw new Error(d.message||`Permintaan gagal (${r.status})`);return d}
+$("heroGreeting").textContent=`Selamat datang, ${tutorName()}. Mari dampingi perjalanan belajar siswa hari ini.`;$("todayBadge").textContent=todayLabel().toUpperCase();
+
+async function loadMeetLinks(items){
+ const ids=[...new Set(items.map(s=>String(field(s,["idSiswa","studentId","id_siswa"],"")).trim()).filter(Boolean))];
+ await Promise.all(ids.map(async id=>{
+  try{
+   const d=await request(`${API_URL}?action=getParentPortal&idSiswa=${encodeURIComponent(id)}`);
+   if(d?.success&&d.student){
+    const student=d.student;
+    const link=normalizeMeet(field(student,["meetLink","meet_link","googleMeet"],""));
+    if(link)meetLinksByStudent[id]=link;
+    studentDetailsById[id]=student;
+   }
+  }catch(e){console.warn("Detail siswa tidak termuat",id,e)}
+ }));
+}
+
+async function loadSchedules(){
+ const list=$("scheduleList");list.innerHTML='<div class="empty"><strong>Memuat jadwal...</strong>Mohon tunggu sebentar.</div>';
+ try{const data=await request(`${API_URL}?action=getSchedules`);if(!Array.isArray(data))throw new Error(data.message||"Format data jadwal tidak valid.");await loadMeetLinks(data);const logged=tutorName().trim().toLowerCase();schedules=data.filter(s=>{const status=String(field(s,["status"],"Aktif")).trim().toLowerCase();const assigned=String(field(s,["tutor","namaTutor","teacher"],"")).trim().toLowerCase();return status!=="dibatalkan"&&(!assigned||assigned===logged||assigned===String(auth.username||"").trim().toLowerCase())});$("todayScheduleCount").textContent=schedulesForDate(todayKey()).length;$("todayBadge").textContent=todayLabel().toUpperCase();renderTutorCalendar();renderSelectedDate(selectedDateKey);renderTutorStudents();await loadStudentCount()}catch(e){console.error(e);list.innerHTML=`<div class="empty"><strong>Jadwal belum dapat dimuat</strong>${esc(e.message)}<br>Periksa koneksi dan endpoint Apps Script.</div>`;$("todayScheduleCount").textContent="0";$("pendingCount").textContent="0";$("activeStudentCount").textContent="—"}
+}
+function render(items,dateKeyForItems=todayKey()){const list=$("scheduleList");list.innerHTML="";if(!items.length){list.innerHTML='<div class="empty"><strong>Belum ada jadwal hari ini</strong>Jadwal mengajar aktif akan muncul otomatis di sini.</div>';updatePending();return}
+items.forEach(s=>{const start=String(field(s,["start","jamMulai","jam_mulai"],"—")),end=String(field(s,["end","jamSelesai","jam_selesai"],"")),student=String(field(s,["student","namaSiswa","name"],"Siswa")),prog=program(s),time=end?`${start} – ${end}`:start,duration=durMins(start,end),id=String(field(s,["id","idJadwal","id_jadwal"],""));const item=document.createElement("article");item.className="schedule";Object.assign(item.dataset,{id,idSiswa:String(field(s,["idSiswa","studentId","id_siswa"],"")),student,program:prog,tutor:String(field(s,["tutor","namaTutor","teacher"],tutorName())),time,duration:String(duration),date:dateKeyForItems,start,end});const link=meetLink(s),ready=Boolean(link&&meetIsOpen(s));item.innerHTML=`<div class="time"><strong>${esc(start)}</strong><span>${esc(durText(duration))}</span></div><div><p class="student">${esc(student)}</p><p class="program">${esc(prog)}</p><div class="chips"><span class="chip">${esc(time)}</span><span class="chip">${esc(tutorName())}</span></div></div><div class="actions"><button type="button" class="btn btn-primary history-open">Isi Riwayat</button><button type="button" class="btn btn-remind remind-parent">Ingatkan Orang Tua via WhatsApp</button><button type="button" class="btn btn-meet meet-open" ${ready?"":"disabled"}>${ready?"▶ Mulai Google Meet":link?"Meet belum dimulai":"Tautan Meet belum tersedia"}</button></div>`;item.querySelector(".history-open").addEventListener("click",()=>openHistory(item));item.querySelector(".remind-parent").addEventListener("click",()=>remindParent(s,dateKeyForItems,item.dataset.student));const mb=item.querySelector(".meet-open");if(ready)mb.addEventListener("click",()=>{const safe=meetLink(s);if(safe&&meetIsOpen(s))window.open(safe,"_blank","noopener,noreferrer")});list.appendChild(item)});updatePending();restoreDone();setIntervalMeet()}
+function dayIndex(value){const v=String(value||"").trim().toLowerCase();return days.findIndex(d=>d.toLowerCase()===v)}
+function dateKeyForDate(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+function schedulesForDate(key){const d=new Date(`${key}T00:00:00`);return schedules.filter(s=>{const raw=String(field(s,["date","tanggal","scheduleDate","tanggalJadwal"],"")).trim();if(raw){let norm="";if(/^\d{4}-\d{2}-\d{2}$/.test(raw))norm=raw;else{const m=raw.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);if(m)norm=`${m[3]}-${pad(Number(m[2]))}-${pad(Number(m[1]))}`;else{const parsed=new Date(raw);if(!Number.isNaN(parsed.getTime()))norm=dateKeyForDate(parsed)}}if(norm)return norm===key}return dayIndex(field(s,["day","hari"],""))===d.getDay()})}
+function completedOn(key){try{const v=JSON.parse(localStorage.getItem("suryantaraLessons")||"[]");return Array.isArray(v)&&v.some(x=>x&&x.date===key&&x.status==="completed")}catch(e){return false}}
+function renderTutorCalendar(){const grid=$("tutorCalendarDays"),heading=$("tutorCalendarMonth");if(!grid||!heading)return;grid.innerHTML="";const y=calendarCurrent.getFullYear(),m=calendarCurrent.getMonth();heading.textContent=`${months[m]} ${y}`;const first=new Date(y,m,1).getDay(),total=new Date(y,m+1,0).getDate(),today=todayKey();for(let i=0;i<first;i++){const e=document.createElement("div");e.className="tutor-calendar-day empty";grid.appendChild(e)}for(let n=1;n<=total;n++){const key=`${y}-${pad(m+1)}-${pad(n)}`,items=schedulesForDate(key),done=completedOn(key),btn=document.createElement("button");btn.type="button";btn.className="tutor-calendar-day";if(items.length)btn.classList.add("has-schedule");if(done)btn.classList.add("completed");if(key===today)btn.classList.add("today");if(key===selectedDateKey)btn.classList.add("selected");const num=document.createElement("span");num.className="tutor-day-number";num.textContent=n;btn.appendChild(num);if(items.length){const times=[...new Set(items.map(s=>{const st=String(field(s,["start","jamMulai","jam_mulai"],"")),en=String(field(s,["end","jamSelesai","jam_selesai"],""));return en?`${st} – ${en}`:st||"Waktu belum ditentukan"}))].slice(0,2);const t=document.createElement("span");t.className="tutor-day-time";t.innerHTML=times.map(esc).join("<br>");btn.appendChild(t)}btn.setAttribute("aria-label",`${n} ${months[m]} ${y}${items.length?`, ${items.length} sesi`:", tidak ada jadwal"}`);btn.addEventListener("click",()=>{selectedDateKey=key;renderTutorCalendar();renderSelectedDate(key)});grid.appendChild(btn)}}
+function renderSelectedDate(key){const d=new Date(`${key}T00:00:00`);const items=schedulesForDate(key).sort((a,b)=>{const av=String(field(a,["start","jamMulai","jam_mulai"],""));const bv=String(field(b,["start","jamMulai","jam_mulai"],""));return av.localeCompare(bv)});$("selectedDayTitle").textContent=d.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});$("selectedDaySubtitle").textContent=items.length?`${items.length} sesi mengajar pada tanggal ini.`:"Tidak ada jadwal mengajar pada tanggal ini.";render(items,key)}
+$("tutorPrevMonth").addEventListener("click",()=>{calendarCurrent.setMonth(calendarCurrent.getMonth()-1);renderTutorCalendar()});$("tutorNextMonth").addEventListener("click",()=>{calendarCurrent.setMonth(calendarCurrent.getMonth()+1);renderTutorCalendar()});
+function normalizePhone(raw){
+ let n=String(raw||"").replace(/[^0-9]/g,"");
+ if(n.startsWith("0"))n="62"+n.slice(1);
+ if(n.startsWith("8"))n="62"+n;
+ return n;
+}
+function remindParent(s,dateKey,studentName){
+ const id=String(field(s,["idSiswa","studentId","id_siswa"],"")).trim();
+ const detail=studentDetailsById[id]||{};
+ const phone=normalizePhone(field(detail,["parentPhone","whatsapp","phone"],""));
+ if(!phone){alert("Nomor WhatsApp orang tua belum tersedia pada data siswa.");return}
+ const date=new Date(`${dateKey}T00:00:00`);
+ const dateText=date.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+ const start=String(field(s,["start","jamMulai","jam_mulai"],""));
+ const end=String(field(s,["end","jamSelesai","jam_selesai"],""));
+ const message=`Assalamu'alaikum Bapak/Ibu ${field(detail,["parent"],"Orang Tua")}.\n\nKami mengingatkan bahwa hari ini ada jadwal belajar bersama Suryantara Education dengan rincian:\n\nNama siswa: ${studentName}\nProgram: ${program(s)}\nHari/Tanggal: ${dateText}\nWaktu: ${start}${end?"–"+end:""} WIB\n\nMohon bantuannya untuk mempersiapkan siswa mengikuti pembelajaran tepat waktu.\n\nTerima kasih.\nSuryantara Education\nBelajar Hari Ini, Bersinar Esok Hari.`;
+ window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`,"_blank","noopener,noreferrer");
+}
+function renderTutorStudents(){
+ const host=$("tutorStudentList");
+ const map=new Map();
+ schedules.forEach(s=>{
+  const id=String(field(s,["idSiswa","studentId","id_siswa"],"")).trim();
+  if(!id||map.has(id))return;
+  const detail=studentDetailsById[id]||{};
+  map.set(id,{id,name:String(field(s,["student","namaSiswa","name"],detail.name||"Siswa")),program:program(s),level:field(detail,["level"],field(s,["level"],"")),className:field(detail,["className","kelas"],field(s,["className","kelas"],"")),meet:meetLinksByStudent[id]||""});
+ });
+ host.innerHTML="";
+ if(!map.size){host.innerHTML='<div class="empty"><strong>Belum ada siswa binaan</strong>Siswa akan muncul setelah jadwal mengajarnya ditetapkan.</div>';return}
+ [...map.values()].sort((a,b)=>a.name.localeCompare(b.name,"id")).forEach(st=>{
+  const card=document.createElement("article");card.className="student-card";
+  const title=document.createElement("h3");title.textContent=st.name;
+  const p=document.createElement("p");p.textContent=[st.program,st.level,st.className?`Kelas ${st.className}`:""].filter(Boolean).join(" · ");
+  const meet=document.createElement("p");meet.textContent=st.meet?"Link Google Meet sudah tersimpan":"Link Google Meet belum diisi";
+  const btn=document.createElement("button");btn.type="button";btn.className="btn btn-primary";btn.textContent="Lihat Detail Siswa";btn.addEventListener("click",()=>openStudentDetail(st.id));
+  card.append(title,p,meet,btn);host.appendChild(card);
+ });
+}
+function openStudentDetail(id){
+ const st=studentDetailsById[id]||{};
+ const assigned=schedules.some(s=>String(field(s,["idSiswa","studentId","id_siswa"],"")).trim()===id);
+ if(!assigned){alert("Siswa ini tidak tercatat sebagai siswa binaanmu.");return}
+ currentDetailStudentId=id;
+ $("studentDetailTitle").textContent=`Detail Siswa — ${field(st,["name"],"Siswa")}`;
+ $("studentDetailSubtitle").textContent="Informasi siswa dan pengaturan Google Meet.";
+ $("detailStudentName").textContent=field(st,["name"],"—");
+ $("detailStudentProgram").textContent=field(st,["subject"],schedules.find(s=>String(field(s,["idSiswa","studentId","id_siswa"],"")).trim()===id)?program(schedules.find(s=>String(field(s,["idSiswa","studentId","id_siswa"],"")).trim()===id)):"—");
+ $("detailStudentClass").textContent=[field(st,["level"],""),field(st,["className"],"")].filter(Boolean).join(" · ")||"—";
+ $("detailParentName").textContent=field(st,["parent"],"Belum tersedia");
+ $("detailParentPhone").textContent=field(st,["parentPhone"],"Belum tersedia");
+ $("studentMeetLink").value=meetLinksByStudent[id]||normalizeMeet(field(st,["meetLink"],""));
+ $("meetSuccessMessage").style.display="none";$("meetErrorMessage").style.display="none";
+ $("studentDetailPanel").hidden=false;$("studentDetailPanel").scrollIntoView({behavior:"smooth",block:"start"});
+}
+$("closeStudentDetail").addEventListener("click",()=>{$("studentDetailPanel").hidden=true;currentDetailStudentId=""});
+$("meetLinkForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(!currentDetailStudentId)return;
+ const link=normalizeMeet($("studentMeetLink").value);
+ if(!link){showMessage("meetErrorMessage","Masukkan tautan Google Meet yang valid.");return}
+ const btn=$("saveMeetLinkButton");btn.disabled=true;btn.textContent="Menyimpan...";
+ $("meetSuccessMessage").style.display="none";$("meetErrorMessage").style.display="none";
+ try{
+  const result=await request(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"updateTutorMeetLink",data:{idSiswa:currentDetailStudentId,tutor:tutorName(),meetLink:link}})});
+  if(!result||result.success!==true)throw new Error(result?.message||"Link Meet gagal disimpan.");
+  meetLinksByStudent[currentDetailStudentId]=link;
+  if(studentDetailsById[currentDetailStudentId])studentDetailsById[currentDetailStudentId].meetLink=link;
+  schedules=schedules.map(s=>String(field(s,["idSiswa","studentId","id_siswa"],"")).trim()===currentDetailStudentId?{...s,meetLink:link}:s);
+  renderTutorStudents();renderSelectedDate(selectedDateKey);
+  showMessage("meetSuccessMessage","Link Google Meet berhasil disimpan. Portal orang tua akan menggunakan tautan ini setelah Apps Script diperbarui dan diterapkan.");
+ }catch(err){showMessage("meetErrorMessage",err.message||"Gagal menyimpan link Meet.")}
+ finally{btn.disabled=false;btn.textContent="Simpan Link Meet"}
+});
+async function loadStudentCount(){try{const data=await request(`${API_URL}?action=getStudents`);if(!Array.isArray(data))throw new Error("Data siswa tidak valid");$("activeStudentCount").textContent=data.filter(s=>String(s.status||"").trim().toLowerCase()==="aktif").length}catch(e){console.warn(e);$("activeStudentCount").textContent="—"}}
+function updatePending(){let n=0;document.querySelectorAll(".schedule").forEach(i=>{const b=i.querySelector(".history-open");if(b&&!b.classList.contains("btn-done"))n++});$("pendingCount").textContent=n}
+function openHistory(item){currentItem=item;$("infoStudent").textContent=item.dataset.student;$("infoProgram").textContent=item.dataset.program;$("infoDate").textContent=formatDate(item.dataset.date);$("infoTime").textContent=item.dataset.time;$("infoDuration").textContent=durText(item.dataset.duration);$("historySubtitle").textContent=`${item.dataset.student} · ${item.dataset.program} · ${item.dataset.time}`;hideMessages();$("historyCard").classList.add("active");$("historyCard").scrollIntoView({behavior:"smooth",block:"start"})}
+function formatDate(v){const d=new Date(`${v}T00:00:00`);return Number.isNaN(d.getTime())?v:`${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`}
+function hideMessages(){$("successMessage").style.display="none";$("errorMessage").style.display="none"}
+function showMessage(id,text){$(id).textContent=text;$(id).style.display="block"}
+$("cancelHistory").addEventListener("click",()=>{$("historyCard").classList.remove("active");$("historyForm").reset();currentItem=null;hideMessages()});
+function restoreDone(){let saved=[];try{saved=JSON.parse(localStorage.getItem("suryantaraLessons")||"[]");if(!Array.isArray(saved))saved=[]}catch(e){}document.querySelectorAll(".schedule").forEach(item=>{const done=saved.some(l=>String(l.idSiswa||"")===item.dataset.idSiswa&&l.date===item.dataset.date&&l.status==="completed");if(done){const b=item.querySelector(".history-open");b.textContent="✓ Riwayat tersimpan";b.classList.add("btn-done");b.disabled=true}});updatePending()}
+function setIntervalMeet(){document.querySelectorAll(".schedule").forEach(item=>{const s=schedules.find(x=>String(field(x,["id","idJadwal","id_jadwal"],""))===item.dataset.id&&item.dataset.id);if(!s)return;const b=item.querySelector(".meet-open"),link=meetLink(s),ready=Boolean(link&&meetIsOpen(s));b.disabled=!ready;b.textContent=ready?"▶ Mulai Google Meet":link?"Meet belum dimulai":"Tautan Meet belum tersedia"})}
+async function sendHistory(data){const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"addHistory",data})});try{const d=await r.json();if(d&&d.success===false)throw new Error(d.message||"Riwayat gagal disimpan");return d}catch(e){if(e instanceof SyntaxError)return {success:true};throw e}}
+$("historyForm").addEventListener("submit",async e=>{e.preventDefault();if(!currentItem)return;hideMessages();const button=$("saveHistoryButton");button.disabled=true;button.textContent="Menyimpan...";const i=currentItem;const data={idSiswa:i.dataset.idSiswa,namaSiswa:i.dataset.student,tutor:i.dataset.tutor||tutorName(),tanggal:i.dataset.date,jam:i.dataset.time,durasi:durText(i.dataset.duration),topik:$("topic").value.trim(),aktivitas:$("activities").value.trim(),hasil:$("result").value.trim(),catatan:$("tutorNote").value.trim()};if(!data.idSiswa){showMessage("errorMessage","ID siswa tidak ditemukan pada jadwal. Riwayat belum dikirim.");button.disabled=false;button.textContent="Simpan Riwayat";return}try{const r=await sendHistory(data);if(r&&r.success===false)throw new Error(r.message||"Riwayat gagal disimpan");let saved=[];try{saved=JSON.parse(localStorage.getItem("suryantaraLessons")||"[]");if(!Array.isArray(saved))saved=[]}catch(e){}saved.push({id:"lesson-"+Date.now(),idSiswa:data.idSiswa,student:data.namaSiswa,program:i.dataset.program,date:data.tanggal,time:data.jam,duration:data.durasi,topic:data.topik,activities:data.aktivitas,result:data.hasil,tutorNote:data.catatan,status:"completed"});localStorage.setItem("suryantaraLessons",JSON.stringify(saved));const b=i.querySelector(".history-open");b.textContent="✓ Riwayat tersimpan";b.classList.add("btn-done");b.disabled=true;updatePending();showMessage("successMessage","Permintaan riwayat telah dikirim. Periksa tab Riwayat di Google Sheets untuk memastikan data tersimpan.");$("historyForm").reset()}catch(err){console.error(err);showMessage("errorMessage",`Riwayat belum dapat dipastikan tersimpan: ${err.message||"Periksa koneksi dan Apps Script."}`)}finally{button.disabled=false;button.textContent="Simpan Riwayat"}});
+setInterval(setIntervalMeet,20000);
+if(auth)loadSchedules();
+</script>
+</body>
+</html>
