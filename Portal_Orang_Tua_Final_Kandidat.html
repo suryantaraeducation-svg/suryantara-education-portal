@@ -741,9 +741,14 @@ const auth=getAuth();
 // PROTEKSI PORTAL ORANG TUA
 // Hanya sesi dengan role "Orang Tua" yang boleh masuk.
 // =====================================================
-if(!auth || !auth.idSiswa || !auth.sessionToken || auth.role !== "Orang Tua"){
+
+const auth = getAuth();
+
+if (!auth || !auth.idSiswa || auth.role !== "Orang Tua") {
     sessionStorage.removeItem("suryantaraAuth");
     window.location.replace("login.html");
+}
+
 }
 
 const portalUser=document.getElementById("portalUser");
