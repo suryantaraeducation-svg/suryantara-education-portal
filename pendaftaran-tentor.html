@@ -40,7 +40,7 @@ form{display:grid;gap:17px}.panel{background:#fff;border:1px solid var(--line);b
 <footer>© <span id="year"></span> Suryantara Education · Belajar Hari Ini, Bersinar Esok Hari</footer>
 <script>
 /* Ganti dengan URL Web App Apps Script database Suryantara Education yang benar. */
-const APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycby8kXDMF9cTI27fwN95EhB46IK78-feCBpvjf7RMSeh9Xax3RWNsJc5o5w4jBam00Jy/exec";
+const APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbzCE_S0Cl01ztmzq68kqNT3t6FzV6-d8_gwXCIP1LpW8WeKfDoPGrWe5sL6KqwLQAfE/exec";
 const form=document.getElementById("tutorForm"), messageBox=document.getElementById("formMessage"), submitBtn=document.getElementById("submitBtn"), availabilityList=document.getElementById("availabilityList"), subjectOther=document.getElementById("subjectOther");
 document.getElementById("year").textContent=new Date().getFullYear();
 document.getElementById("subjects").addEventListener("change",function(){const checked=Array.from(document.querySelectorAll('input[name="mataPelajaran"]')).some(x=>x.checked&&x.value==="Lainnya");subjectOther.classList.toggle("hidden",!checked);subjectOther.required=checked;if(!checked)subjectOther.value="";});
