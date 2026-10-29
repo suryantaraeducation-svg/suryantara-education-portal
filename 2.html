@@ -1142,9 +1142,21 @@ async function loadData(){
          * SEKARANG PORTAL HANYA MEMINTA DATA UNTUK
          * SATU ID SISWA YANG SEDANG LOGIN.
          */
-        const data = await fetchJSON(
-            `${API_URL}?action=getParentPortal&sessionToken=${encodeURIComponent(auth.sessionToken||"")}`
-        );
+                  const idSiswa = String(
+    auth.idSiswa ||
+    new URLSearchParams(window.location.search).get("idSiswa") ||
+    ""
+).trim();
+
+if (!idSiswa) {
+    throw new Error("ID siswa tidak ditemukan. Silakan login kembali.");
+}
+
+const data = await fetchJSON(
+    `${API_URL}?action=getParentPortal` +
+    `&idSiswa=${encodeURIComponent(idSiswa)}` +
+    `&sessionToken=${encodeURIComponent(auth.sessionToken || "")}`
+);
 
         if(!data || !data.success){
             throw new Error(
