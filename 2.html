@@ -747,8 +747,6 @@ if (!auth || !auth.idSiswa || auth.role !== "Orang Tua") {
     window.location.replace("login.html");
 }
 
-}
-
 const portalUser=document.getElementById("portalUser");
 if(portalUser && auth){
     portalUser.textContent = auth.namaSiswa || auth.studentName || "Memuat nama siswa...";
