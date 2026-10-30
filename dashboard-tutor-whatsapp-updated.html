@@ -118,10 +118,78 @@ async function loadMeetLinks(items){
  }));
 }
 
-async function loadSchedules(){
- const list=$("scheduleList");list.innerHTML='<div class="empty"><strong>Memuat jadwal...</strong>Mohon tunggu sebentar.</div>';
- try{const data=await request(`${API_URL}?action=getSchedules`);if(!Array.isArray(data))throw new Error(data.message||"Format data jadwal tidak valid.");await loadMeetLinks(data);const logged=tutorName().trim().toLowerCase();schedules=data.filter(s=>{const status=String(field(s,["status"],"Aktif")).trim().toLowerCase();const assigned=String(field(s,["tutor","namaTutor","teacher"],"")).trim().toLowerCase();return status!=="dibatalkan"&&(!assigned||assigned===logged||assigned===String(auth.username||"").trim().toLowerCase())});$("todayScheduleCount").textContent=schedulesForDate(todayKey()).length;$("todayBadge").textContent=todayLabel().toUpperCase();renderTutorCalendar();renderSelectedDate(selectedDateKey);renderTutorStudents();await loadStudentCount()}catch(e){console.error(e);list.innerHTML=`<div class="empty"><strong>Jadwal belum dapat dimuat</strong>${esc(e.message)}<br>Periksa koneksi dan endpoint Apps Script.</div>`;$("todayScheduleCount").textContent="0";$("pendingCount").textContent="0";$("activeStudentCount").textContent="—"}
+```javascript
+async function loadSchedules() {
+  const list = $("scheduleList");
+
+  list.innerHTML = `
+    <div class="empty">
+      <strong>Memuat jadwal...</strong>
+      Mohon tunggu sebentar.
+    </div>
+  `;
+
+  try {
+    // Pastikan sesi tentor tersedia.
+    if (!auth || !auth.sessionToken) {
+      throw new Error(
+        "Sesi login tidak ditemukan. Silakan login kembali."
+      );
+    }
+
+    // Ambil jadwal khusus tentor yang sedang login.
+    const data = await request(
+      `${API_URL}?action=getTutorSchedules&sessionToken=${encodeURIComponent(auth.sessionToken)}`
+    );
+
+    if (!Array.isArray(data)) {
+      throw new Error(
+        data.message || "Format data jadwal tidak valid."
+      );
+    }
+
+    // Lengkapi link pertemuan jika fungsi ini diperlukan.
+    await loadMeetLinks(data);
+
+    // Status dan penyaringan tambahan di sisi dashboard.
+    schedules = data.filter(function(s) {
+      const status = String(
+        field(s, ["status"], "Aktif")
+      ).trim().toLowerCase();
+
+      return status !== "dibatalkan";
+    });
+
+    $("todayScheduleCount").textContent =
+      schedulesForDate(todayKey()).length;
+
+    $("todayBadge").textContent =
+      todayLabel().toUpperCase();
+
+    renderTutorCalendar();
+    renderSelectedDate(selectedDateKey);
+    renderTutorStudents();
+
+    await loadStudentCount();
+
+  } catch (e) {
+    console.error("Gagal memuat jadwal tentor:", e);
+
+    list.innerHTML = `
+      <div class="empty">
+        <strong>Jadwal belum dapat dimuat</strong>
+        ${esc(e.message)}
+        <br>
+        Periksa sesi login dan endpoint Apps Script.
+      </div>
+    `;
+
+    $("todayScheduleCount").textContent = "0";
+    $("pendingCount").textContent = "0";
+    $("activeStudentCount").textContent = "—";
+  }
 }
+```
 function render(items,dateKeyForItems=todayKey()){const list=$("scheduleList");list.innerHTML="";if(!items.length){list.innerHTML='<div class="empty"><strong>Belum ada jadwal hari ini</strong>Jadwal mengajar aktif akan muncul otomatis di sini.</div>';updatePending();return}
 items.forEach(s=>{const start=String(field(s,["start","jamMulai","jam_mulai"],"—")),end=String(field(s,["end","jamSelesai","jam_selesai"],"")),student=String(field(s,["student","namaSiswa","name"],"Siswa")),prog=program(s),time=end?`${start} – ${end}`:start,duration=durMins(start,end),id=String(field(s,["id","idJadwal","id_jadwal"],""));const item=document.createElement("article");item.className="schedule";Object.assign(item.dataset,{id,idSiswa:String(field(s,["idSiswa","studentId","id_siswa"],"")),student,program:prog,tutor:String(field(s,["tutor","namaTutor","teacher"],tutorName())),time,duration:String(duration),date:dateKeyForItems,start,end});const link=meetLink(s),ready=Boolean(link&&meetIsOpen(s));item.innerHTML=`<div class="time"><strong>${esc(start)}</strong><span>${esc(durText(duration))}</span></div><div><p class="student">${esc(student)}</p><p class="program">${esc(prog)}</p><div class="chips"><span class="chip">${esc(time)}</span><span class="chip">${esc(tutorName())}</span></div></div><div class="actions"><button type="button" class="btn btn-primary history-open">Isi Riwayat</button><button type="button" class="btn btn-remind remind-parent">Ingatkan Orang Tua via WhatsApp</button><button type="button" class="btn btn-meet meet-open" ${ready?"":"disabled"}>${ready?"▶ Mulai Google Meet":link?"Meet belum dimulai":"Tautan Meet belum tersedia"}</button></div>`;item.querySelector(".history-open").addEventListener("click",()=>openHistory(item));item.querySelector(".remind-parent").addEventListener("click",()=>remindParent(s,dateKeyForItems,item.dataset.student));const mb=item.querySelector(".meet-open");if(ready)mb.addEventListener("click",()=>{const safe=meetLink(s);if(safe&&meetIsOpen(s))window.open(safe,"_blank","noopener,noreferrer")});list.appendChild(item)});updatePending();restoreDone();setIntervalMeet()}
 function dayIndex(value){const v=String(value||"").trim().toLowerCase();return days.findIndex(d=>d.toLowerCase()===v)}
