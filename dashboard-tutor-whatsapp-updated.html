@@ -118,7 +118,6 @@ async function loadMeetLinks(items){
  }));
 }
 
-```javascript
 async function loadSchedules() {
   const list = $("scheduleList");
 
@@ -189,7 +188,6 @@ async function loadSchedules() {
     $("activeStudentCount").textContent = "—";
   }
 }
-```
 function render(items,dateKeyForItems=todayKey()){const list=$("scheduleList");list.innerHTML="";if(!items.length){list.innerHTML='<div class="empty"><strong>Belum ada jadwal hari ini</strong>Jadwal mengajar aktif akan muncul otomatis di sini.</div>';updatePending();return}
 items.forEach(s=>{const start=String(field(s,["start","jamMulai","jam_mulai"],"—")),end=String(field(s,["end","jamSelesai","jam_selesai"],"")),student=String(field(s,["student","namaSiswa","name"],"Siswa")),prog=program(s),time=end?`${start} – ${end}`:start,duration=durMins(start,end),id=String(field(s,["id","idJadwal","id_jadwal"],""));const item=document.createElement("article");item.className="schedule";Object.assign(item.dataset,{id,idSiswa:String(field(s,["idSiswa","studentId","id_siswa"],"")),student,program:prog,tutor:String(field(s,["tutor","namaTutor","teacher"],tutorName())),time,duration:String(duration),date:dateKeyForItems,start,end});const link=meetLink(s),ready=Boolean(link&&meetIsOpen(s));item.innerHTML=`<div class="time"><strong>${esc(start)}</strong><span>${esc(durText(duration))}</span></div><div><p class="student">${esc(student)}</p><p class="program">${esc(prog)}</p><div class="chips"><span class="chip">${esc(time)}</span><span class="chip">${esc(tutorName())}</span></div></div><div class="actions"><button type="button" class="btn btn-primary history-open">Isi Riwayat</button><button type="button" class="btn btn-remind remind-parent">Ingatkan Orang Tua via WhatsApp</button><button type="button" class="btn btn-meet meet-open" ${ready?"":"disabled"}>${ready?"▶ Mulai Google Meet":link?"Meet belum dimulai":"Tautan Meet belum tersedia"}</button></div>`;item.querySelector(".history-open").addEventListener("click",()=>openHistory(item));item.querySelector(".remind-parent").addEventListener("click",()=>remindParent(s,dateKeyForItems,item.dataset.student));const mb=item.querySelector(".meet-open");if(ready)mb.addEventListener("click",()=>{const safe=meetLink(s);if(safe&&meetIsOpen(s))window.open(safe,"_blank","noopener,noreferrer")});list.appendChild(item)});updatePending();restoreDone();setIntervalMeet()}
 function dayIndex(value){const v=String(value||"").trim().toLowerCase();return days.findIndex(d=>d.toLowerCase()===v)}
@@ -297,7 +295,34 @@ $("meetLinkForm").addEventListener("submit",async e=>{
  }catch(err){showMessage("meetErrorMessage",err.message||"Gagal menyimpan link Meet.")}
  finally{btn.disabled=false;btn.textContent="Simpan Link Meet"}
 });
-async function loadStudentCount(){try{const data=await request(`${API_URL}?action=getStudents`);if(!Array.isArray(data))throw new Error("Data siswa tidak valid");$("activeStudentCount").textContent=data.filter(s=>String(s.status||"").trim().toLowerCase()==="aktif").length}catch(e){console.warn(e);$("activeStudentCount").textContent="—"}}
+async function loadStudentCount() {
+  try {
+    // Gunakan jadwal yang sudah dimuat khusus untuk tentor ini.
+    const uniqueStudents = new Set(
+      schedules
+        .filter(function(s) {
+          const status = String(
+            field(s, ["status"], "Aktif")
+          ).trim().toLowerCase();
+
+          return status !== "dibatalkan";
+        })
+        .map(function(s) {
+          return String(
+            field(s, ["idSiswa", "ID_SISWA"], "")
+          ).trim();
+        })
+        .filter(Boolean)
+    );
+
+    $("activeStudentCount").textContent =
+      uniqueStudents.size;
+
+  } catch (e) {
+    console.warn("Gagal menghitung siswa:", e);
+    $("activeStudentCount").textContent = "—";
+  }
+}
 function updatePending(){let n=0;document.querySelectorAll(".schedule").forEach(i=>{const b=i.querySelector(".history-open");if(b&&!b.classList.contains("btn-done"))n++});$("pendingCount").textContent=n}
 function openHistory(item){currentItem=item;$("infoStudent").textContent=item.dataset.student;$("infoProgram").textContent=item.dataset.program;$("infoDate").textContent=formatDate(item.dataset.date);$("infoTime").textContent=item.dataset.time;$("infoDuration").textContent=durText(item.dataset.duration);$("historySubtitle").textContent=`${item.dataset.student} · ${item.dataset.program} · ${item.dataset.time}`;hideMessages();$("historyCard").classList.add("active");$("historyCard").scrollIntoView({behavior:"smooth",block:"start"})}
 function formatDate(v){const d=new Date(`${v}T00:00:00`);return Number.isNaN(d.getTime())?v:`${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`}
