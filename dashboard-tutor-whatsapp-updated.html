@@ -189,7 +189,44 @@ async function loadSchedules() {
   }
 }
 function render(items,dateKeyForItems=todayKey()){const list=$("scheduleList");list.innerHTML="";if(!items.length){list.innerHTML='<div class="empty"><strong>Belum ada jadwal hari ini</strong>Jadwal mengajar aktif akan muncul otomatis di sini.</div>';updatePending();return}
-items.forEach(s=>{const start=String(field(s,["start","jamMulai","jam_mulai"],"—")),end=String(field(s,["end","jamSelesai","jam_selesai"],"")),student=String(field(s,["student","namaSiswa","name"],"Siswa")),prog=program(s),time=end?`${start} – ${end}`:start,duration=durMins(start,end),id=String(field(s,["id","idJadwal","id_jadwal"],""));const item=document.createElement("article");item.className="schedule";Object.assign(item.dataset,{id,idSiswa:String(field(s,["idSiswa","studentId","id_siswa"],"")),student,program:prog,tutor:String(field(s,["tutor","namaTutor","teacher"],tutorName())),time,duration:String(duration),date:dateKeyForItems,start,end});const link=meetLink(s),ready=Boolean(link&&meetIsOpen(s));item.innerHTML=`<div class="time"><strong>${esc(start)}</strong><span>${esc(durText(duration))}</span></div><div><p class="student">${esc(student)}</p><p class="program">${esc(prog)}</p><div class="chips"><span class="chip">${esc(time)}</span><span class="chip">${esc(tutorName())}</span></div></div><div class="actions"><button type="button" class="btn btn-primary history-open">Isi Riwayat</button><button type="button" class="btn btn-remind remind-parent">Ingatkan Orang Tua via WhatsApp</button><button type="button" class="btn btn-meet meet-open" ${ready?"":"disabled"}>${ready?"▶ Mulai Google Meet":link?"Meet belum dimulai":"Tautan Meet belum tersedia"}</button></div>`;item.querySelector(".history-open").addEventListener("click",()=>openHistory(item));item.querySelector(".remind-parent").addEventListener("click",()=>remindParent(s,dateKeyForItems,item.dataset.student));const mb=item.querySelector(".meet-open");if(ready)mb.addEventListener("click",()=>{const safe=meetLink(s);if(safe&&meetIsOpen(s))window.open(safe,"_blank","noopener,noreferrer")});list.appendChild(item)});updatePending();restoreDone();setIntervalMeet()}
+items.forEach(s=>{const start=String(field(s,["start","jamMulai","jam_mulai"],"—")),end=String(field(s,["end","jamSelesai","jam_selesai"],"")),student=String(field(s,["student","namaSiswa","name"],"Siswa")),prog=program(s),time=end?`${start} – ${end}`:start,duration=durMins(start,end),id=String(field(s,["id","idJadwal","id_jadwal"],""));const item=document.createElement("article");item.className="schedule";Object.assign(item.dataset,{id,idSiswa:String(field(s,["idSiswa","studentId","id_siswa"],"")),student,program:prog,tutor:String(field(s,["tutor","namaTutor","teacher"],tutorName())),time,duration:String(duration),date:dateKeyForItems,start,end});const link=meetLink(s),ready=Boolean(link&&meetIsOpen(s));
+                
+// Informasi permintaan perubahan jadwal dari orang tua.
+const permintaan = s.permintaan;
+
+let permintaanHTML = "";
+
+if (
+  permintaan &&
+  String(permintaan.status || "").trim().toLowerCase() === "menunggu"
+) {
+  const jenis = String(permintaan.jenis || "Permintaan jadwal");
+  const alasan = String(permintaan.alasan || "Tidak ada alasan");
+  const tanggalPengganti = String(permintaan.tanggalPengganti || "");
+  const jamMulaiPengganti = String(permintaan.jamMulai || "");
+  const jamSelesaiPengganti = String(permintaan.jamSelesai || "");
+
+  const waktuPengganti = [
+    tanggalPengganti,
+    jamMulaiPengganti && jamSelesaiPengganti
+      ? `${jamMulaiPengganti}–${jamSelesaiPengganti}`
+      : jamMulaiPengganti
+  ].filter(Boolean).join(" • ");
+
+  permintaanHTML = `
+    <div class="request-notice">
+      <strong>⚠️ Permintaan Orang Tua — Menunggu</strong>
+      <p><b>Jenis:</b> ${esc(jenis)}</p>
+      <p><b>Alasan:</b> ${esc(alasan)}</p>
+      ${
+        waktuPengganti
+          ? `<p><b>Waktu yang diminta:</b> ${esc(waktuPengganti)}</p>`
+          : ""
+      }
+    </div>
+  `;
+}
+                  item.innerHTML=`<div class="time"><strong>${esc(start)}</strong><span>${esc(durText(duration))}</span></div><div><p class="student">${esc(student)}</p><p class="program">${esc(prog)}</p><div class="chips"><span class="chip">${esc(time)}</span><span class="chip">${esc(tutorName())}</span></div></div><div class="actions"><button type="button" class="btn btn-primary history-open">Isi Riwayat</button><button type="button" class="btn btn-remind remind-parent">Ingatkan Orang Tua via WhatsApp</button><button type="button" class="btn btn-meet meet-open" ${ready?"":"disabled"}>${ready?"▶ Mulai Google Meet":link?"Meet belum dimulai":"Tautan Meet belum tersedia"}</button></div>`;item.querySelector(".history-open").addEventListener("click",()=>openHistory(item));item.querySelector(".remind-parent").addEventListener("click",()=>remindParent(s,dateKeyForItems,item.dataset.student));const mb=item.querySelector(".meet-open");if(ready)mb.addEventListener("click",()=>{const safe=meetLink(s);if(safe&&meetIsOpen(s))window.open(safe,"_blank","noopener,noreferrer")});list.appendChild(item)});updatePending();restoreDone();setIntervalMeet()}
 function dayIndex(value){const v=String(value||"").trim().toLowerCase();return days.findIndex(d=>d.toLowerCase()===v)}
 function dateKeyForDate(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
 function schedulesForDate(key){const d=new Date(`${key}T00:00:00`);return schedules.filter(s=>{const raw=String(field(s,["date","tanggal","scheduleDate","tanggalJadwal"],"")).trim();if(raw){let norm="";if(/^\d{4}-\d{2}-\d{2}$/.test(raw))norm=raw;else{const m=raw.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);if(m)norm=`${m[3]}-${pad(Number(m[2]))}-${pad(Number(m[1]))}`;else{const parsed=new Date(raw);if(!Number.isNaN(parsed.getTime()))norm=dateKeyForDate(parsed)}}if(norm)return norm===key}return dayIndex(field(s,["day","hari"],""))===d.getDay()})}
