@@ -7,6 +7,28 @@
 <title>Dashboard Tentor | Suryantara Education</title>
 <link rel="stylesheet" href="style.css">
 <style>
+.request-notice {
+  grid-column: 1 / -1;
+  margin: 10px 0;
+  padding: 12px 14px;
+  border: 1px solid #f0c36d;
+  border-left: 4px solid #d99a16;
+  border-radius: 8px;
+  background: #fff8e8;
+  color: #654b12;
+  font-size: 13px;
+}
+
+.request-notice strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.request-notice p {
+  margin: 4px 0;
+  overflow-wrap: anywhere;
+}
+  
 :root{--navy:#102542;--navy2:#194875;--gold:#d8ad49;--ink:#172b45;--muted:#667085;--line:#e5eaf0;--bg:#f4f6fa;--green:#176b40}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Arial,sans-serif}button,input,textarea{font:inherit}button{cursor:pointer}
 .header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line)}.header-inner{max-width:1180px;margin:auto;padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}
@@ -226,7 +248,7 @@ if (
     </div>
   `;
 }
-                  item.innerHTML=`<div class="time"><strong>${esc(start)}</strong><span>${esc(durText(duration))}</span></div><div><p class="student">${esc(student)}</p><p class="program">${esc(prog)}</p><div class="chips"><span class="chip">${esc(time)}</span><span class="chip">${esc(tutorName())}</span></div></div><div class="actions"><button type="button" class="btn btn-primary history-open">Isi Riwayat</button><button type="button" class="btn btn-remind remind-parent">Ingatkan Orang Tua via WhatsApp</button><button type="button" class="btn btn-meet meet-open" ${ready?"":"disabled"}>${ready?"▶ Mulai Google Meet":link?"Meet belum dimulai":"Tautan Meet belum tersedia"}</button></div>`;item.querySelector(".history-open").addEventListener("click",()=>openHistory(item));item.querySelector(".remind-parent").addEventListener("click",()=>remindParent(s,dateKeyForItems,item.dataset.student));const mb=item.querySelector(".meet-open");if(ready)mb.addEventListener("click",()=>{const safe=meetLink(s);if(safe&&meetIsOpen(s))window.open(safe,"_blank","noopener,noreferrer")});list.appendChild(item)});updatePending();restoreDone();setIntervalMeet()}
+                  item.innerHTML=`<div class="time"><strong>${esc(start)}</strong><span>${esc(durText(duration))}</span></div><div><p class="student">${esc(student)}</p><p class="program">${esc(prog)}</p><div class="chips"><span class="chip">${esc(time)}</span><span class="chip">${esc(tutorName())}</span></div></div>${permintaanHTML}<div class="actions"><button type="button" class="btn btn-primary history-open">Isi Riwayat</button><button type="button" class="btn btn-remind remind-parent">Ingatkan Orang Tua via WhatsApp</button><button type="button" class="btn btn-meet meet-open" ${ready?"":"disabled"}>${ready?"▶ Mulai Google Meet":link?"Meet belum dimulai":"Tautan Meet belum tersedia"}</button></div>`;item.querySelector(".history-open").addEventListener("click",()=>openHistory(item));item.querySelector(".remind-parent").addEventListener("click",()=>remindParent(s,dateKeyForItems,item.dataset.student));const mb=item.querySelector(".meet-open");if(ready)mb.addEventListener("click",()=>{const safe=meetLink(s);if(safe&&meetIsOpen(s))window.open(safe,"_blank","noopener,noreferrer")});list.appendChild(item)});updatePending();restoreDone();setIntervalMeet()}
 function dayIndex(value){const v=String(value||"").trim().toLowerCase();return days.findIndex(d=>d.toLowerCase()===v)}
 function dateKeyForDate(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
 function schedulesForDate(key){const d=new Date(`${key}T00:00:00`);return schedules.filter(s=>{const raw=String(field(s,["date","tanggal","scheduleDate","tanggalJadwal"],"")).trim();if(raw){let norm="";if(/^\d{4}-\d{2}-\d{2}$/.test(raw))norm=raw;else{const m=raw.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);if(m)norm=`${m[3]}-${pad(Number(m[2]))}-${pad(Number(m[1]))}`;else{const parsed=new Date(raw);if(!Number.isNaN(parsed.getTime()))norm=dateKeyForDate(parsed)}}if(norm)return norm===key}return dayIndex(field(s,["day","hari"],""))===d.getDay()})}
