@@ -388,7 +388,74 @@ if (tombolTolak && s.permintaan) {
 item.querySelector(".remind-parent").addEventListener("click",()=>remindParent(s,dateKeyForItems,item.dataset.student));const mb=item.querySelector(".meet-open");if(ready)mb.addEventListener("click",()=>{const safe=meetLink(s);if(safe&&meetIsOpen(s))window.open(safe,"_blank","noopener,noreferrer")});list.appendChild(item)});updatePending();restoreDone();setIntervalMeet()}
 function dayIndex(value){const v=String(value||"").trim().toLowerCase();return days.findIndex(d=>d.toLowerCase()===v)}
 function dateKeyForDate(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
-function schedulesForDate(key){const d=new Date(`${key}T00:00:00`);return schedules.filter(s=>{const raw=String(field(s,["date","tanggal","scheduleDate","tanggalJadwal"],"")).trim();if(raw){let norm="";if(/^\d{4}-\d{2}-\d{2}$/.test(raw))norm=raw;else{const m=raw.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);if(m)norm=`${m[3]}-${pad(Number(m[2]))}-${pad(Number(m[1]))}`;else{const parsed=new Date(raw);if(!Number.isNaN(parsed.getTime()))norm=dateKeyForDate(parsed)}}if(norm)return norm===key}return dayIndex(field(s,["day","hari"],""))===d.getDay()})}
+
+function schedulesForDate(key) {
+  const d = new Date(`${key}T00:00:00`);
+  const hariIni = d.getDay();
+
+  return schedules.filter(s => {
+    // Periksa apakah jadwal rutin berlangsung pada tanggal ini.
+    const raw = String(
+      field(s, ["date", "tanggal", "scheduleDate", "tanggalJadwal"], "")
+    ).trim();
+
+    let norm = "";
+
+    if (raw) {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+        norm = raw;
+      } else {
+        const m = raw.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+
+        if (m) {
+          norm = `${m[3]}-${pad(Number(m[2]))}-${pad(Number(m[1]))}`;
+        } else {
+          const parsed = new Date(raw);
+
+          if (!Number.isNaN(parsed.getTime())) {
+            norm = dateKeyForDate(parsed);
+          }
+        }
+      }
+
+      if (norm && norm !== key) return false;
+
+      if (!norm) {
+        return dayIndex(field(s, ["day", "hari"], "")) === hariIni;
+      }
+    } else {
+      if (dayIndex(field(s, ["day", "hari"], "")) !== hariIni) {
+        return false;
+      }
+    }
+
+    // Ambil seluruh riwayat permintaan jadwal.
+    const riwayat = Array.isArray(s.riwayatPermintaan)
+      ? s.riwayatPermintaan
+      : [];
+
+    // Periksa permintaan yang disetujui untuk tanggal ini.
+    const permintaanTanggalIni = riwayat.filter(r => {
+      const status = String(r.status || "").trim().toLowerCase();
+      const tanggalAsal = String(r.tanggalAsal || "").trim();
+
+      return (
+        status === "disetujui" &&
+        tanggalAsal === key
+      );
+    });
+
+    // Pembatalan yang disetujui menghilangkan sesi rutin
+    // hanya pada tanggal asal.
+    const dibatalkan = permintaanTanggalIni.some(r =>
+      String(r.jenis || "").trim().toLowerCase() === "pembatalan"
+    );
+
+    if (dibatalkan) return false;
+
+    return true;
+  });
+}
 function completedOn(key){try{const v=JSON.parse(localStorage.getItem("suryantaraLessons")||"[]");return Array.isArray(v)&&v.some(x=>x&&x.date===key&&x.status==="completed")}catch(e){return false}}
 function renderTutorCalendar(){const grid=$("tutorCalendarDays"),heading=$("tutorCalendarMonth");if(!grid||!heading)return;grid.innerHTML="";const y=calendarCurrent.getFullYear(),m=calendarCurrent.getMonth();heading.textContent=`${months[m]} ${y}`;const first=new Date(y,m,1).getDay(),total=new Date(y,m+1,0).getDate(),today=todayKey();for(let i=0;i<first;i++){const e=document.createElement("div");e.className="tutor-calendar-day empty";grid.appendChild(e)}for(let n=1;n<=total;n++){const key=`${y}-${pad(m+1)}-${pad(n)}`,items=schedulesForDate(key),done=completedOn(key),btn=document.createElement("button");btn.type="button";btn.className="tutor-calendar-day";if(items.length)btn.classList.add("has-schedule");if(done)btn.classList.add("completed");if(key===today)btn.classList.add("today");if(key===selectedDateKey)btn.classList.add("selected");const num=document.createElement("span");num.className="tutor-day-number";num.textContent=n;btn.appendChild(num);if(items.length){const times=[...new Set(items.map(s=>{const st=String(field(s,["start","jamMulai","jam_mulai"],"")),en=String(field(s,["end","jamSelesai","jam_selesai"],""));return en?`${st} – ${en}`:st||"Waktu belum ditentukan"}))].slice(0,2);const t=document.createElement("span");t.className="tutor-day-time";t.innerHTML=times.map(esc).join("<br>");btn.appendChild(t)}btn.setAttribute("aria-label",`${n} ${months[m]} ${y}${items.length?`, ${items.length} sesi`:", tidak ada jadwal"}`);btn.addEventListener("click",()=>{selectedDateKey=key;renderTutorCalendar();renderSelectedDate(key)});grid.appendChild(btn)}}
 function renderSelectedDate(key){const d=new Date(`${key}T00:00:00`);const items=schedulesForDate(key).sort((a,b)=>{const av=String(field(a,["start","jamMulai","jam_mulai"],""));const bv=String(field(b,["start","jamMulai","jam_mulai"],""));return av.localeCompare(bv)});$("selectedDayTitle").textContent=d.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});$("selectedDaySubtitle").textContent=items.length?`${items.length} sesi mengajar pada tanggal ini.`:"Tidak ada jadwal mengajar pada tanggal ini.";render(items,key)}
