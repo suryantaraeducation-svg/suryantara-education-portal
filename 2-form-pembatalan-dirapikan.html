@@ -1411,9 +1411,9 @@ function updateRequestFields() {
 
   // Tanggal asal selalu diperlukan untuk pembatalan
   // dan penggantian jadwal.
-  originalDateFieldEl.style.display = isExtra ? "none" : "";
+  originalDateFieldEl.style.display = "";
 
-  requestDateEl.required = !isExtra;
+  requestDateEl.required = true;
   requestDateEl.disabled = false;
 
   // Tanggal pengganti hanya diperlukan untuk ganti jadwal.
