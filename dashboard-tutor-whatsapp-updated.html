@@ -242,6 +242,8 @@ async function loadSchedules() {
       `${API_URL}?action=getTutorSchedules&sessionToken=${encodeURIComponent(auth.sessionToken)}`
     );
 
+      console.log("DATA JADWAL TENTOR:", data);
+    
     if (!Array.isArray(data)) {
       throw new Error(
         data.message || "Format data jadwal tidak valid."
