@@ -682,28 +682,95 @@ Klik tanggal yang memiliki jadwal untuk melihat detail kegiatan belajar.
     <div class="schedule-request-card">
       <h3>Permintaan Perubahan Jadwal</h3>
       <p>Ajukan pembatalan untuk satu tanggal les tertentu. Permintaan akan menunggu persetujuan tentor; jadwal rutin pada tanggal lainnya tidak berubah.</p>
-      <form id="scheduleRequestForm">
+        <form id="scheduleRequestForm">
         <div class="request-grid">
-          <div class="request-field full"><label for="requestType">Jenis Permintaan</label><select id="requestType" required><option value="Dibatalkan" selected>Batalkan satu pertemuan</option><option value="Ganti Hari">Ganti jadwal pertemuan</option><option value="Jadwal Tambahan">Ajukan jadwal tambahan</option></select></div>
-          <div class="request-field full" id="sessionField"><label for="requestSession">Sesi rutin (digunakan untuk penggantian)</label><select id="requestSession"><option value="">Memuat jadwal...</option></select></div>
-          <div class="request-field"><label for="requestDate" id="requestDateLabel">Tanggal les yang ingin dibatalkan</label><input type="date" id="requestDate"></div>
-          
+      
+          <!-- JENIS PERMINTAAN -->
+          <div class="request-field full">
+            <label for="requestType">Jenis Permintaan</label>
+            <select id="requestType" required>
+              <option value="Dibatalkan" selected>
+                Batalkan satu pertemuan
+              </option>
+              <option value="Ganti Hari">
+                Ganti jadwal pertemuan
+              </option>
+              <option value="Jadwal Tambahan">
+                Ajukan jadwal tambahan
+              </option>
+            </select>
+          </div>
+      
+          <!-- SESI RUTIN -->
+          <div class="request-field full" id="sessionField">
+            <label for="requestSession">
+              Pilih jadwal rutin yang ingin diubah
+            </label>
+            <select id="requestSession">
+              <option value="">Memuat jadwal...</option>
+            </select>
+          </div>
+      
+          <!-- TANGGAL PERTEMUAN ASAL -->
+          <div class="request-field" id="originalDateField">
+            <label for="requestDate" id="requestDateLabel">
+              Tanggal les yang ingin dibatalkan
+            </label>
+            <input type="date" id="requestDate">
+          </div>
+      
+          <!-- TANGGAL PENGGANTI -->
+          <div class="request-field" id="replacementDateField" style="display:none">
+            <label for="requestReplacementDate">
+              Tanggal pengganti
+            </label>
+            <input type="date" id="requestReplacementDate">
+          </div>
+      
+          <!-- JAM MULAI -->
           <div class="request-field" id="startTimeField">
             <label for="requestStart">Jam mulai</label>
             <input type="time" id="requestStart" step="900">
           </div>
-
-        
+      
+          <!-- JAM SELESAI -->
           <div class="request-field" id="endTimeField">
             <label for="requestEnd">Jam selesai</label>
             <input type="time" id="requestEnd" step="900">
           </div>
+      
+          <!-- ALASAN -->
+          <div class="request-field full">
+            <label for="requestReason" id="requestReasonLabel">
+              Alasan pembatalan
+            </label>
+            <textarea
+              id="requestReason"
+              rows="3"
+              required
+              maxlength="1000"
+              placeholder="Tuliskan alasan pembatalan"
+            ></textarea>
+          </div>
 
-          <div class="request-field full"><label for="requestReason" id="requestReasonLabel">Alasan pembatalan</label><textarea id="requestReason" rows="3" required maxlength="1000" placeholder="Tuliskan alasan pembatalan"></textarea></div>
-        </div>
-        <button class="request-submit" type="submit" id="requestSubmit">Kirim Permintaan Perubahan Sesi</button>
-        <div class="request-message" id="requestMessage" role="status" aria-live="polite"></div>
-      </form>
+          </div>
+        
+          <button
+            class="request-submit"
+            type="submit"
+            id="requestSubmit"
+          >
+            Kirim Permintaan Pembatalan
+          </button>
+        
+          <div
+            class="request-message"
+            id="requestMessage"
+            role="status"
+            aria-live="polite"
+          ></div>
+        </form>
+      
     </div>
   </div>
 </section>
@@ -1296,6 +1363,15 @@ const requestTypeEl=document.getElementById("requestType");
 const requestSessionEl=document.getElementById("requestSession");
 const sessionFieldEl=document.getElementById("sessionField");
 const requestDateEl=document.getElementById("requestDate");
+  const requestReplacementDateEl =
+  document.getElementById("requestReplacementDate");
+
+const replacementDateFieldEl =
+  document.getElementById("replacementDateField");
+
+const originalDateFieldEl =
+  document.getElementById("originalDateField");
+  
 const requestStartEl=document.getElementById("requestStart");
 const requestEndEl=document.getElementById("requestEnd");
 const startTimeFieldEl = document.getElementById("startTimeField");
@@ -1316,29 +1392,77 @@ function fillRequestSessions(){
   });
   if(currentValue)requestSessionEl.value=currentValue;
 }
-function updateRequestFields(){
-  const type=requestTypeEl.value;
-  const isCancel=type==="Dibatalkan";
-  const isExtra=type==="Jadwal Tambahan";
-  const needsSession=!isCancel && !isExtra;
-  sessionFieldEl.style.display=needsSession?"flex":"none";
-  requestSessionEl.required=needsSession;
-  requestDateEl.required=true;
-  requestDateEl.disabled=false;
-  requestStartEl.required=!isCancel;
-  requestEndEl.required=!isCancel;
-  requestStartEl.disabled=isCancel;
-  requestEndEl.disabled=isCancel;
+
+function updateRequestFields() {
+  const type = requestTypeEl.value;
+
+  const isCancel = type === "Dibatalkan";
+  const isExtra = type === "Jadwal Tambahan";
+  const isReschedule = type === "Ganti Hari";
+
+  // Tampilkan pilihan jadwal rutin untuk pembatalan
+  // dan penggantian jadwal.
+  const needsSession = !isExtra;
+
+  sessionFieldEl.style.display = needsSession ? "flex" : "none";
+  requestSessionEl.required = needsSession;
+
+  // Tanggal asal selalu diperlukan untuk pembatalan
+  // dan penggantian jadwal.
+  originalDateFieldEl.style.display = isExtra ? "none" : "";
+
+  requestDateEl.required = !isExtra;
+  requestDateEl.disabled = false;
+
+  // Tanggal pengganti hanya diperlukan untuk ganti jadwal.
+  replacementDateFieldEl.style.display =
+    isReschedule ? "" : "none";
+
+  requestReplacementDateEl.required = isReschedule;
+  requestReplacementDateEl.disabled = !isReschedule;
+
+  // Jam hanya diperlukan untuk ganti jadwal
+  // dan jadwal tambahan.
+  requestStartEl.required = !isCancel;
+  requestEndEl.required = !isCancel;
+
+  requestStartEl.disabled = isCancel;
+  requestEndEl.disabled = isCancel;
+
   startTimeFieldEl.style.display = isCancel ? "none" : "";
   endTimeFieldEl.style.display = isCancel ? "none" : "";
-  document.getElementById("requestDateLabel").textContent=isCancel
-    ? "Tanggal les yang ingin dibatalkan"
-    : isExtra ? "Tanggal les tambahan yang diminta" : "Tanggal les pengganti";
-  document.getElementById("requestReasonLabel").textContent=isCancel
-    ? "Alasan pembatalan" : isExtra ? "Alasan penambahan jadwal" : "Alasan penggantian sesi";
-  document.getElementById("requestReason").placeholder=isCancel
-    ? "Tuliskan alasan pembatalan" : isExtra ? "Tuliskan alasan meminta sesi tambahan" : "Tuliskan alasan penggantian sesi";
-  requestSubmitEl.textContent=isCancel?"Kirim Permintaan Pembatalan":isExtra?"Ajukan Jadwal Tambahan":"Kirim Permintaan Perubahan Sesi";
+
+  // Label tanggal asal.
+  document.getElementById("requestDateLabel").textContent =
+    isCancel
+      ? "Tanggal les yang ingin dibatalkan"
+      : isReschedule
+        ? "Tanggal les yang ingin diubah"
+        : "Tanggal les tambahan yang diminta";
+
+  // Label alasan.
+  document.getElementById("requestReasonLabel").textContent =
+    isCancel
+      ? "Alasan pembatalan"
+      : isReschedule
+        ? "Alasan penggantian jadwal"
+        : "Alasan penambahan jadwal";
+
+  // Placeholder alasan.
+  document.getElementById("requestReason").placeholder =
+    isCancel
+      ? "Tuliskan alasan pembatalan"
+      : isReschedule
+        ? "Tuliskan alasan penggantian jadwal"
+        : "Tuliskan alasan meminta sesi tambahan";
+
+  // Teks tombol.
+  requestSubmitEl.textContent =
+    isCancel
+      ? "Kirim Permintaan Pembatalan"
+      : isReschedule
+        ? "Kirim Permintaan Ganti Jadwal"
+        : "Ajukan Jadwal Tambahan";
 }
 requestTypeEl.addEventListener("change",updateRequestFields);
 requestSessionEl.addEventListener("change",()=>{const opt=requestSessionEl.selectedOptions[0];if(opt&&opt.dataset.date){const k=dateKey(opt.dataset.date);if(k)requestDateEl.value=k;}});
