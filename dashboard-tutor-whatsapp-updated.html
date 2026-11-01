@@ -243,6 +243,8 @@ async function loadSchedules() {
     );
 
       console.log("DATA JADWAL TENTOR:", data);
+
+      console.log("RIWAYAT PERMINTAAN:", data.map(s => ({id: s.id,riwayatPermintaan: s.riwayatPermintaan})));
     
     if (!Array.isArray(data)) {
       throw new Error(
