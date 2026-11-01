@@ -1402,7 +1402,7 @@ document.getElementById("scheduleRequestForm").addEventListener("submit",async e
   finally{requestSubmitEl.disabled=false;updateRequestFields();}
 });
 function showRequestMessage(message,ok){requestMessageEl.textContent=message;requestMessageEl.className="request-message show "+(ok?"ok":"err");}
-
+updateRequestFields();
 loadData();
 </script>
 </body>
