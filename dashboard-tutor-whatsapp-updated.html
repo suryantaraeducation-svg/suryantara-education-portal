@@ -245,6 +245,24 @@ async function loadSchedules() {
       console.log("DATA JADWAL TENTOR:", data);
 
       console.log("RIWAYAT PERMINTAAN:", data.map(s => ({id: s.id,riwayatPermintaan: s.riwayatPermintaan})));
+
+     
+          console.log(
+            "DETAIL RIWAYAT PERMINTAAN:",
+            data.flatMap(s =>
+              (s.riwayatPermintaan || []).map(r => ({
+                idJadwal: s.id,
+                namaSiswa: s.student,
+                jenis: r.jenis,
+                tanggalAsal: r.tanggalAsal,
+                jamAsal: r.jamAsal,
+                tanggalPengganti: r.tanggalPengganti,
+                jamMulai: r.jamMulai,
+                jamSelesai: r.jamSelesai,
+                status: r.status
+              }))
+            )
+          );
     
     if (!Array.isArray(data)) {
       throw new Error(
