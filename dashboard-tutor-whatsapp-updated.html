@@ -28,7 +28,22 @@
   margin: 4px 0;
   overflow-wrap: anywhere;
 }
-  
+    .request-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.request-actions button {
+  min-height: 36px;
+}
+
+.request-reject {
+  background: #fff;
+  color: #b42318;
+  border: 1px solid #f0b4b0;
+}
 :root{--navy:#102542;--navy2:#194875;--gold:#d8ad49;--ink:#172b45;--muted:#667085;--line:#e5eaf0;--bg:#f4f6fa;--green:#176b40}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Arial,sans-serif}button,input,textarea{font:inherit}button{cursor:pointer}
 .header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line)}.header-inner{max-width:1180px;margin:auto;padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}
@@ -139,7 +154,71 @@ async function loadMeetLinks(items){
   }catch(e){console.warn("Detail siswa tidak termuat",id,e)}
  }));
 }
+    async function processParentScheduleRequest(permintaan, keputusan) {
+  if (!permintaan || !permintaan.idPermintaan) {
+    alert("ID permintaan tidak ditemukan. Silakan muat ulang dashboard.");
+    return;
+  }
 
+  const aksi = keputusan === "Disetujui" ? "menyetujui" : "menolak";
+
+  const yakin = confirm(
+    `Apakah kamu yakin ingin ${aksi} permintaan jadwal ini?`
+  );
+
+  if (!yakin) return;
+
+  const catatan = prompt(
+    "Catatan untuk orang tua (opsional):",
+    ""
+  );
+
+  if (catatan === null) return;
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        action: "processScheduleRequest",
+        sessionToken: auth.sessionToken,
+        data: {
+          idPermintaan: permintaan.idPermintaan,
+          keputusan: keputusan,
+          catatan: catatan.trim()
+        }
+      })
+    });
+
+    const hasil = await response.json();
+
+    if (!response.ok || hasil.success !== true) {
+      throw new Error(
+        hasil.message || "Permintaan gagal diproses."
+      );
+    }
+
+    alert(
+      keputusan === "Disetujui"
+        ? "Permintaan orang tua berhasil disetujui."
+        : "Permintaan orang tua berhasil ditolak."
+    );
+
+    await loadSchedules();
+
+  } catch (error) {
+    console.error("Gagal memproses permintaan jadwal:", error);
+
+    alert(
+      error.message ||
+      "Terjadi kesalahan saat memproses permintaan."
+    );
+  }
+}
+
+  
 async function loadSchedules() {
   const list = $("scheduleList");
 
@@ -245,10 +324,46 @@ if (
           ? `<p><b>Waktu yang diminta:</b> ${esc(waktuPengganti)}</p>`
           : ""
       }
+        <div class="request-actions">
+      <button
+        type="button"
+        class="btn btn-primary request-approve"
+      >
+        ✓ Setujui
+      </button>
+
+      <button
+        type="button"
+        class="btn request-reject"
+      >
+        ✕ Tolak
+      </button>
+    </div>
     </div>
   `;
 }
-                  item.innerHTML=`<div class="time"><strong>${esc(start)}</strong><span>${esc(durText(duration))}</span></div><div><p class="student">${esc(student)}</p><p class="program">${esc(prog)}</p><div class="chips"><span class="chip">${esc(time)}</span><span class="chip">${esc(tutorName())}</span></div></div>${permintaanHTML}<div class="actions"><button type="button" class="btn btn-primary history-open">Isi Riwayat</button><button type="button" class="btn btn-remind remind-parent">Ingatkan Orang Tua via WhatsApp</button><button type="button" class="btn btn-meet meet-open" ${ready?"":"disabled"}>${ready?"▶ Mulai Google Meet":link?"Meet belum dimulai":"Tautan Meet belum tersedia"}</button></div>`;item.querySelector(".history-open").addEventListener("click",()=>openHistory(item));item.querySelector(".remind-parent").addEventListener("click",()=>remindParent(s,dateKeyForItems,item.dataset.student));const mb=item.querySelector(".meet-open");if(ready)mb.addEventListener("click",()=>{const safe=meetLink(s);if(safe&&meetIsOpen(s))window.open(safe,"_blank","noopener,noreferrer")});list.appendChild(item)});updatePending();restoreDone();setIntervalMeet()}
+                  item.innerHTML=`<div class="time"><strong>${esc(start)}</strong><span>${esc(durText(duration))}</span></div><div><p class="student">${esc(student)}</p><p class="program">${esc(prog)}</p><div class="chips"><span class="chip">${esc(time)}</span><span class="chip">${esc(tutorName())}</span></div></div>${permintaanHTML}<div class="actions"><button type="button" class="btn btn-primary history-open">Isi Riwayat</button><button type="button" class="btn btn-remind remind-parent">Ingatkan Orang Tua via WhatsApp</button><button type="button" class="btn btn-meet meet-open" ${ready?"":"disabled"}>${ready?"▶ Mulai Google Meet":link?"Meet belum dimulai":"Tautan Meet belum tersedia"}</button></div>`;item.querySelector(".history-open").addEventListener("click",()=>openHistory(item));
+                  const tombolSetujui = item.querySelector(".request-approve");
+const tombolTolak = item.querySelector(".request-reject");
+
+if (tombolSetujui && s.permintaan) {
+  tombolSetujui.addEventListener("click", () => {
+    processParentScheduleRequest(
+      s.permintaan,
+      "Disetujui"
+    );
+  });
+}
+
+if (tombolTolak && s.permintaan) {
+  tombolTolak.addEventListener("click", () => {
+    processParentScheduleRequest(
+      s.permintaan,
+      "Ditolak"
+    );
+  });
+}
+item.querySelector(".remind-parent").addEventListener("click",()=>remindParent(s,dateKeyForItems,item.dataset.student));const mb=item.querySelector(".meet-open");if(ready)mb.addEventListener("click",()=>{const safe=meetLink(s);if(safe&&meetIsOpen(s))window.open(safe,"_blank","noopener,noreferrer")});list.appendChild(item)});updatePending();restoreDone();setIntervalMeet()}
 function dayIndex(value){const v=String(value||"").trim().toLowerCase();return days.findIndex(d=>d.toLowerCase()===v)}
 function dateKeyForDate(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
 function schedulesForDate(key){const d=new Date(`${key}T00:00:00`);return schedules.filter(s=>{const raw=String(field(s,["date","tanggal","scheduleDate","tanggalJadwal"],"")).trim();if(raw){let norm="";if(/^\d{4}-\d{2}-\d{2}$/.test(raw))norm=raw;else{const m=raw.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);if(m)norm=`${m[3]}-${pad(Number(m[2]))}-${pad(Number(m[1]))}`;else{const parsed=new Date(raw);if(!Number.isNaN(parsed.getTime()))norm=dateKeyForDate(parsed)}}if(norm)return norm===key}return dayIndex(field(s,["day","hari"],""))===d.getDay()})}
