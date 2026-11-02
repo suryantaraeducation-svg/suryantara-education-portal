@@ -788,7 +788,7 @@ dan dicatat oleh tutor.
 </main>
 
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbwN_ClVbJs_cdan5yELLxunUMohKnOB0ku3vauGBwTo964eR8j2QWH-t0vwtbc_00sG/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbzZKgSp1lUAWjIbh0txBJwH4ZqImDcdcIjuD_ED6E7Tn0pMRZJfIkbrWiK2w88nJxHt/exec";
 const months=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 const dayNames=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 const calendarDays=document.getElementById("calendarDays");
@@ -1475,6 +1475,10 @@ document.getElementById("scheduleRequestForm").addEventListener("submit",async e
   const chosenDate=requestDateEl.value;
   const start=requestStartEl.value,end=requestEndEl.value;
   if(!chosenDate){showRequestMessage("Pilih tanggal les terlebih dahulu.",false);return;}
+  if (type === "Ganti Hari" && !requestReplacementDateEl.value) {
+  showRequestMessage("Pilih tanggal pengganti terlebih dahulu.", false);
+  return;
+  }
   if(type!=="Dibatalkan"){
     if(!start||!end){showRequestMessage("Isi jam mulai dan jam selesai.",false);return;}
     const mins=t=>{const [h,m]=t.split(":").map(Number);return h*60+m;};
@@ -1503,17 +1507,28 @@ document.getElementById("scheduleRequestForm").addEventListener("submit",async e
   } else if(type!=="Jadwal Tambahan"&&!idJadwal){
     showRequestMessage("Pilih sesi rutin yang ingin diganti.",false);return;
   }
-  const data={
-    idSiswa:auth.idSiswa,
-    jenis:type,
-    idJadwal:idJadwal,
-    tanggal:chosenDate,
-    jamMulai:type==="Dibatalkan"?"":start,
-    jamSelesai:type==="Dibatalkan"?"":end,
-    alasan:document.getElementById("requestReason").value.trim(),
-    tanggalAsli:tanggalAsli,
-    tutor:tutor
-  };
+ 
+    const data = {
+      idSiswa: auth.idSiswa,
+      jenis: type,
+      idJadwal: idJadwal,
+    
+      // Tanggal pertemuan asal.
+      tanggalAsli: type === "Jadwal Tambahan"
+        ? ""
+        : chosenDate,
+    
+      // Tanggal pertemuan pengganti atau tambahan.
+      tanggalPengganti: type === "Dibatalkan"
+        ? ""
+        : requestReplacementDateEl.value,
+    
+      jamMulai: type === "Dibatalkan" ? "" : start,
+      jamSelesai: type === "Dibatalkan" ? "" : end,
+    
+      alasan: document.getElementById("requestReason").value.trim(),
+      tutor: tutor
+    };
   if(!data.alasan){showRequestMessage("Tuliskan alasan permintaan terlebih dahulu.",false);return;}
   requestSubmitEl.disabled=true;requestSubmitEl.textContent="Menyimpan permintaan...";
   try{
