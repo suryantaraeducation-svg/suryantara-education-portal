@@ -677,29 +677,40 @@ header{
 ===================================================== */
 
 const API_URL =
-    "https://script.google.com/macros/s/AKfycbz0YO7jVKq8tDcblWu4yNXryHz4J3WiAa24xM9STeMMwMA4wO7efOdiecaztozZtru2/exec";
+    "https://script.google.com/macros/s/AKfycbzZKgSp1lUAWjIbh0txBJwH4ZqImDcdcIjuD_ED6E7Tn0pMRZJfIkbrWiK2w88nJxHt/exec";
 
 function getAdminSessionToken(){
-  const keys = ["adminSessionToken","sessionTokenAdmin","adminToken","sessionToken","suryantaraAdminSession","adminSession"];
-  for(const store of [sessionStorage, localStorage]){
-    for(const key of keys){
-      const raw = store.getItem(key);
-      if(!raw) continue;
-      try{
-        const parsed = JSON.parse(raw);
-        if(typeof parsed === "string" && parsed.length > 20) return parsed;
-        if(parsed && typeof parsed === "object"){
-          const token = parsed.token || parsed.sessionToken || parsed.session_token;
-          if(token) return String(token);
-        }
-      }catch(_){ if(raw.length > 20 && !raw.includes(" ")) return raw; }
+  // Halaman login menyimpan seluruh sesi pada sessionStorage dengan key ini.
+  // Ambil token hanya jika sesi yang aktif memang milik Admin.
+  try {
+    const rawAuth = sessionStorage.getItem("suryantaraAuth");
+    if (rawAuth) {
+      const auth = JSON.parse(rawAuth);
+      if (auth && String(auth.role || "").toLowerCase() === "admin" &&
+          auth.sessionToken && String(auth.sessionToken).trim()) {
+        return String(auth.sessionToken).trim();
+      }
     }
-    // Fallback for a token saved under a differently named admin key.
-    for(let i=0;i<store.length;i++){
-      const key=store.key(i)||"";
-      if(!/admin/i.test(key) || !/(session|token|login)/i.test(key)) continue;
-      const raw=store.getItem(key); if(!raw) continue;
-      try{const parsed=JSON.parse(raw);const token=typeof parsed==="string"?parsed:(parsed.token||parsed.sessionToken||parsed.session_token);if(token)return String(token);}catch(_){if(raw.length>20&&!raw.includes(" "))return raw;}
+  } catch (error) {
+    console.warn("Data suryantaraAuth tidak dapat dibaca:", error);
+  }
+
+  // Kompatibilitas dengan kemungkinan key sesi Admin versi sebelumnya.
+  const keys = ["adminSessionToken","sessionTokenAdmin","adminToken","sessionToken","suryantaraAdminSession","adminSession"];
+  for (const store of [sessionStorage, localStorage]) {
+    for (const key of keys) {
+      const raw = store.getItem(key);
+      if (!raw) continue;
+      try {
+        const parsed = JSON.parse(raw);
+        if (typeof parsed === "string" && parsed.length > 20) return parsed;
+        if (parsed && typeof parsed === "object") {
+          const token = parsed.token || parsed.sessionToken || parsed.session_token;
+          if (token) return String(token);
+        }
+      } catch (_) {
+        if (raw.length > 20 && !raw.includes(" ")) return raw;
+      }
     }
   }
   return "";
