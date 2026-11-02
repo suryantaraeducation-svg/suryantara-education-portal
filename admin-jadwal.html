@@ -147,6 +147,27 @@ header{
   flex-shrink:0;
 }
 
+.request-section{margin-top:28px;}
+.request-section h2{margin:0 0 8px;font-size:22px;color:#0b1f3a;}
+.request-intro{margin:0 0 16px;color:#687386;line-height:1.5;}
+.request-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+.request-toolbar select{padding:10px 12px;border:1px solid #d5dce7;border-radius:9px;background:white;}
+.request-list{display:grid;gap:14px;}
+.request-card{background:#fff;border-radius:14px;padding:18px;box-shadow:0 4px 16px rgba(20,35,60,.07);border:1px solid #e8edf4;}
+.request-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px;}
+.request-title{font-weight:700;font-size:17px;color:#0b1f3a;}
+.request-meta{font-size:12px;color:#687386;margin-top:5px;}
+.request-badge{font-size:12px;font-weight:700;border-radius:999px;padding:6px 10px;background:#fff2cc;color:#875b00;white-space:nowrap;}
+.request-badge.approved{background:#dcfce7;color:#166534;}.request-badge.rejected{background:#fee2e2;color:#991b1b;}.request-badge.other{background:#e0e7ff;color:#3730a3;}
+.request-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 18px;margin:12px 0;}
+.request-field{font-size:13px;line-height:1.5;overflow-wrap:anywhere;}.request-field b{display:block;color:#687386;font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;}
+.request-controls{display:grid;grid-template-columns:minmax(180px,1fr) minmax(180px,1fr);gap:10px;margin-top:14px;}
+.request-controls select,.request-controls textarea{width:100%;padding:10px 11px;border:1px solid #d5dce7;border-radius:8px;font:inherit;background:white;}
+.request-controls textarea{grid-column:1/-1;min-height:70px;resize:vertical;}
+.request-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.btn.success{background:#dcfce7;color:#166534;}.btn.warning{background:#fff2cc;color:#875b00;}
+@media(max-width:650px){.request-grid,.request-controls{grid-template-columns:1fr}.request-controls textarea{grid-column:auto}.request-card{padding:14px}.request-section h2{font-size:20px}}
+
 .empty{
   background:white;
   border-radius:14px;
@@ -401,6 +422,24 @@ header{
     <div class="loading">Memuat siswa dan jadwal...</div>
   </section>
 
+  <section class="request-section" aria-labelledby="requestHeading">
+    <h2 id="requestHeading">Permintaan Jadwal dari Orang Tua</h2>
+    <p class="request-intro">Tinjau permintaan penggantian atau tambahan sesi di sini. Permintaan tambahan dapat diberi tentor sebelum disetujui. Bagian ini tidak mengubah jadwal rutin siswa.</p>
+    <div class="request-toolbar">
+      <select id="requestStatusFilter" aria-label="Filter status permintaan" onchange="renderScheduleRequests()">
+        <option value="Menunggu">Menunggu diproses</option>
+        <option value="Semua">Semua status</option>
+        <option value="Disetujui">Disetujui</option>
+        <option value="Ditolak">Ditolak</option>
+        <option value="Alternatif Ditawarkan">Alternatif ditawarkan</option>
+      </select>
+      <button class="btn secondary" type="button" onclick="loadScheduleRequests()">↻ Muat ulang permintaan</button>
+    </div>
+    <div id="scheduleRequestList" class="request-list">
+      <div class="empty">Memuat permintaan jadwal...</div>
+    </div>
+  </section>
+
 </main>
 
 
@@ -638,8 +677,38 @@ header{
 ===================================================== */
 
 const API_URL =
-    "https://script.google.com/macros/s/AKfycbzZKgSp1lUAWjIbh0txBJwH4ZqImDcdcIjuD_ED6E7Tn0pMRZJfIkbrWiK2w88nJxHt/exec";
+    "https://script.google.com/macros/s/AKfycbz0YO7jVKq8tDcblWu4yNXryHz4J3WiAa24xM9STeMMwMA4wO7efOdiecaztozZtru2/exec";
 
+function getAdminSessionToken(){
+  const keys = ["adminSessionToken","sessionTokenAdmin","adminToken","sessionToken","suryantaraAdminSession","adminSession"];
+  for(const store of [sessionStorage, localStorage]){
+    for(const key of keys){
+      const raw = store.getItem(key);
+      if(!raw) continue;
+      try{
+        const parsed = JSON.parse(raw);
+        if(typeof parsed === "string" && parsed.length > 20) return parsed;
+        if(parsed && typeof parsed === "object"){
+          const token = parsed.token || parsed.sessionToken || parsed.session_token;
+          if(token) return String(token);
+        }
+      }catch(_){ if(raw.length > 20 && !raw.includes(" ")) return raw; }
+    }
+    // Fallback for a token saved under a differently named admin key.
+    for(let i=0;i<store.length;i++){
+      const key=store.key(i)||"";
+      if(!/admin/i.test(key) || !/(session|token|login)/i.test(key)) continue;
+      const raw=store.getItem(key); if(!raw) continue;
+      try{const parsed=JSON.parse(raw);const token=typeof parsed==="string"?parsed:(parsed.token||parsed.sessionToken||parsed.session_token);if(token)return String(token);}catch(_){if(raw.length>20&&!raw.includes(" "))return raw;}
+    }
+  }
+  return "";
+}
+function requireAdminToken(){
+  const token=getAdminSessionToken();
+  if(!token) throw new Error("Sesi admin tidak ditemukan. Silakan login melalui halaman admin terlebih dahulu.");
+  return token;
+}
 
 /* =====================================================
    VARIABEL
@@ -689,7 +758,7 @@ async function loadActiveStudents(){
 
     const response =
       await fetch(
-        API_URL + "?action=getStudents"
+        API_URL + "?action=getStudents&sessionToken=" + encodeURIComponent(requireAdminToken())
       );
 
     const data =
@@ -754,7 +823,7 @@ async function loadActiveStudents(){
 async function loadActiveTutors(){
   const select = document.getElementById("tutor");
   try{
-    const response = await fetch(API_URL + "?action=getActiveTutors");
+    const response = await fetch(API_URL + "?action=getActiveTutors&sessionToken=" + encodeURIComponent(requireAdminToken()));
     const data = await response.json();
     if(!Array.isArray(data)) throw new Error("Data tentor tidak valid.");
     activeTutors = data;
@@ -781,7 +850,7 @@ async function loadSchedules(){
 
     const response =
       await fetch(
-        API_URL + "?action=getSchedules"
+        API_URL + "?action=getSchedules&sessionToken=" + encodeURIComponent(requireAdminToken())
       );
 
     const data =
@@ -887,7 +956,7 @@ async function assignTutor(idJadwal,namaTutor,namaSiswa,hari){
   if(!namaTutor){alert("Pilih tentor terlebih dahulu.");return;}
   if(!confirm(`Tetapkan ${namaTutor} untuk ${namaSiswa} pada hari ${hari}?`)) return;
   try{
-    const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"assignTutor",idJadwal:idJadwal,data:{tutor:namaTutor}})});
+    const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"assignTutor",sessionToken:requireAdminToken(),idJadwal:idJadwal,data:{tutor:namaTutor}})});
     const result=await response.json();
     if(!result.success) throw new Error(result.message || "Gagal menyimpan pilihan tentor.");
     alert("Tentor berhasil diperbarui.");
@@ -1304,6 +1373,7 @@ form.onsubmit =
             body:
               JSON.stringify({
 
+                sessionToken: requireAdminToken(),
                 action:
                   action,
 
@@ -1415,6 +1485,7 @@ async function removeSchedule(id){
           body:
             JSON.stringify({
 
+              sessionToken: requireAdminToken(),
               action:
                 "deleteSchedule",
 
@@ -1464,6 +1535,84 @@ async function removeSchedule(id){
 
 
 /* =====================================================
+   PERMINTAAN JADWAL ORANG TUA (ADMIN)
+===================================================== */
+let scheduleRequests = [];
+function badgeClass(status){
+  if(status === "Disetujui") return "approved";
+  if(status === "Ditolak") return "rejected";
+  if(status === "Alternatif Ditawarkan") return "other";
+  return "";
+}
+function formatRequestDate(value){
+  if(!value) return "—";
+  const s=String(value);
+  const m=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : esc(s);
+}
+async function loadScheduleRequests(){
+  const target=document.getElementById("scheduleRequestList");
+  target.innerHTML='<div class="empty">Memuat permintaan jadwal...</div>';
+  try{
+    const response=await fetch(API_URL+"?action=adminGetScheduleRequests&sessionToken="+encodeURIComponent(requireAdminToken()));
+    const result=await response.json();
+    if(!result || result.success!==true || !Array.isArray(result.requests)) throw new Error(result.message||"Data permintaan tidak valid.");
+    scheduleRequests=result.requests;
+    renderScheduleRequests();
+  }catch(error){
+    console.error(error);
+    target.innerHTML='<div class="empty"><strong>Permintaan belum dapat dimuat</strong>'+esc(error.message)+ '</div>';
+  }
+}
+function renderScheduleRequests(){
+  const target=document.getElementById("scheduleRequestList");
+  const filter=document.getElementById("requestStatusFilter").value;
+  const rows=scheduleRequests.filter(r=>filter==="Semua"||String(r.status||"")===filter);
+  if(!rows.length){target.innerHTML='<div class="empty"><strong>Tidak ada permintaan</strong>Belum ada permintaan dengan status ini.</div>';return;}
+  target.innerHTML=rows.map(r=>{
+    const pending=String(r.status||"")==="Menunggu";
+    const tutorOptions='<option value="">Pilih tentor aktif</option>'+activeTutors.map(t=>`<option value="${esc(t.nama)}" ${String(t.nama).toLowerCase()===String(r.tutor||"").toLowerCase()?"selected":""}>${esc(t.nama)}${t.mataPelajaran?' — '+esc(t.mataPelajaran):''}</option>`).join("");
+    const dateTime=r.type==="Pembatalan"?`${formatRequestDate(r.originalDate)} · ${esc(r.originalTime||"—")}`:`${formatRequestDate(r.replacementDate)} · ${esc(r.start||"—")}–${esc(r.end||"—")}`;
+    return `<article class="request-card" data-request-id="${esc(r.id)}">
+      <div class="request-top"><div><div class="request-title">${esc(r.student||"Siswa tidak diketahui")} · ${esc(r.type||"Permintaan")}</div><div class="request-meta">ID ${esc(r.id)} · Diajukan ${esc(r.submittedAt||"—")}</div></div><span class="request-badge ${badgeClass(r.status)}">${esc(r.status||"Menunggu")}</span></div>
+      <div class="request-grid">
+        <div class="request-field"><b>Jadwal</b>${dateTime}</div>
+        <div class="request-field"><b>Tentor saat ini</b>${esc(r.tutor||"Belum ditentukan")}</div>
+        <div class="request-field"><b>Alasan</b>${esc(r.reason||"—")}</div>
+        <div class="request-field"><b>Diproses oleh</b>${esc(r.processedBy||"—")}</div>
+        ${r.adminNote?`<div class="request-field"><b>Catatan sebelumnya</b>${esc(r.adminNote)}</div>`:""}
+      </div>
+      ${pending?`<div class="request-controls">
+        <select class="request-tutor" aria-label="Pilih tentor untuk ${esc(r.student)}" ${r.type==="Tambahan"?"":""}>${tutorOptions}</select>
+        <select class="request-decision" aria-label="Keputusan permintaan"><option value="Disetujui">Setujui</option><option value="Ditolak">Tolak</option><option value="Alternatif Ditawarkan">Tawarkan alternatif</option></select>
+        <textarea class="request-note" aria-label="Catatan admin" placeholder="Catatan untuk orang tua (opsional)"></textarea>
+      </div><div class="request-actions"><button class="btn success" type="button" onclick="processAdminScheduleRequest('${esc(r.id)}',this)">Simpan keputusan</button></div>`:""}
+    </article>`;
+  }).join("");
+}
+async function processAdminScheduleRequest(id,button){
+  const card=button.closest(".request-card");
+  const decision=card.querySelector(".request-decision").value;
+  const tutor=card.querySelector(".request-tutor").value;
+  const catatan=card.querySelector(".request-note").value.trim();
+  const item=scheduleRequests.find(r=>String(r.id)===String(id));
+  if(!item){alert("Permintaan tidak ditemukan. Muat ulang daftar.");return;}
+  if(decision==="Disetujui" && ["Tambahan","Penggantian"].includes(item.type) && !(tutor||item.tutor)){
+    alert("Pilih tentor aktif sebelum menyetujui permintaan ini.");return;
+  }
+  const confirmText=decision==="Disetujui"?"Setujui permintaan jadwal ini?":decision==="Ditolak"?"Tolak permintaan jadwal ini?":"Tandai permintaan sebagai alternatif ditawarkan?";
+  if(!confirm(confirmText)) return;
+  button.disabled=true;button.textContent="Menyimpan...";
+  try{
+    const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"adminProcessScheduleRequest",sessionToken:requireAdminToken(),data:{idPermintaan:id,keputusan:decision,tutor:tutor,catatan:catatan}})});
+    const result=await response.json();
+    if(!result||result.success!==true) throw new Error(result.message||"Keputusan gagal disimpan.");
+    alert(result.message||"Keputusan berhasil disimpan.");
+    await loadScheduleRequests();
+  }catch(error){console.error(error);alert("Gagal memproses permintaan: "+error.message);button.disabled=false;button.textContent="Simpan keputusan";}
+}
+
+/* =====================================================
    TUTUP MODAL KLIK DI LUAR
 ===================================================== */
 
@@ -1509,6 +1658,7 @@ document.addEventListener(
 loadActiveTutors();
 loadActiveStudents();
 loadSchedules();
+loadScheduleRequests();
 
 </script>
 
