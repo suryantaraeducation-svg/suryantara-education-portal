@@ -681,19 +681,98 @@ Klik tanggal yang memiliki jadwal untuk melihat detail kegiatan belajar.
   <div class="container">
     <div class="schedule-request-card">
       <h3>Permintaan Perubahan Jadwal</h3>
-      <p>Ajukan pembatalan sesi, penggantian hari, atau jadwal tambahan. Jadwal pengganti dan tambahan harus berdurasi minimal 1 jam. Permintaan akan disimpan dan menunggu persetujuan tentor.</p>
-      <form id="scheduleRequestForm">
+      <p>Ajukan pembatalan untuk satu tanggal les tertentu. Permintaan akan menunggu persetujuan tentor; jadwal rutin pada tanggal lainnya tidak berubah.</p>
+        <form id="scheduleRequestForm">
         <div class="request-grid">
-          <div class="request-field full"><label for="requestType">Jenis Permintaan</label><select id="requestType" required><option value="Ganti Hari">Ganti hari / jadwal pengganti</option><option value="Dibatalkan">Batalkan sesi terpilih</option><option value="Jadwal Tambahan">Ajukan jadwal tambahan</option></select></div>
-          <div class="request-field full" id="sessionField"><label for="requestSession">Sesi yang ingin diubah</label><select id="requestSession" required><option value="">Memuat jadwal...</option></select></div>
-          <div class="request-field"><label for="requestDate">Tanggal yang diminta</label><input type="date" id="requestDate"></div>
-          <div class="request-field"><label for="requestStart">Jam mulai</label><input type="time" id="requestStart" step="900"></div>
-          <div class="request-field"><label for="requestEnd">Jam selesai</label><input type="time" id="requestEnd" step="900"></div>
-          <div class="request-field full"><label for="requestReason">Alasan permintaan</label><textarea id="requestReason" rows="3" required maxlength="1000" placeholder="Tuliskan alasan atau catatan untuk tentor"></textarea></div>
-        </div>
-        <button class="request-submit" type="submit" id="requestSubmit">Kirim Permintaan Perubahan Sesi</button>
-        <div class="request-message" id="requestMessage" role="status" aria-live="polite"></div>
-      </form>
+      
+          <!-- JENIS PERMINTAAN -->
+          <div class="request-field full">
+            <label for="requestType">Jenis Permintaan</label>
+            <select id="requestType" required>
+              <option value="Dibatalkan" selected>
+                Batalkan satu pertemuan
+              </option>
+              <option value="Ganti Hari">
+                Ganti jadwal pertemuan
+              </option>
+              <option value="Jadwal Tambahan">
+                Ajukan jadwal tambahan
+              </option>
+            </select>
+          </div>
+      
+          <!-- SESI RUTIN -->
+          <div class="request-field full" id="sessionField">
+            <label for="requestSession">
+              Pilih jadwal rutin yang ingin diubah
+            </label>
+            <select id="requestSession">
+              <option value="">Memuat jadwal...</option>
+            </select>
+          </div>
+      
+
+          <!-- TANGGAL PERTEMUAN ASAL ATAU TANGGAL TAMBAHAN -->
+          <div class="request-field" id="originalDateField">
+            <label for="requestDate" id="requestDateLabel">
+              Tanggal les yang ingin dibatalkan
+            </label>
+            <input type="date" id="requestDate">
+          </div>
+
+      
+          <!-- TANGGAL PENGGANTI -->
+          <div class="request-field" id="replacementDateField" style="display:none">
+            <label for="requestReplacementDate">
+              Tanggal pengganti
+            </label>
+            <input type="date" id="requestReplacementDate">
+          </div>
+      
+          <!-- JAM MULAI -->
+          <div class="request-field" id="startTimeField">
+            <label for="requestStart">Jam mulai</label>
+            <input type="time" id="requestStart" step="900">
+          </div>
+      
+          <!-- JAM SELESAI -->
+          <div class="request-field" id="endTimeField">
+            <label for="requestEnd">Jam selesai</label>
+            <input type="time" id="requestEnd" step="900">
+          </div>
+      
+          <!-- ALASAN -->
+          <div class="request-field full">
+            <label for="requestReason" id="requestReasonLabel">
+              Alasan pembatalan
+            </label>
+            <textarea
+              id="requestReason"
+              rows="3"
+              required
+              maxlength="1000"
+              placeholder="Tuliskan alasan pembatalan"
+            ></textarea>
+          </div>
+
+          </div>
+        
+          <button
+            class="request-submit"
+            type="submit"
+            id="requestSubmit"
+          >
+            Kirim Permintaan Pembatalan
+          </button>
+        
+          <div
+            class="request-message"
+            id="requestMessage"
+            role="status"
+            aria-live="polite"
+          ></div>
+        </form>
+      
     </div>
   </div>
 </section>
@@ -709,7 +788,7 @@ dan dicatat oleh tutor.
 </main>
 
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycby9b8ubRhUG-q_Xl1SbymWa0ra69vUErxvf09Qd-IEuQ5k6qAZQytnMrJA1qxh_D_VS/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbwjH8UWmtQyj8jmaha6p3jq3UgnJzGAUL8VXBZqgnRtBbGACAKu0V-WRF88I7bTm4tz/exec";
 const months=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 const dayNames=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 const calendarDays=document.getElementById("calendarDays");
@@ -792,11 +871,26 @@ function sameDayOfWeek(scheduleDay, date){
 function schedulesForDate(key){
     const date=new Date(key+"T00:00:00");
     return schedules.filter(s=>{
-        // Jika jadwal memiliki tanggal khusus, cocokkan tanggalnya.
-        // Jika tanggal kosong, perlakukan sebagai jadwal rutin berdasarkan hari.
+        // Sesi tambahan/pengganti memiliki tanggal khusus dan hanya muncul
+        // pada tanggal yang telah disetujui.
         const scheduledDate=dateKey(s.date || s.tanggal || s.scheduleDate || "");
-        if(scheduledDate) return scheduledDate===key;
-        return sameDayOfWeek(s.day || s.hari,date);
+        const matchesDate=scheduledDate
+            ? scheduledDate===key
+            : sameDayOfWeek(s.day || s.hari,date);
+        if(!matchesDate) return false;
+
+        // Permintaan yang disetujui mengosongkan sesi asal hanya pada
+        // tanggal yang diajukan. Jadwal rutin minggu berikutnya tetap ada.
+        const requests=Array.isArray(s.riwayatPermintaan)?s.riwayatPermintaan:[];
+        const movedOrCancelled=requests.some(r=>{
+            const status=String(r.status||"").trim().toLowerCase();
+            const type=String(r.jenis||"").trim().toLowerCase();
+            const originalDate=dateKey(r.tanggalAsal||"");
+            return status==="disetujui" &&
+                originalDate===key &&
+                (type==="pembatalan" || type==="penggantian");
+        });
+        return !movedOrCancelled;
     });
 }
 
@@ -1286,14 +1380,28 @@ const requestTypeEl=document.getElementById("requestType");
 const requestSessionEl=document.getElementById("requestSession");
 const sessionFieldEl=document.getElementById("sessionField");
 const requestDateEl=document.getElementById("requestDate");
+  const requestReplacementDateEl =
+  document.getElementById("requestReplacementDate");
+
+const replacementDateFieldEl =
+  document.getElementById("replacementDateField");
+
+const originalDateFieldEl =
+  document.getElementById("originalDateField");
+  
 const requestStartEl=document.getElementById("requestStart");
 const requestEndEl=document.getElementById("requestEnd");
+const startTimeFieldEl = document.getElementById("startTimeField");
+const endTimeFieldEl = document.getElementById("endTimeField");
 const requestMessageEl=document.getElementById("requestMessage");
 const requestSubmitEl=document.getElementById("requestSubmit");
 function fillRequestSessions(){
   const currentValue=requestSessionEl.value;
   requestSessionEl.innerHTML='<option value="">Pilih sesi...</option>';
   schedules.forEach(s=>{
+    // Sesi pengganti/tambahan adalah kejadian satu kali, bukan jadwal rutin
+    // yang dapat dipilih sebagai sumber permintaan baru.
+    if(s.scheduleType) return;
     const opt=document.createElement("option");
     opt.value=String(s.id||"");
     const date=s.date?String(s.date):String(s.day||"Jadwal rutin");
@@ -1304,17 +1412,77 @@ function fillRequestSessions(){
   });
   if(currentValue)requestSessionEl.value=currentValue;
 }
-function updateRequestFields(){
-  const type=requestTypeEl.value;
-  const needsSession=type!=="Jadwal Tambahan";
-  sessionFieldEl.style.display=needsSession?"flex":"none";
-  requestSessionEl.required=needsSession;
-  const needsNewTime=type!=="Dibatalkan";
-  // Tanggal tetap wajib untuk pembatalan agar hanya satu pertemuan yang dibatalkan.
-  requestDateEl.required=true;requestDateEl.disabled=false;
-  requestStartEl.required=needsNewTime;requestEndEl.required=needsNewTime;
-  requestStartEl.disabled=!needsNewTime;requestEndEl.disabled=!needsNewTime;
-  requestSubmitEl.textContent=type==="Dibatalkan"?"Kirim Permintaan Pembatalan":type==="Jadwal Tambahan"?"Ajukan Jadwal Tambahan":"Kirim Permintaan Perubahan Sesi";
+
+function updateRequestFields() {
+  const type = requestTypeEl.value;
+
+  const isCancel = type === "Dibatalkan";
+  const isExtra = type === "Jadwal Tambahan";
+  const isReschedule = type === "Ganti Hari";
+
+  // Tampilkan pilihan jadwal rutin untuk pembatalan
+  // dan penggantian jadwal.
+  const needsSession = !isExtra;
+
+  sessionFieldEl.style.display = needsSession ? "flex" : "none";
+  requestSessionEl.required = needsSession;
+
+  // Tanggal asal selalu diperlukan untuk pembatalan
+  // dan penggantian jadwal.
+  originalDateFieldEl.style.display = "";
+
+  requestDateEl.required = true;
+  requestDateEl.disabled = false;
+
+  // Tanggal pengganti hanya diperlukan untuk ganti jadwal.
+  replacementDateFieldEl.style.display =
+    isReschedule ? "" : "none";
+
+  requestReplacementDateEl.required = isReschedule;
+  requestReplacementDateEl.disabled = !isReschedule;
+
+  // Jam hanya diperlukan untuk ganti jadwal
+  // dan jadwal tambahan.
+  requestStartEl.required = !isCancel;
+  requestEndEl.required = !isCancel;
+
+  requestStartEl.disabled = isCancel;
+  requestEndEl.disabled = isCancel;
+
+  startTimeFieldEl.style.display = isCancel ? "none" : "";
+  endTimeFieldEl.style.display = isCancel ? "none" : "";
+
+  // Label tanggal asal.
+  document.getElementById("requestDateLabel").textContent =
+    isCancel
+      ? "Tanggal les yang ingin dibatalkan"
+      : isReschedule
+        ? "Tanggal les yang ingin diubah"
+        : "Tanggal les tambahan yang diminta";
+
+  // Label alasan.
+  document.getElementById("requestReasonLabel").textContent =
+    isCancel
+      ? "Alasan pembatalan"
+      : isReschedule
+        ? "Alasan penggantian jadwal"
+        : "Alasan penambahan jadwal";
+
+  // Placeholder alasan.
+  document.getElementById("requestReason").placeholder =
+    isCancel
+      ? "Tuliskan alasan pembatalan"
+      : isReschedule
+        ? "Tuliskan alasan penggantian jadwal"
+        : "Tuliskan alasan meminta sesi tambahan";
+
+  // Teks tombol.
+  requestSubmitEl.textContent =
+    isCancel
+      ? "Kirim Permintaan Pembatalan"
+      : isReschedule
+        ? "Kirim Permintaan Ganti Jadwal"
+        : "Ajukan Jadwal Tambahan";
 }
 requestTypeEl.addEventListener("change",updateRequestFields);
 requestSessionEl.addEventListener("change",()=>{const opt=requestSessionEl.selectedOptions[0];if(opt&&opt.dataset.date){const k=dateKey(opt.dataset.date);if(k)requestDateEl.value=k;}});
@@ -1322,16 +1490,64 @@ document.getElementById("scheduleRequestForm").addEventListener("submit",async e
   ev.preventDefault();
   requestMessageEl.className="request-message";requestMessageEl.textContent="";
   const type=requestTypeEl.value;
+  const chosenDate=requestDateEl.value;
   const start=requestStartEl.value,end=requestEndEl.value;
+  if(!chosenDate){showRequestMessage("Pilih tanggal les terlebih dahulu.",false);return;}
+  if (type === "Ganti Hari" && !requestReplacementDateEl.value) {
+  showRequestMessage("Pilih tanggal pengganti terlebih dahulu.", false);
+  return;
+  }
   if(type!=="Dibatalkan"){
     if(!start||!end){showRequestMessage("Isi jam mulai dan jam selesai.",false);return;}
     const mins=t=>{const [h,m]=t.split(":").map(Number);return h*60+m;};
     if(mins(end)<=mins(start)){showRequestMessage("Jam selesai harus setelah jam mulai.",false);return;}
     if(mins(end)-mins(start)<60){showRequestMessage("Durasi jadwal pengganti dan tambahan minimal 1 jam.",false);return;}
   }
-  const selected=requestSessionEl.selectedOptions[0];
-  const data={idSiswa:auth.idSiswa,jenis:type,idJadwal:type==="Jadwal Tambahan"?"":requestSessionEl.value,tanggal:requestDateEl.value,tanggalPengganti:requestDateEl.value,jamMulai:start,jamSelesai:end,alasan:document.getElementById("requestReason").value.trim(),tanggalAsli:selected?(selected.dataset.date||requestDateEl.value):requestDateEl.value,tutor:selected?(selected.dataset.tutor||""):""};
-  if(type!=="Jadwal Tambahan"&&!data.idJadwal){showRequestMessage("Pilih sesi yang ingin diubah.",false);return;}
+  let selected=requestSessionEl.selectedOptions[0];
+  let idJadwal=type==="Jadwal Tambahan"?"":requestSessionEl.value;
+  let tutor=selected?(selected.dataset.tutor||""):"";
+  let tanggalAsli=chosenDate;
+  if(type==="Dibatalkan"){
+    const chosen=new Date(`${chosenDate}T00:00:00`);
+    const candidates=schedules.filter(s=>{
+      const status=String(s.status||"Aktif").trim().toLowerCase();
+      if(status==="dibatalkan") return false;
+      const explicitDate=dateKey(s.date||s.tanggal||"");
+      if(explicitDate) return explicitDate===chosenDate;
+      return sameDayOfWeek(s.day||s.hari||"",chosen);
+    });
+    if(candidates.length===0){showRequestMessage("Tanggal yang dipilih tidak memiliki jadwal rutin. Pilih tanggal les yang benar.",false);return;}
+    if(candidates.length>1){showRequestMessage("Pada tanggal tersebut ada lebih dari satu jadwal rutin. Untuk menghindari pembatalan sesi yang salah, permintaan belum dikirim. Hubungi admin untuk memastikan sesi yang dimaksud.",false);return;}
+    idJadwal=String(candidates[0].id||candidates[0].idJadwal||"");
+    tutor=String(candidates[0].tutor||"");
+    tanggalAsli=chosenDate;
+    if(!idJadwal){showRequestMessage("ID jadwal tidak ditemukan. Silakan hubungi admin.",false);return;}
+  } else if(type!=="Jadwal Tambahan"&&!idJadwal){
+    showRequestMessage("Pilih sesi rutin yang ingin diganti.",false);return;
+  }
+ 
+    const data = {
+      idSiswa: auth.idSiswa,
+      jenis: type,
+      idJadwal: idJadwal,
+    
+      // Tanggal pertemuan asal.
+      tanggalAsli: type === "Jadwal Tambahan"
+        ? ""
+        : chosenDate,
+    
+      // Tanggal pertemuan pengganti atau tambahan.
+      tanggalPengganti: type === "Dibatalkan"
+        ? ""
+        : requestReplacementDateEl.value,
+    
+      jamMulai: type === "Dibatalkan" ? "" : start,
+      jamSelesai: type === "Dibatalkan" ? "" : end,
+    
+      alasan: document.getElementById("requestReason").value.trim(),
+      tutor: tutor
+    };
+  if(!data.alasan){showRequestMessage("Tuliskan alasan permintaan terlebih dahulu.",false);return;}
   requestSubmitEl.disabled=true;requestSubmitEl.textContent="Menyimpan permintaan...";
   try{
     const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"submitParentScheduleRequest",sessionToken:auth.sessionToken,data})});
@@ -1345,7 +1561,7 @@ document.getElementById("scheduleRequestForm").addEventListener("submit",async e
   finally{requestSubmitEl.disabled=false;updateRequestFields();}
 });
 function showRequestMessage(message,ok){requestMessageEl.textContent=message;requestMessageEl.className="request-message show "+(ok?"ok":"err");}
-
+updateRequestFields();
 loadData();
 </script>
 </body>
