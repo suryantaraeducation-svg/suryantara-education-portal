@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Ruang Belajar Suryantara Education"><meta name="theme-color" content="#173b69">
+<title>Ruang Belajar | Suryantara Education</title>
+<link rel="icon" href="SE-BULAT.png"><link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ruang-belajar.css">
+</head>
+<body>
+<header class="header"><div class="container nav">
+<a class="brand" href="index.html"><img src="SE.png" alt="Suryantara Education" onerror="this.hidden=true"><span><b>SURYANTARA</b><small>EDUCATION</small></span></a>
+<button id="menuToggle" class="menu" aria-label="Buka menu" aria-expanded="false">☰</button>
+<nav id="navLinks"><a href="index.html">Beranda</a><a class="active" href="#program">Ruang Belajar</a><a href="#tentang">Tentang</a><a href="login.html">Login</a></nav>
+<a class="nav-cta" href="index.html#kontak">Konsultasi</a></div></header>
+<main>
+<section class="hero"><div class="container hero-grid"><div>
+<span class="eyebrow">✦ SURYANTARA DIGITAL LEARNING</span>
+<h1>Ruang untuk <em>belajar dan bertumbuh.</em></h1>
+<p>Jelajahi program pembelajaran terarah, pelajari konsep secara bertahap, dan ukur perkembanganmu melalui latihan serta evaluasi.</p>
+<div class="actions"><a class="btn gold" href="#program">Jelajahi Program&nbsp; →</a><a class="btn light" href="index.html">Kembali ke Beranda</a></div>
+<div class="highlights"><div><b>Terarah</b><small>Alur belajar bertahap</small></div><div><b>Terukur</b><small>Latihan dan evaluasi</small></div><div><b>Fleksibel</b><small>Belajar secara digital</small></div></div>
+</div><div class="hero-visual"><div class="orbit"></div><div class="book-card"><div class="sun">✦</div><div class="book"><i></i><i></i></div><div class="book-lines"><i></i><i></i><i></i></div><b>Belajar Hari Ini,<br><strong>Bersinar Esok Hari.</strong></b></div><span class="float top">✦ Pemahaman konsep</span><span class="float bottom">✓ Progres belajar</span></div></div></section>
+<section class="section" id="program"><div class="container">
+<div class="heading"><div><span class="kicker">PILIH PERJALANAN BELAJARMU</span><h2>Program <em>Pembelajaran</em></h2><p>Program yang tersedia akan ditampilkan setelah dipublikasikan oleh Suryantara Education.</p></div><span id="programCount" class="count">Memuat program…</span></div>
+<div class="toolbar"><label class="search">⌕ <input id="programSearch" type="search" placeholder="Cari program pembelajaran…"></label><button id="refreshButton" class="refresh">↻ Muat ulang</button></div>
+<div id="apiNotice" class="notice" hidden role="status"></div><div id="programGrid" class="grid" aria-live="polite"><div class="state"><span class="loader"></span><p>Menghubungkan ke katalog pembelajaran…</p></div></div>
+</div></section>
+<section class="section steps" id="tentang"><div class="container"><div class="heading centered"><span class="kicker">PENGALAMAN BELAJAR</span><h2>Belajar dengan <em>alur yang jelas.</em></h2><p>Setiap program dirancang agar siswa mengetahui apa yang dipelajari dan bagaimana perkembangannya.</p></div>
+<div class="steps-grid"><article><span>01</span><div class="step-icon">⌕</div><h3>Pilih Program</h3><p>Temukan program sesuai jenjang, kelas, dan tujuan belajarmu.</p></article><article><span>02</span><div class="step-icon">▤</div><h3>Ikuti Kurikulum</h3><p>Pelajari materi melalui fase dan pertemuan yang tersusun bertahap.</p></article><article><span>03</span><div class="step-icon">↗</div><h3>Pantau Perkembangan</h3><p>Kerjakan latihan dan evaluasi untuk melihat kemajuan belajarmu.</p></article></div></div></section>
+</main>
+<footer><div class="container foot"><a class="brand" href="index.html"><img src="SE.png" alt="" onerror="this.hidden=true"><span><b>SURYANTARA</b><small>EDUCATION</small></span></a><p>Belajar Hari Ini, Bersinar Esok Hari.</p><a href="index.html">Kembali ke Beranda ↑</a></div><div class="copyright">© <span id="currentYear"></span> Suryantara Education. All rights reserved.</div></footer>
+<script src="ruang-belajar.js"></script></body></html>
