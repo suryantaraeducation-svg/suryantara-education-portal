@@ -113,7 +113,7 @@
 <footer class="footer"><strong>Suryantara Education</strong><span>Belajar Hari Ini, Bersinar Esok Hari · © 2026</span></footer>
 <script>
 "use strict";
-const API_URL="https://script.google.com/macros/s/AKfycbxb9hWdXehztAEm_zCq-WK-acDt25CyD6wWlAezjYxRIkd-RF-wzsL7yWe-8w_Cn7c/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbyi1gnhPvGzNLtTW3OU7NuFkzPm-5ML0jQSU7dz-F5U0kfNe1SwyoTEun3Rzy2wRvby/exec";
 const $=id=>document.getElementById(id);
 function getAuth(){try{const a=JSON.parse(sessionStorage.getItem("suryantaraAuth")||"null");return a&&a.role==="Tentor"&&a.username?a:null}catch(e){return null}}
 const auth=getAuth();
