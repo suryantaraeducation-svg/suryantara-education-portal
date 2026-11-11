@@ -113,12 +113,13 @@
 <footer class="footer"><strong>Suryantara Education</strong><span>Belajar Hari Ini, Bersinar Esok Hari · © 2026</span></footer>
 <script>
 "use strict";
-const API_URL="https://script.google.com/macros/s/AKfycbwsXmM2gb5aDu9bH2pfNVGFlsi5OTfgtaXsBLOpPrvA0nFLfQ_Kwxh80U74MFWwu9A0/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbyi1gnhPvGzNLtTW3OU7NuFkzPm-5ML0jQSU7dz-F5U0kfNe1SwyoTEun3Rzy2wRvby/exec";
 const $=id=>document.getElementById(id);
 function getAuth(){try{const a=JSON.parse(sessionStorage.getItem("suryantaraAuth")||"null");return a&&a.role==="Tentor"&&a.username?a:null}catch(e){return null}}
 const auth=getAuth();
 if(!auth){sessionStorage.removeItem("suryantaraAuth");window.location.replace("login-tentor.html")}
 let schedules=[],currentItem=null,meetLinksByStudent={},studentDetailsById={},currentDetailStudentId="";
+let tutorHistories = [];
 const days=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 const months=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 const tutorName=()=>auth?.name||auth?.nama||auth?.username||"Tentor";
@@ -229,7 +230,28 @@ async function loadMeetLinks(items){
     );
   }
 }
+  // =================================================
+// MEMUAT RIWAYAT TENTOR DARI GOOGLE SHEETS
+// =================================================
+async function loadTutorHistories() {
+  try {
+    const data = await request(
+      `${API_URL}?action=getTutorHistory&sessionToken=${encodeURIComponent(auth.sessionToken)}`
+    );
 
+    if (!Array.isArray(data)) {
+      throw new Error("Data riwayat bukan berupa daftar.");
+    }
+
+    tutorHistories = data;
+    return true;
+
+  } catch (error) {
+    console.error("Gagal mengambil riwayat tentor:", error);
+    tutorHistories = [];
+    return false;
+  }
+}
   
 async function loadSchedules() {
   const list = $("scheduleList");
@@ -276,7 +298,8 @@ async function loadSchedules() {
 
       return status !== "dibatalkan";
     });
-
+      // Ambil riwayat tentor dari Google Sheets
+      await loadTutorHistories();
     $("todayScheduleCount").textContent =
       schedulesForDate(todayKey()).length;
 
@@ -477,7 +500,11 @@ function schedulesForDate(key) {
     return true;
   });
 }
-function completedOn(key){try{const v=JSON.parse(localStorage.getItem("suryantaraLessons")||"[]");return Array.isArray(v)&&v.some(x=>x&&x.date===key&&x.status==="completed")}catch(e){return false}}
+function completedOn(key) {
+  return tutorHistories.some(history =>
+    normalizeRequestDate(history.date) === key
+  );
+}
 function renderTutorCalendar(){const grid=$("tutorCalendarDays"),heading=$("tutorCalendarMonth");if(!grid||!heading)return;grid.innerHTML="";const y=calendarCurrent.getFullYear(),m=calendarCurrent.getMonth();heading.textContent=`${months[m]} ${y}`;const first=new Date(y,m,1).getDay(),total=new Date(y,m+1,0).getDate(),today=todayKey();for(let i=0;i<first;i++){const e=document.createElement("div");e.className="tutor-calendar-day empty";grid.appendChild(e)}for(let n=1;n<=total;n++){const key=`${y}-${pad(m+1)}-${pad(n)}`,items=schedulesForDate(key),done=completedOn(key),btn=document.createElement("button");btn.type="button";btn.className="tutor-calendar-day";if(items.length)btn.classList.add("has-schedule");if(done)btn.classList.add("completed");if(key===today)btn.classList.add("today");if(key===selectedDateKey)btn.classList.add("selected");const num=document.createElement("span");num.className="tutor-day-number";num.textContent=n;btn.appendChild(num);if(items.length){const times=[...new Set(items.map(s=>{const st=String(field(s,["start","jamMulai","jam_mulai"],"")),en=String(field(s,["end","jamSelesai","jam_selesai"],""));return en?`${st} – ${en}`:st||"Waktu belum ditentukan"}))].slice(0,2);const t=document.createElement("span");t.className="tutor-day-time";t.innerHTML=times.map(esc).join("<br>");btn.appendChild(t)}btn.setAttribute("aria-label",`${n} ${months[m]} ${y}${items.length?`, ${items.length} sesi`:", tidak ada jadwal"}`);btn.addEventListener("click",()=>{selectedDateKey=key;renderTutorCalendar();renderSelectedDate(key)});grid.appendChild(btn)}}
 function renderSelectedDate(key){const d=new Date(`${key}T00:00:00`);const items=schedulesForDate(key).sort((a,b)=>{const av=String(field(a,["start","jamMulai","jam_mulai"],""));const bv=String(field(b,["start","jamMulai","jam_mulai"],""));return av.localeCompare(bv)});$("selectedDayTitle").textContent=d.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});$("selectedDaySubtitle").textContent=items.length?`${items.length} sesi mengajar pada tanggal ini.`:"Tidak ada jadwal mengajar pada tanggal ini.";render(items,key)}
 $("tutorPrevMonth").addEventListener("click",()=>{calendarCurrent.setMonth(calendarCurrent.getMonth()-1);renderTutorCalendar()});$("tutorNextMonth").addEventListener("click",()=>{calendarCurrent.setMonth(calendarCurrent.getMonth()+1);renderTutorCalendar()});
@@ -611,10 +638,127 @@ function formatDate(v){const d=new Date(`${v}T00:00:00`);return Number.isNaN(d.g
 function hideMessages(){$("successMessage").style.display="none";$("errorMessage").style.display="none"}
 function showMessage(id,text){$(id).textContent=text;$(id).style.display="block"}
 $("cancelHistory").addEventListener("click",()=>{$("historyCard").classList.remove("active");$("historyForm").reset();currentItem=null;hideMessages()});
-function restoreDone(){let saved=[];try{saved=JSON.parse(localStorage.getItem("suryantaraLessons")||"[]");if(!Array.isArray(saved))saved=[]}catch(e){}document.querySelectorAll(".schedule").forEach(item=>{const done=saved.some(l=>String(l.idSiswa||"")===item.dataset.idSiswa&&l.date===item.dataset.date&&l.status==="completed");if(done){const b=item.querySelector(".history-open");b.textContent="✓ Riwayat tersimpan";b.classList.add("btn-done");b.disabled=true}});updatePending()}
+function restoreDone() {
+  document.querySelectorAll(".schedule").forEach(item => {
+
+    const done = tutorHistories.some(history =>
+      String(history.idSiswa || "").trim() ===
+        String(item.dataset.idSiswa || "").trim() &&
+
+      normalizeRequestDate(history.date) ===
+        normalizeRequestDate(item.dataset.date)
+    );
+
+    if (done) {
+      const button = item.querySelector(".history-open");
+
+      if (button) {
+        button.textContent = "✓ Riwayat tersimpan";
+        button.classList.add("btn-done");
+        button.disabled = true;
+      }
+    }
+  });
+
+  updatePending();
+}
 function setIntervalMeet(){document.querySelectorAll(".schedule").forEach(item=>{const s=schedules.find(x=>String(field(x,["id","idJadwal","id_jadwal"],""))===item.dataset.id&&item.dataset.id);if(!s)return;const b=item.querySelector(".meet-open"),link=meetLink(s),ready=Boolean(link&&meetIsOpen(s));b.disabled=!ready;b.textContent=ready?"▶ Mulai Google Meet":link?"Meet belum dimulai":"Tautan Meet belum tersedia"})}
 async function sendHistory(data){const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"addHistory",sessionToken:auth.sessionToken,data})});try{const d=await r.json();if(d&&d.success===false)throw new Error(d.message||"Riwayat gagal disimpan");return d}catch(e){if(e instanceof SyntaxError)return {success:true};throw e}}
-$("historyForm").addEventListener("submit",async e=>{e.preventDefault();if(!currentItem)return;hideMessages();const button=$("saveHistoryButton");button.disabled=true;button.textContent="Menyimpan...";const i=currentItem;const data={idSiswa:i.dataset.idSiswa,namaSiswa:i.dataset.student,tutor:i.dataset.tutor||tutorName(),tanggal:i.dataset.date,jam:i.dataset.time,durasi:durText(i.dataset.duration),topik:$("topic").value.trim(),aktivitas:$("activities").value.trim(),hasil:$("result").value.trim(),catatan:$("tutorNote").value.trim()};if(!data.idSiswa){showMessage("errorMessage","ID siswa tidak ditemukan pada jadwal. Riwayat belum dikirim.");button.disabled=false;button.textContent="Simpan Riwayat";return}try{const r=await sendHistory(data);if(r&&r.success===false)throw new Error(r.message||"Riwayat gagal disimpan");let saved=[];try{saved=JSON.parse(localStorage.getItem("suryantaraLessons")||"[]");if(!Array.isArray(saved))saved=[]}catch(e){}saved.push({id:"lesson-"+Date.now(),idSiswa:data.idSiswa,student:data.namaSiswa,program:i.dataset.program,date:data.tanggal,time:data.jam,duration:data.durasi,topic:data.topik,activities:data.aktivitas,result:data.hasil,tutorNote:data.catatan,status:"completed"});localStorage.setItem("suryantaraLessons",JSON.stringify(saved));const b=i.querySelector(".history-open");b.textContent="✓ Riwayat tersimpan";b.classList.add("btn-done");b.disabled=true;updatePending();showMessage("successMessage","Permintaan riwayat telah dikirim. Periksa tab Riwayat di Google Sheets untuk memastikan data tersimpan.");$("historyForm").reset()}catch(err){console.error(err);showMessage("errorMessage",`Riwayat belum dapat dipastikan tersimpan: ${err.message||"Periksa koneksi dan Apps Script."}`)}finally{button.disabled=false;button.textContent="Simpan Riwayat"}});
+$("historyForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  if (!currentItem) return;
+
+  hideMessages();
+
+  const button = $("saveHistoryButton");
+  button.disabled = true;
+  button.textContent = "Menyimpan...";
+
+  const item = currentItem;
+
+  const data = {
+    idSiswa: item.dataset.idSiswa,
+    namaSiswa: item.dataset.student,
+    tutor: item.dataset.tutor || tutorName(),
+    tanggal: item.dataset.date,
+    jam: item.dataset.time,
+    durasi: durText(item.dataset.duration),
+    topik: $("topic").value.trim(),
+    aktivitas: $("activities").value.trim(),
+    hasil: $("result").value.trim(),
+    catatan: $("tutorNote").value.trim()
+  };
+
+  if (!data.idSiswa) {
+    showMessage(
+      "errorMessage",
+      "ID siswa tidak ditemukan pada jadwal. Riwayat belum dikirim."
+    );
+
+    button.disabled = false;
+    button.textContent = "Simpan Riwayat";
+    return;
+  }
+
+  try {
+    // Simpan riwayat ke Google Sheets
+    const result = await sendHistory(data);
+
+    if (result && result.success === false) {
+      throw new Error(
+        result.message || "Riwayat gagal disimpan."
+      );
+    }
+
+    // Ambil ulang data riwayat dari Google Sheets
+    const berhasilMemuat = await loadTutorHistories();
+
+    // Periksa apakah riwayat yang baru disimpan
+    // benar-benar sudah terbaca kembali dari Spreadsheet.
+    const sudahTersimpan = berhasilMemuat &&
+      tutorHistories.some(history =>
+        String(history.idSiswa || "").trim() ===
+          String(data.idSiswa).trim() &&
+
+        normalizeRequestDate(history.date) ===
+          normalizeRequestDate(data.tanggal)
+      );
+
+    // Perbarui tampilan kalender
+    renderTutorCalendar();
+
+    // Perbarui status tombol jadwal
+    renderSelectedDate(selectedDateKey);
+
+    if (sudahTersimpan) {
+      showMessage(
+        "successMessage",
+        "Riwayat pembelajaran berhasil tersimpan dan terverifikasi di Google Sheets."
+      );
+
+      $("historyForm").reset();
+
+    } else {
+      showMessage(
+        "errorMessage",
+        "Permintaan penyimpanan telah dikirim, tetapi riwayat belum berhasil diverifikasi dari Google Sheets. Silakan muat ulang dashboard dan periksa tab Riwayat."
+      );
+    }
+
+  } catch (error) {
+    console.error("Gagal menyimpan riwayat:", error);
+
+    showMessage(
+      "errorMessage",
+      `Riwayat belum dapat dipastikan tersimpan: ${error.message || "Periksa koneksi dan Apps Script."}`
+    );
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Simpan Riwayat";
+  }
+});
 setInterval(setIntervalMeet,20000);
 if(auth)loadSchedules();
 </script>
