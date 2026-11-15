@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Siswa | Suryantara Digital Learning</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #142b52;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #ffffff;
+      padding: 20px 6%;
+      border-bottom: 1px solid #e5e9f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: bold;
+      color: #142b52;
+    }
+
+    .brand span {
+      color: #c99b35;
+    }
+
+    .logout {
+      background: #142b52;
+      color: white;
+      border: none;
+      padding: 11px 20px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    main {
+      width: 88%;
+      max-width: 1100px;
+      margin: 40px auto;
+    }
+
+    .welcome {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.04);
+      margin-bottom: 25px;
+    }
+
+    .welcome h1 {
+      font-size: 25px;
+      margin-bottom: 12px;
+    }
+
+    .welcome p {
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    .section-title {
+      font-size: 20px;
+      margin: 30px 0 18px;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .menu-card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      border: 1px solid #e8edf5;
+    }
+
+    .menu-card h3 {
+      margin-bottom: 10px;
+      font-size: 17px;
+    }
+
+    .menu-card p {
+      color: #64748b;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .status {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: #e8f5ed;
+      color: #237a45;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      color: #718096;
+      font-size: 13px;
+      padding: 30px 15px;
+    }
+
+    #loading {
+      text-align: center;
+      padding: 100px 20px;
+      color: #64748b;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 16px 5%;
+      }
+
+      .brand {
+        font-size: 16px;
+      }
+
+      .logout {
+        padding: 9px 13px;
+        font-size: 12px;
+      }
+
+      main {
+        width: 92%;
+        margin: 25px auto;
+      }
+
+      .welcome {
+        padding: 22px;
+      }
+
+      .welcome h1 {
+        font-size: 21px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="loading">Memeriksa sesi akun siswa...</div>
+
+  <div id="app" hidden>
+
+    <header>
+      <div class="brand">
+        SURYANTARA <span>DIGITAL LEARNING</span>
+      </div>
+
+      <button class="logout" onclick="logoutSiswa()">
+        Logout
+      </button>
+    </header>
+
+    <main>
+
+      <section class="welcome">
+        <h1 id="namaSiswa">Selamat Datang!</h1>
+        <p>
+          Selamat belajar di Suryantara Digital Learning.
+          Mari belajar hari ini untuk bersinar esok hari.
+        </p>
+        <div class="status">AKUN SISWA AKTIF</div>
+      </section>
+
+      <h2 class="section-title">Ruang Belajar</h2>
+
+      <section class="menu-grid">
+
+        <div class="menu-card">
+          <h3>Materi Pembelajaran</h3>
+          <p>
+            Akses materi dan video pembelajaran
+            sesuai program belajar yang dimiliki.
+          </p>
+        </div>
+
+        <div class="menu-card">
+          <h3>Latihan Soal</h3>
+          <p>
+            Kerjakan latihan soal untuk menguji
+            pemahaman materi.
+          </p>
+        </div>
+
+        <div class="menu-card">
+          <h3>Evaluasi</h3>
+          <p>
+            Ikuti evaluasi pembelajaran dan
+            lihat hasil pengerjaan.
+          </p>
+        </div>
+
+        <div class="menu-card">
+          <h3>Progres Belajar</h3>
+          <p>
+            Pantau perkembangan dan riwayat
+            kegiatan belajar.
+          </p>
+        </div>
+
+      </section>
+
+    </main>
+
+    <footer>
+      © 2026 Suryantara Education. All rights reserved.
+    </footer>
+
+  </div>
+
+  <script>
+    const WEB_APP_URL =
+      "https://script.google.com/macros/s/AKfycbzRfzgwBlr4kGL1DPTwEK4-Gf6tArAsw3zT3MMVeRKIeeJ_giRpkU60VCq1FLINSXjw/exec";
+
+    async function periksaSesi() {
+      const token = sessionStorage.getItem("sdl_token");
+      const userData = sessionStorage.getItem("sdl_user");
+      const expiresAt = sessionStorage.getItem("sdl_expires_at");
+
+      if (!token || !userData || !expiresAt) {
+        kembaliKeLogin();
+        return;
+      }
+
+      if (new Date(expiresAt).getTime() <= Date.now()) {
+        kembaliKeLogin();
+        return;
+      }
+
+      try {
+        const response = await fetch(WEB_APP_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify({
+            action: "validatestudentsession",
+            token: token
+          })
+        });
+
+        const result = await response.json();
+
+        if (
+          !result.success ||
+          !Array.isArray(result.roles) ||
+          !result.roles.includes("STUDENT")
+        ) {
+          kembaliKeLogin();
+          return;
+        }
+
+        const user = JSON.parse(userData);
+
+        document.getElementById("namaSiswa").textContent =
+          "Selamat Datang, " +
+          (user.fullName || user.name || "Siswa") +
+          "!";
+
+        document.getElementById("loading").hidden = true;
+        document.getElementById("app").hidden = false;
+
+      } catch (error) {
+        document.getElementById("loading").textContent =
+          "Tidak dapat memeriksa sesi. Periksa koneksi internet dan muat ulang halaman.";
+      }
+    }
+
+    function kembaliKeLogin() {
+      sessionStorage.removeItem("sdl_token");
+      sessionStorage.removeItem("sdl_user");
+      sessionStorage.removeItem("sdl_expires_at");
+
+      window.location.replace("login.html");
+    }
+
+    async function logoutSiswa() {
+      const token = sessionStorage.getItem("sdl_token");
+
+      try {
+        if (token) {
+          await fetch(WEB_APP_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify({
+              action: "logout",
+              token: token
+            })
+          });
+        }
+      } catch (error) {
+        console.error("Logout server:", error);
+      }
+
+      sessionStorage.removeItem("sdl_token");
+      sessionStorage.removeItem("sdl_user");
+      sessionStorage.removeItem("sdl_expires_at");
+
+      window.location.replace("login.html");
+    }
+
+    periksaSesi();
+  </script>
+
+</body>
+</html>
