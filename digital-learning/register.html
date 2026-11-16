@@ -1,0 +1,560 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pendaftaran Siswa | Suryantara Digital Learning</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #142b52;
+    }
+
+    .register-card {
+      width: 100%;
+      max-width: 480px;
+      padding: 35px 30px;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 8px 35px rgba(20,43,82,.08);
+    }
+
+    .brand {
+      text-align: center;
+      font-size: 19px;
+      font-weight: bold;
+      margin-bottom: 28px;
+    }
+
+    .brand span {
+      color: #c69b43;
+    }
+
+    h1 {
+      font-size: 25px;
+      text-align: center;
+      margin: 0 0 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #718096;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      margin: 16px 0 7px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d9dfeb;
+      border-radius: 7px;
+      font-size: 14px;
+      outline: none;
+      background: white;
+      color: #142b52;
+    }
+
+    input:focus, select:focus {
+      border-color: #142b52;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 23px;
+      padding: 14px;
+      border: none;
+      border-radius: 7px;
+      background: #142b52;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    #message {
+      display: none;
+      margin-top: 17px;
+      padding: 12px;
+      border-radius: 7px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .error {
+      display: block !important;
+      background: #fff0f0;
+      color: #b42318;
+    }
+
+    .success {
+      display: block !important;
+      background: #edf9f0;
+      color: #16723b;
+    }
+
+    .info {
+      display: block !important;
+      background: #eef4ff;
+      color: #244b85;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .back {
+      display: block;
+      margin-top: 22px;
+      text-align: center;
+      color: #718096;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .otp-note {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #718096;
+      margin-top: 12px;
+    }
+
+    .otp-input {
+      text-align: center;
+      letter-spacing: 8px;
+      font-size: 23px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 480px) {
+      .register-card {
+        padding: 28px 21px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="register-card">
+
+    <div class="brand">
+      SURYANTARA <span>DIGITAL LEARNING</span>
+    </div>
+
+    <!-- FORM PENDAFTARAN -->
+    <section id="registrationSection">
+
+      <h1>Pendaftaran Siswa</h1>
+
+      <p class="subtitle">
+        Buat akun untuk mulai belajar bersama
+        Suryantara Digital Learning.
+      </p>
+
+      <form id="registerForm">
+
+        <label for="fullName">Nama Lengkap</label>
+        <input
+          type="text"
+          id="fullName"
+          required
+          autocomplete="name"
+          placeholder="Nama lengkap siswa"
+        >
+
+        <label for="email">Email Aktif</label>
+        <input
+          type="email"
+          id="email"
+          required
+          autocomplete="email"
+          placeholder="contoh@email.com"
+        >
+
+        <label for="phone">Nomor WhatsApp</label>
+        <input
+          type="tel"
+          id="phone"
+          required
+          autocomplete="tel"
+          placeholder="08xxxxxxxxxx"
+        >
+
+        <label for="educationLevel">Jenjang Pendidikan</label>
+        <select id="educationLevel" required>
+          <option value="">Pilih jenjang</option>
+          <option value="SD">SD</option>
+          <option value="SMP">SMP</option>
+          <option value="SMA">SMA</option>
+        </select>
+
+        <label for="grade">Kelas</label>
+        <select id="grade" required disabled>
+          <option value="">Pilih jenjang terlebih dahulu</option>
+        </select>
+
+        <label for="schoolName">Nama Sekolah</label>
+        <input
+          type="text"
+          id="schoolName"
+          required
+          placeholder="Nama sekolah"
+        >
+
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          required
+          minlength="8"
+          autocomplete="new-password"
+          placeholder="Minimal 8 karakter"
+        >
+
+        <label for="confirmPassword">Konfirmasi Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          required
+          minlength="8"
+          autocomplete="new-password"
+          placeholder="Ulangi password"
+        >
+
+        <button type="submit" id="registerButton">
+          Daftar Sekarang
+        </button>
+
+      </form>
+
+    </section>
+
+    <!-- FORM VERIFIKASI OTP -->
+    <section id="otpSection" class="hidden">
+
+      <h1>Verifikasi Email</h1>
+
+      <p class="subtitle">
+        Masukkan enam digit kode OTP yang telah dikirim
+        ke alamat email Anda.
+      </p>
+
+      <form id="otpForm">
+
+        <label for="otp">Kode OTP</label>
+        <input
+          type="text"
+          id="otp"
+          class="otp-input"
+          inputmode="numeric"
+          pattern="[0-9]{6}"
+          maxlength="6"
+          required
+          placeholder="000000"
+          autocomplete="one-time-code"
+        >
+
+        <p class="otp-note">
+          Kode OTP hanya berlaku selama 5 menit dan
+          hanya dapat digunakan satu kali.
+        </p>
+
+        <button type="submit" id="verifyButton">
+          Verifikasi Email
+        </button>
+
+      </form>
+
+    </section>
+
+    <div id="message" role="alert"></div>
+
+    <a href="login.html" class="back">
+      ← Kembali ke halaman login
+    </a>
+
+  </div>
+
+  <script>
+    // Gunakan URL Web App yang sama dengan login.html.
+    const WEB_APP_URL =
+      "https://script.google.com/macros/s/AKfycbzRfzgwBlr4kGL1DPTwEK4-Gf6tArAsw3zT3MMVeRKIeeJ_giRpkU60VCq1FLINSXjw/exec";
+
+    const registrationSection =
+      document.getElementById("registrationSection");
+
+    const otpSection =
+      document.getElementById("otpSection");
+
+    const registerForm =
+      document.getElementById("registerForm");
+
+    const otpForm =
+      document.getElementById("otpForm");
+
+    const registerButton =
+      document.getElementById("registerButton");
+
+    const verifyButton =
+      document.getElementById("verifyButton");
+
+    const message =
+      document.getElementById("message");
+
+    let registeredUserId = "";
+    let registeredEmail = "";
+
+    function showMessage(text, type) {
+      message.className = type;
+      message.textContent = text;
+    }
+
+    function hideMessage() {
+      message.className = "";
+      message.textContent = "";
+    }
+
+    async function sendRequest(payload) {
+      const response = await fetch(WEB_APP_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const responseText = await response.text();
+
+      let result;
+
+      try {
+        result = JSON.parse(responseText);
+      } catch (error) {
+        throw new Error(
+          "Respons server tidak valid. Periksa URL Web App."
+        );
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          result.message || "Server tidak dapat dihubungi."
+        );
+      }
+
+      return result;
+    }
+
+    // Pilihan kelas mengikuti jenjang pendidikan.
+    document.getElementById("educationLevel")
+      .addEventListener("change", function() {
+
+        const level = this.value;
+        const gradeSelect =
+          document.getElementById("grade");
+
+        gradeSelect.innerHTML =
+          '<option value="">Pilih kelas</option>';
+
+        let grades = [];
+
+        if (level === "SD") {
+          grades = ["I", "II", "III", "IV", "V", "VI"];
+        } else if (level === "SMP") {
+          grades = ["VII", "VIII", "IX"];
+        } else if (level === "SMA") {
+          grades = ["X", "XI", "XII"];
+        }
+
+        grades.forEach(function(grade) {
+          const option = document.createElement("option");
+          option.value = grade;
+          option.textContent = "Kelas " + grade;
+          gradeSelect.appendChild(option);
+        });
+
+        gradeSelect.disabled = grades.length === 0;
+      });
+
+    // PROSES PENDAFTARAN SISWA.
+    registerForm.addEventListener("submit", async function(event) {
+      event.preventDefault();
+      hideMessage();
+
+      const fullName =
+        document.getElementById("fullName").value.trim();
+
+      const email =
+        document.getElementById("email").value.trim().toLowerCase();
+
+      const phone =
+        document.getElementById("phone").value.trim();
+
+      const educationLevel =
+        document.getElementById("educationLevel").value;
+
+      const grade =
+        document.getElementById("grade").value;
+
+      const schoolName =
+        document.getElementById("schoolName").value.trim();
+
+      const password =
+        document.getElementById("password").value;
+
+      const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+      if (password !== confirmPassword) {
+        showMessage(
+          "Konfirmasi password tidak sama.",
+          "error"
+        );
+        return;
+      }
+
+      if (password.length < 8) {
+        showMessage(
+          "Password minimal terdiri dari 8 karakter.",
+          "error"
+        );
+        return;
+      }
+
+      registerButton.disabled = true;
+      registerButton.textContent = "Memproses pendaftaran...";
+
+      try {
+        const result = await sendRequest({
+          action: "register",
+          formData: {
+            fullName: fullName,
+            email: email,
+            phone: phone,
+            educationLevel: educationLevel,
+            grade: grade,
+            schoolName: schoolName,
+            password: password
+          }
+        });
+
+        if (!result.success) {
+          throw new Error(
+            result.message || "Pendaftaran gagal."
+          );
+        }
+
+        if (!result.userId || result.otpSent !== true) {
+          throw new Error(
+            "Pendaftaran tercatat, tetapi pengiriman OTP belum berhasil. Hubungi administrator sebelum mendaftar ulang."
+          );
+        }
+
+        registeredUserId = result.userId;
+        registeredEmail = result.email || email;
+
+        registrationSection.classList.add("hidden");
+        otpSection.classList.remove("hidden");
+
+        showMessage(
+          "Kode OTP berhasil dikirim ke " +
+          registeredEmail +
+          ". Segera periksa kotak masuk atau folder spam email Anda.",
+          "success"
+        );
+
+        document.getElementById("otp").focus();
+
+      } catch (error) {
+        showMessage(
+          error.message || "Terjadi kesalahan saat pendaftaran.",
+          "error"
+        );
+
+      } finally {
+        registerButton.disabled = false;
+        registerButton.textContent = "Daftar Sekarang";
+      }
+    });
+
+    // PROSES VERIFIKASI OTP.
+    otpForm.addEventListener("submit", async function(event) {
+      event.preventDefault();
+      hideMessage();
+
+      const otp =
+        document.getElementById("otp").value.trim();
+
+      if (!/^\d{6}$/.test(otp)) {
+        showMessage(
+          "Masukkan kode OTP yang terdiri dari 6 digit.",
+          "error"
+        );
+        return;
+      }
+
+      verifyButton.disabled = true;
+      verifyButton.textContent = "Memverifikasi...";
+
+      try {
+        const result = await sendRequest({
+          action: "verifyemailotp",
+          email: registeredEmail,
+          otp: otp,
+          userId: registeredUserId
+        });
+
+        if (!result.success) {
+          throw new Error(
+            result.message || "Verifikasi OTP gagal."
+          );
+        }
+
+        otpSection.classList.add("hidden");
+
+        showMessage(
+          "Email berhasil diverifikasi! Pendaftaran Anda sedang menunggu persetujuan Super Admin. Silakan kembali ke halaman login setelah akun disetujui.",
+          "success"
+        );
+
+      } catch (error) {
+        showMessage(
+          error.message || "Verifikasi OTP gagal.",
+          "error"
+        );
+
+      } finally {
+        verifyButton.disabled = false;
+        verifyButton.textContent = "Verifikasi Email";
+      }
+    });
+
+  </script>
+
+</body>
+</html>
