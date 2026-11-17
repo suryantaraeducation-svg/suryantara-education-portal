@@ -167,7 +167,24 @@
         font-size: 13px;
         line-height: 1.9;
       }
+
+      .product-register-btn {
+        width: 100%;
+        margin-top: 20px;
+        padding: 12px 16px;
+        background: #142b52;
+        color: #ffffff;
+        border: none;
+        border-radius: 7px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
       
+      .product-register-btn:hover {
+        background: #1e3d70;
+      }
       .catalog-message {
         background: #ffffff;
         border: 1px solid #e5eaf2;
@@ -501,9 +518,26 @@
           card.appendChild(description);
           card.appendChild(price);
           card.appendChild(info);
-
+          
+          // TOMBOL DAFTAR PROGRAM
+          const registerButton = document.createElement("button");
+          registerButton.className = "product-register-btn";
+          registerButton.textContent = "Daftar Program";
+          
+          registerButton.addEventListener("click", function() {
+            alert(
+              "Kamu memilih program: " +
+              (product.product_name || "Program Pembelajaran") +
+              "\n\nHarga: " +
+              price.textContent +
+              "\n\nTahap pendaftaran dan pembayaran akan segera tersedia."
+            );
+          });
+          
+          card.appendChild(registerButton);
+          
           grid.appendChild(card);
-        });
+                  });
 
       } catch (error) {
         console.error("Katalog program:", error);
