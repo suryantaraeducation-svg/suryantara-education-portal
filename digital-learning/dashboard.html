@@ -103,6 +103,93 @@
       line-height: 1.6;
     }
 
+    
+      /* KATALOG PROGRAM */
+      .catalog-section {
+        margin: 35px 0;
+      }
+      
+      .catalog-description {
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 18px;
+      }
+      
+      .catalog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 18px;
+      }
+      
+      .product-card {
+        background: #ffffff;
+        border: 1px solid #e5eaf2;
+        border-radius: 12px;
+        padding: 23px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      }
+      
+      .product-category {
+        display: inline-block;
+        padding: 5px 10px;
+        background: #eef3fa;
+        color: #345783;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: bold;
+        margin-bottom: 13px;
+      }
+      
+      .product-card h3 {
+        font-size: 18px;
+        line-height: 1.4;
+        margin-bottom: 10px;
+      }
+      
+      .product-card p {
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      
+      .product-price {
+        color: #142b52;
+        font-size: 21px;
+        font-weight: bold;
+        margin: 18px 0;
+      }
+      
+      .product-info {
+        border-top: 1px solid #edf0f5;
+        padding-top: 13px;
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.9;
+      }
+      
+      .catalog-message {
+        background: #ffffff;
+        border: 1px solid #e5eaf2;
+        border-radius: 10px;
+        padding: 22px;
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      
+      .catalog-loading {
+        text-align: center;
+        padding: 30px;
+        color: #64748b;
+      }
+      
+      @media (max-width: 600px) {
+        .catalog-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
     .status {
       display: inline-block;
       margin-top: 15px;
@@ -183,6 +270,25 @@
         </p>
         <div class="status">AKUN SISWA AKTIF</div>
       </section>
+
+      
+    <section class="catalog-section">
+
+      <h2 class="section-title">Program Pembelajaran</h2>
+
+      <p class="catalog-description">
+        Temukan program belajar yang sesuai dengan kebutuhanmu.
+      </p>
+
+      <div id="catalogLoading" class="catalog-loading">
+        Memuat daftar program...
+      </div>
+
+      <div id="catalogGrid" class="catalog-grid"></div>
+
+      <div id="catalogMessage" hidden></div>
+
+    </section>
 
       <h2 class="section-title">Ruang Belajar</h2>
 
@@ -281,10 +387,134 @@
 
         document.getElementById("loading").hidden = true;
         document.getElementById("app").hidden = false;
+        loadProductCatalog();
 
       } catch (error) {
         document.getElementById("loading").textContent =
           "Tidak dapat memeriksa sesi. Periksa koneksi internet dan muat ulang halaman.";
+      }
+    }
+
+    
+    // MEMUAT KATALOG PROGRAM
+    async function loadProductCatalog() {
+      const loading = document.getElementById("catalogLoading");
+      const grid = document.getElementById("catalogGrid");
+      const message = document.getElementById("catalogMessage");
+
+      loading.hidden = false;
+      grid.replaceChildren();
+      message.hidden = true;
+
+      try {
+        const response = await fetch(
+          WEB_APP_URL + "?action=getProducts"
+        );
+
+        if (!response.ok) {
+          throw new Error("Gagal mengambil data katalog.");
+        }
+
+        const result = await response.json();
+
+        if (!result.success || !Array.isArray(result.data)) {
+          throw new Error("Format data katalog tidak valid.");
+        }
+
+        loading.hidden = true;
+
+        if (result.data.length === 0) {
+          message.className = "catalog-message";
+          message.textContent =
+            "Belum ada program pembelajaran yang tersedia. " +
+            "Silakan kunjungi kembali nanti.";
+
+          message.hidden = false;
+          return;
+        }
+
+        result.data.forEach(function(product) {
+          const card = document.createElement("article");
+          card.className = "product-card";
+
+          const category = document.createElement("span");
+          category.className = "product-category";
+          category.textContent =
+            product.category || "Program Pembelajaran";
+
+          const title = document.createElement("h3");
+          title.textContent =
+            product.product_name || "Program Tanpa Nama";
+
+          const target = document.createElement("p");
+          target.textContent =
+            "Sasaran: " +
+            (product.target_level || "-") +
+            (product.target_grade
+              ? " Kelas " + product.target_grade
+              : "");
+
+          const description = document.createElement("p");
+          description.style.marginTop = "10px";
+          description.textContent =
+            product.short_description ||
+            product.description ||
+            "Informasi program belum tersedia.";
+
+          const price = document.createElement("div");
+          price.className = "product-price";
+
+          const amount = Number(product.price);
+
+          if (Number.isFinite(amount)) {
+            const currency = product.currency || "IDR";
+
+            price.textContent = new Intl.NumberFormat("id-ID", {
+              style: "currency",
+              currency: currency,
+              maximumFractionDigits: 0
+            }).format(amount);
+          } else {
+            price.textContent = "Harga belum tersedia";
+          }
+
+          const info = document.createElement("div");
+          info.className = "product-info";
+
+          const lessons = document.createElement("div");
+          lessons.textContent =
+            "Jumlah pertemuan: " +
+            (product.total_lessons || "-");
+
+          const duration = document.createElement("div");
+          duration.textContent =
+            "Masa akses: " +
+            (product.access_duration_days || "-") +
+            " hari";
+
+          info.appendChild(lessons);
+          info.appendChild(duration);
+
+          card.appendChild(category);
+          card.appendChild(title);
+          card.appendChild(target);
+          card.appendChild(description);
+          card.appendChild(price);
+          card.appendChild(info);
+
+          grid.appendChild(card);
+        });
+
+      } catch (error) {
+        console.error("Katalog program:", error);
+
+        loading.hidden = true;
+        message.className = "catalog-message";
+        message.textContent =
+          "Katalog belum dapat dimuat. " +
+          "Silakan muat ulang halaman atau coba beberapa saat lagi.";
+
+        message.hidden = false;
       }
     }
 
