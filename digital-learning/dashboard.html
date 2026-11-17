@@ -185,6 +185,120 @@
       .product-register-btn:hover {
         background: #1e3d70;
       }
+
+      /* MODAL KONFIRMASI PENDAFTARAN */
+        .modal-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(15, 30, 55, 0.65);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 20px;
+          z-index: 9999;
+        }
+        
+        .modal-overlay[hidden] {
+          display: none;
+        }
+        
+        .modal-box {
+          background: #ffffff;
+          width: 100%;
+          max-width: 480px;
+          padding: 28px;
+          border-radius: 14px;
+          box-shadow: 0 15px 45px rgba(0,0,0,0.2);
+        }
+        
+        .modal-box h2 {
+          font-size: 22px;
+          margin-bottom: 8px;
+          color: #142b52;
+        }
+        
+        .modal-description {
+          color: #64748b;
+          font-size: 14px;
+          line-height: 1.6;
+          margin-bottom: 22px;
+        }
+        
+        .modal-product-name {
+          font-size: 17px;
+          font-weight: bold;
+          margin-bottom: 18px;
+          color: #142b52;
+        }
+        
+        .modal-detail {
+          display: flex;
+          justify-content: space-between;
+          gap: 15px;
+          margin: 13px 0;
+          font-size: 14px;
+        }
+        
+        .modal-detail span:first-child {
+          color: #64748b;
+        }
+        
+        .modal-detail span:last-child {
+          font-weight: bold;
+          text-align: right;
+        }
+        
+        .modal-total {
+          border-top: 1px solid #e5eaf2;
+          margin-top: 20px;
+          padding-top: 18px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 10px;
+        }
+        
+        .modal-total strong {
+          font-size: 22px;
+          color: #142b52;
+        }
+        
+        .modal-actions {
+          display: flex;
+          gap: 12px;
+          margin-top: 25px;
+        }
+        
+        .modal-actions button {
+          flex: 1;
+          padding: 12px;
+          border-radius: 7px;
+          font-weight: bold;
+          cursor: pointer;
+          font-size: 14px;
+        }
+        
+        .modal-cancel {
+          background: #ffffff;
+          color: #142b52;
+          border: 1px solid #d5dce7;
+        }
+        
+        .modal-continue {
+          background: #142b52;
+          color: #ffffff;
+          border: none;
+        }
+        
+        @media (max-width: 480px) {
+          .modal-box {
+            padding: 22px;
+          }
+        
+          .modal-actions {
+            flex-direction: column-reverse;
+          }
+        }
       .catalog-message {
         background: #ffffff;
         border: 1px solid #e5eaf2;
