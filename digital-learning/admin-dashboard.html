@@ -263,9 +263,101 @@
   }
 
   validasiSesiAdmin();
+
+async function loadAdminPendingPayments() {
+  const container = document.getElementById("pendingPaymentsContainer");
+  const token = sessionStorage.getItem("sdl_token");
+
+  container.textContent = "Memuat data pembayaran...";
+
+  try {
+    const response = await fetch(WEB_APP_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        action: "getadminpendingpayments",
+        token: token
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.message || "Gagal mengambil data pembayaran.");
+    }
+
+    if (!result.payments || result.payments.length === 0) {
+      container.innerHTML = "<p>Belum ada pembayaran yang menunggu verifikasi.</p>";
+      return;
+    }
+
+    let html = `
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th>No. Pesanan</th>
+              <th>Nama Siswa</th>
+              <th>Program</th>
+              <th>Jumlah</th>
+              <th>Metode</th>
+              <th>Bukti Pembayaran</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+
+    result.payments.forEach(function(payment) {
+      const amount = Number(payment.amount || 0).toLocaleString("id-ID");
+
+      html += `
+        <tr>
+          <td>${escapeAdminHTML(payment.orderNumber)}</td>
+          <td>${escapeAdminHTML(payment.studentName)}</td>
+          <td>${escapeAdminHTML(payment.productName)}</td>
+          <td>Rp${amount}</td>
+          <td>${escapeAdminHTML(payment.paymentMethod)}</td>
+          <td>
+            ${
+              payment.proofUrl
+                ? `<a href="${escapeAdminHTML(payment.proofUrl)}" target="_blank" rel="noopener">Lihat Bukti</a>`
+                : "-"
+            }
+          </td>
+          <td>Menunggu Verifikasi</td>
+        </tr>
+      `;
+    });
+
+    html += `
+          </tbody>
+        </table>
+      </div>
+    `;
+
+    container.innerHTML = html;
+
+  } catch (error) {
+    container.textContent = "Gagal memuat pembayaran: " + error.message;
+  }
+}
+
+function escapeAdminHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, function(character) {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[character];
+  });
+}
+  
 </script>
-</body>
-</html>
 
 </body>
 </html>
