@@ -250,6 +250,7 @@
       }
 
       console.log("Admin berhasil diverifikasi:", result);
+      await loadAdminPendingPayments();
 
     } catch (error) {
       alert("Sesi Admin tidak valid. Silakan login kembali.");
