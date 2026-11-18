@@ -219,6 +219,54 @@
     </section>
 
   </main>
+  
+<script>
+  const WEB_APP_URL =
+    "https://script.google.com/macros/s/AKfycbwTyRdsC7Na1KVXcgnWHIZdyUUGA8NjTEpr5JybaTgVfJ4SNd0pDq1MuHA4VtOp8TBC/exec";
+
+  async function validasiSesiAdmin() {
+    const token = sessionStorage.getItem("sdl_token");
+
+    if (!token) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    try {
+      const response = await fetch(WEB_APP_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify({
+          action: "validateadminsession",
+          token: token
+        })
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error("Akses Admin ditolak.");
+      }
+
+      console.log("Admin berhasil diverifikasi:", result);
+
+    } catch (error) {
+      alert("Sesi Admin tidak valid. Silakan login kembali.");
+
+      sessionStorage.removeItem("sdl_token");
+      sessionStorage.removeItem("sdl_user");
+      sessionStorage.removeItem("sdl_expires_at");
+
+      window.location.href = "login.html";
+    }
+  }
+
+  validasiSesiAdmin();
+</script>
+</body>
+</html>
 
 </body>
 </html>
