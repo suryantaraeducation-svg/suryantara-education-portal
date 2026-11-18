@@ -225,6 +225,21 @@
           throw new Error(result.message || "Login gagal.");
         }
 
+        
+        // Periksa role akun pengguna.
+        const roles = result.user.roles || [];
+        
+        let destination = "";
+        
+        if (roles.includes("SUPER_ADMIN")) {
+          destination = "admin-dashboard.html";
+        } else if (roles.includes("STUDENT")) {
+          destination = "dashboard.html";
+        } else {
+          throw new Error("Akun tidak memiliki hak akses yang sesuai.");
+        }
+
+
         // Simpan token dan informasi akun untuk sesi browser.
         sessionStorage.setItem("sdl_token", result.token);
         sessionStorage.setItem(
@@ -240,7 +255,7 @@
         message.textContent = "Login berhasil. Mengarahkan ke dashboard...";
 
         // Dashboard akan kita buat pada tahap berikutnya.
-        window.location.href = "dashboard.html";
+        window.location.href = destination;
 
       } catch (error) {
         message.className = "error";
