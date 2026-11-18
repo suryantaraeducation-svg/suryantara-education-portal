@@ -516,6 +516,84 @@
       </div>
 
     </div>
+
+    
+<!-- MODAL PEMBAYARAN PROGRAM -->
+<div id="paymentModal" class="modal-overlay" hidden>
+  <div class="modal-box">
+
+    <h2>Pembayaran Program</h2>
+
+    <p class="modal-description">
+      Silakan lakukan pembayaran menggunakan QRIS Suryantara Education.
+    </p>
+
+    <div class="modal-product-name" id="paymentProductName">
+      Nama Program
+    </div>
+
+    <div class="modal-detail">
+      <span>Nomor Pesanan</span>
+      <strong id="paymentOrderNumber">-</strong>
+    </div>
+
+    <div class="modal-total">
+      <span>Total Pembayaran</span>
+      <strong id="paymentAmount">Rp0</strong>
+    </div>
+
+    <div style="text-align:center; margin:20px 0;">
+      <img
+        src="qris-suryantara.jpg"
+        alt="QRIS Suryantara Education"
+        style="width:100%; max-width:320px; border-radius:12px;"
+      >
+      <p style="font-size:13px; color:#64748b;">
+        Pindai QRIS di atas menggunakan aplikasi pembayaran Anda.
+      </p>
+    </div>
+
+    <div style="margin-top:20px;">
+      <label for="paymentProofFile">
+        Unggah bukti pembayaran
+      </label>
+
+      <input
+        type="file"
+        id="paymentProofFile"
+        accept="image/jpeg,image/png,application/pdf"
+        style="display:block; width:100%; margin-top:10px;"
+      >
+      <small style="color:#64748b;">
+        Format JPG, PNG, atau PDF. Maksimal 5 MB.
+      </small>
+    </div>
+
+    <p id="paymentUploadMessage"
+       style="margin-top:12px; font-size:14px;"
+       hidden>
+    </p>
+
+    <div class="modal-actions" style="margin-top:20px;">
+      <button
+        type="button"
+        class="modal-cancel"
+        onclick="closePaymentModal()">
+        Tutup
+      </button>
+
+      <button
+        type="button"
+        class="product-register-btn"
+        id="submitPaymentButton"
+        onclick="submitPaymentProof()">
+        Kirim Bukti Pembayaran
+      </button>
+    </div>
+
+  </div>
+</div>
+
     <footer>
       © 2026 Suryantara Education. All rights reserved.
     </footer>
