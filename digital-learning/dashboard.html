@@ -835,6 +835,7 @@ function closeRegistrationModal() {
 }
 
 
+
 async function continueRegistration() {
   const token = sessionStorage.getItem("sdl_token");
 
@@ -870,20 +871,31 @@ async function continueRegistration() {
       throw new Error(result.message || "Pesanan gagal dibuat.");
     }
 
+    // Tutup modal konfirmasi pendaftaran.
     closeRegistrationModal();
 
-    alert(
-      "Pesanan berhasil dibuat!\n\n" +
-      "Nomor pesanan: " + result.purchase.orderNumber + "\n" +
-      "Program: " + result.purchase.productName + "\n" +
-      "Total: " +
+    // Tampilkan informasi pesanan pada modal pembayaran.
+    document.getElementById("paymentProductName").textContent =
+      result.purchase.productName;
+
+    document.getElementById("paymentOrderNumber").textContent =
+      result.purchase.orderNumber;
+
+    document.getElementById("paymentAmount").textContent =
       new Intl.NumberFormat("id-ID", {
         style: "currency",
         currency: result.purchase.currency || "IDR",
         maximumFractionDigits: 0
-      }).format(result.purchase.amount) +
-      "\n\nSilakan lanjutkan ke tahap pembayaran."
+      }).format(result.purchase.amount);
+
+    // Simpan ID pesanan untuk proses unggah bukti pembayaran.
+    sessionStorage.setItem(
+      "sdl_current_purchase_id",
+      result.purchase.purchaseId
     );
+
+    // Buka modal pembayaran QRIS.
+    document.getElementById("paymentModal").hidden = false;
 
   } catch (error) {
     alert("Terjadi kesalahan: " + error.message);
