@@ -522,7 +522,30 @@
 <div id="paymentModal" class="modal-overlay" hidden>
   <div class="modal-box">
 
-    <h2>Pembayaran Program</h2>
+    <div style="
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+">
+  <h2 style="margin:0;">Pembayaran Program</h2>
+
+  <button
+    type="button"
+    onclick="closePaymentModal()"
+    aria-label="Tutup pembayaran"
+    style="
+      border:none;
+      background:transparent;
+      font-size:28px;
+      color:#64748b;
+      cursor:pointer;
+      line-height:1;
+      padding:4px 8px;
+    ">
+    &times;
+  </button>
+</div>
 
     <p class="modal-description">
       Silakan lakukan pembayaran menggunakan QRIS Suryantara Education.
@@ -937,6 +960,12 @@ async function continueRegistration() {
     }
 
     periksaSesi();
+
+      
+    function closePaymentModal() {
+      document.getElementById("paymentModal").hidden = true;
+    }
+
   </script>
 
 </body>
