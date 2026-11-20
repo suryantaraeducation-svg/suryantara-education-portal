@@ -705,7 +705,9 @@
 
         document.getElementById("loading").hidden = true;
         document.getElementById("app").hidden = false;
+        
         loadProductCatalog();
+        loadStudentRejectedPayments();
 
       } catch (error) {
         document.getElementById("loading").textContent =
@@ -1038,6 +1040,65 @@ function openRejectedPayment(payment) {
   button.textContent = "Kirim Ulang Bukti Pembayaran";
 
   document.getElementById("paymentModal").hidden = false;
+}
+
+    async function loadStudentRejectedPayments() {
+  const container = document.getElementById("rejectedPaymentNotice");
+  const info = document.getElementById("rejectedPaymentInfo");
+  const reason = document.getElementById("rejectedPaymentReason");
+  const button = document.getElementById("retryPaymentButton");
+
+  const token = sessionStorage.getItem("sdl_token");
+
+  if (!token) return;
+
+  try {
+    const response = await fetch(WEB_APP_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        action: "getstudentrejectedpayments",
+        token: token
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.success || !Array.isArray(result.payments)) {
+      throw new Error(result.message || "Gagal mengambil data pembayaran.");
+    }
+
+    if (result.payments.length === 0) {
+      container.hidden = true;
+      return;
+    }
+
+    const payment = result.payments[0];
+
+    const amount = new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: payment.currency || "IDR",
+      maximumFractionDigits: 0
+    }).format(Number(payment.amount || 0));
+
+    info.textContent =
+      "Nomor Pesanan: " + payment.orderNumber +
+      " | Program: " + payment.productName +
+      " | Jumlah: " + amount;
+
+    reason.textContent = payment.reason || "Tidak ada keterangan dari Admin.";
+
+    button.onclick = function () {
+      openRejectedPayment(payment);
+    };
+
+    container.hidden = false;
+
+  } catch (error) {
+    console.error("Gagal memuat pembayaran ditolak:", error);
+  }
 }
 
 async function submitPaymentProof() {
