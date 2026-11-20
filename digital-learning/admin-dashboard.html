@@ -306,6 +306,7 @@ async function loadAdminPendingPayments() {
               <th>Metode</th>
               <th>Bukti Pembayaran</th>
               <th>Status</th>
+              <th>Tindakan</th>
             </tr>
           </thead>
           <tbody>
@@ -329,6 +330,19 @@ async function loadAdminPendingPayments() {
             }
           </td>
           <td>Menunggu Verifikasi</td>
+            <td>
+              <button
+                type="button"
+                onclick="approveAdminPayment('${escapeAdminHTML(payment.paymentId)}')">
+                Setujui
+              </button>
+            
+              <button
+                type="button"
+                onclick="rejectAdminPayment('${escapeAdminHTML(payment.paymentId)}')">
+                Tolak
+              </button>
+            </td>
         </tr>
       `;
     });
@@ -357,7 +371,96 @@ function escapeAdminHTML(value) {
     }[character];
   });
 }
-  
+
+    
+async function approveAdminPayment(paymentId) {
+  const confirmed = confirm(
+    "Setujui pembayaran ini? Akses belajar siswa akan diaktifkan."
+  );
+
+  if (!confirmed) return;
+
+  const token = sessionStorage.getItem("sdl_token");
+
+  try {
+    const response = await fetch(WEB_APP_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        action: "approveadminpayment",
+        token: token,
+        paymentId: paymentId,
+        note: ""
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.message || "Persetujuan gagal.");
+    }
+
+    alert("Pembayaran disetujui. Akses belajar siswa berhasil dibuat.");
+
+    await loadAdminPendingPayments();
+
+  } catch (error) {
+    alert("Gagal menyetujui pembayaran: " + error.message);
+  }
+}
+
+
+async function rejectAdminPayment(paymentId) {
+  const note = prompt(
+    "Tuliskan alasan penolakan bukti pembayaran:"
+  );
+
+  if (note === null) return;
+
+  if (!note.trim()) {
+    alert("Alasan penolakan wajib diisi.");
+    return;
+  }
+
+  const confirmed = confirm(
+    "Yakin menolak pembayaran ini?"
+  );
+
+  if (!confirmed) return;
+
+  const token = sessionStorage.getItem("sdl_token");
+
+  try {
+    const response = await fetch(WEB_APP_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        action: "rejectadminpayment",
+        token: token,
+        paymentId: paymentId,
+        note: note.trim()
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.message || "Penolakan gagal.");
+    }
+
+    alert("Pembayaran berhasil ditolak.");
+
+    await loadAdminPendingPayments();
+
+  } catch (error) {
+    alert("Gagal menolak pembayaran: " + error.message);
+  }
+}
+
 </script>
 
 </body>
