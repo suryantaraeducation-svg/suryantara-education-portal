@@ -1203,6 +1203,7 @@ async function submitPaymentProof() {
       "sdl_payment_submission_" + purchaseId,
       "PENDING_VERIFICATION"
     );
+    await loadStudentRejectedPayments();
 
   } catch (error) {
     message.textContent = "Gagal mengirim bukti: " + error.message;
