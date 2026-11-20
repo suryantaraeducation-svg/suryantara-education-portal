@@ -998,6 +998,48 @@ async function continueRegistration() {
     }
 
     
+function openRejectedPayment(payment) {
+  if (!payment || !payment.purchaseId) {
+    alert("Data pesanan tidak ditemukan.");
+    return;
+  }
+
+  // Gunakan pesanan lama, bukan membuat pesanan baru.
+  sessionStorage.setItem(
+    "sdl_current_purchase_id",
+    payment.purchaseId
+  );
+
+  document.getElementById("paymentProductName").textContent =
+    payment.productName || "Program Pembelajaran";
+
+  document.getElementById("paymentOrderNumber").textContent =
+    payment.orderNumber || "-";
+
+  const amount = Number(payment.amount || 0);
+
+  document.getElementById("paymentAmount").textContent =
+    new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: payment.currency || "IDR",
+      maximumFractionDigits: 0
+    }).format(amount);
+
+  document.getElementById("paymentProofFile").value = "";
+
+  const message = document.getElementById("paymentUploadMessage");
+  message.textContent =
+    "Silakan unggah bukti pembayaran yang sudah diperbaiki.";
+  message.style.color = "#64748b";
+  message.hidden = false;
+
+  const button = document.getElementById("submitPaymentButton");
+  button.disabled = false;
+  button.textContent = "Kirim Ulang Bukti Pembayaran";
+
+  document.getElementById("paymentModal").hidden = false;
+}
+
 async function submitPaymentProof() {
   const token = sessionStorage.getItem("sdl_token");
   const purchaseId = sessionStorage.getItem("sdl_current_purchase_id");
