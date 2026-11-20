@@ -411,6 +411,37 @@
         Temukan program belajar yang sesuai dengan kebutuhanmu.
       </p>
 
+      <!-- INFORMASI PEMBAYARAN YANG DITOLAK ADMIN -->
+      <div id="rejectedPaymentNotice" hidden
+     style="
+       background:#fff7ed;
+       border:1px solid #fed7aa;
+       border-left:4px solid #ea580c;
+       border-radius:8px;
+       padding:16px;
+       margin:20px 0;
+     ">
+
+      <h3 style="color:#9a3412; margin-top:0;">
+        Pembayaran Perlu Diperbaiki
+      </h3>
+
+        <p id="rejectedPaymentInfo"></p>
+      
+        <p>
+          <strong>Alasan penolakan Admin:</strong>
+        </p>
+      
+        <p id="rejectedPaymentReason"></p>
+      
+        <button
+          type="button"
+          id="retryPaymentButton"
+          class="product-register-btn">
+          Kirim Ulang Bukti Pembayaran
+        </button>
+      
+      </div>
       <div id="catalogLoading" class="catalog-loading">
         Memuat daftar program...
       </div>
