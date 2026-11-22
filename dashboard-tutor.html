@@ -80,7 +80,7 @@
 <main class="shell">
   <section class="hero"><div><p class="eyebrow">RUANG KERJA TENTOR</p><h1>Dashboard TENTOR</h1><p id="heroGreeting">Selamat datang. Mari dampingi perjalanan belajar siswa hari ini.</p></div><div class="hero-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 9-4 9 4-9 4-9-4Z"/><path d="M7 10v5c3 2.5 7 2.5 10 0v-5"/><path d="M21 9v5"/></svg></div></section>
   <section class="stats" aria-label="Ringkasan jadwal">
-    <article class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></div><div><p class="stat-label">Jadwal hari ini</p><p class="stat-value" id="todayScheduleCount">—</p></div></article>
+    <article class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></div><div><p class="stat-label">Jadwal tanggal dipilih</p><p class="stat-value" id="todayScheduleCount">—</p></div></article>
     <article class="stat"><div class="stat-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></div><div><p class="stat-label">Belum dicatat</p><p class="stat-value" id="pendingCount">—</p></div></article>
     <article class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><p class="stat-label">Siswa aktif</p><p class="stat-value" id="activeStudentCount">—</p></div></article>
   </section>
@@ -309,7 +309,7 @@ async function loadSchedules() {
     $("activeStudentCount").textContent = "—";
   }
 }
-function render(items,dateKeyForItems=todayKey()){const list=$("scheduleList");list.innerHTML="";if(!items.length){list.innerHTML='<div class="empty"><strong>Belum ada jadwal hari ini</strong>Jadwal mengajar aktif akan muncul otomatis di sini.</div>';updatePending();return}
+function render(items,dateKeyForItems=todayKey()){const list=$("scheduleList");list.innerHTML="";if(!items.length){list.innerHTML='<div class="empty"><strong>Belum ada jadwal pada tanggal ini</strong>Jadwal mengajar aktif akan muncul otomatis di sini.</div>';updatePending();return}
 items.forEach(s=>{const start=String(field(s,["start","jamMulai","jam_mulai"],"—")),end=String(field(s,["end","jamSelesai","jam_selesai"],"")),student=String(field(s,["student","namaSiswa","name"],"Siswa")),prog=program(s),time=end?`${start} – ${end}`:start,duration=durMins(start,end),id=String(field(s,["id","idJadwal","id_jadwal"],""));const item=document.createElement("article");item.className="schedule";Object.assign(item.dataset,{id,idSiswa:String(field(s,["idSiswa","studentId","id_siswa"],"")),student,program:prog,tutor:String(field(s,["tutor","namaTutor","teacher"],tutorName())),time,duration:String(duration),date:dateKeyForItems,start,end});const link=meetLink(s),ready=Boolean(link&&meetIsOpen(s));
                 
 // Tampilkan permintaan hanya pada tanggal sesi yang diajukan orang tua.
@@ -531,7 +531,38 @@ async function loadTutorHistories() {
 }
 
 function renderTutorCalendar(){const grid=$("tutorCalendarDays"),heading=$("tutorCalendarMonth");if(!grid||!heading)return;grid.innerHTML="";const y=calendarCurrent.getFullYear(),m=calendarCurrent.getMonth();heading.textContent=`${months[m]} ${y}`;const first=new Date(y,m,1).getDay(),total=new Date(y,m+1,0).getDate(),today=todayKey();for(let i=0;i<first;i++){const e=document.createElement("div");e.className="tutor-calendar-day empty";grid.appendChild(e)}for(let n=1;n<=total;n++){const key=`${y}-${pad(m+1)}-${pad(n)}`,items=schedulesForDate(key),done=completedOn(key),btn=document.createElement("button");btn.type="button";btn.className="tutor-calendar-day";if(items.length)btn.classList.add("has-schedule");if(done)btn.classList.add("completed");if(key===today)btn.classList.add("today");if(key===selectedDateKey)btn.classList.add("selected");const num=document.createElement("span");num.className="tutor-day-number";num.textContent=n;btn.appendChild(num);if(items.length){const times=[...new Set(items.map(s=>{const st=String(field(s,["start","jamMulai","jam_mulai"],"")),en=String(field(s,["end","jamSelesai","jam_selesai"],""));return en?`${st} – ${en}`:st||"Waktu belum ditentukan"}))].slice(0,2);const t=document.createElement("span");t.className="tutor-day-time";t.innerHTML=times.map(esc).join("<br>");btn.appendChild(t)}btn.setAttribute("aria-label",`${n} ${months[m]} ${y}${items.length?`, ${items.length} sesi`:", tidak ada jadwal"}`);btn.addEventListener("click",()=>{selectedDateKey=key;renderTutorCalendar();renderSelectedDate(key)});grid.appendChild(btn)}}
-function renderSelectedDate(key){const d=new Date(`${key}T00:00:00`);const items=schedulesForDate(key).sort((a,b)=>{const av=String(field(a,["start","jamMulai","jam_mulai"],""));const bv=String(field(b,["start","jamMulai","jam_mulai"],""));return av.localeCompare(bv)});$("selectedDayTitle").textContent=d.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});$("selectedDaySubtitle").textContent=items.length?`${items.length} sesi mengajar pada tanggal ini.`:"Tidak ada jadwal mengajar pada tanggal ini.";render(items,key)}
+function renderSelectedDate(key){
+  const d = new Date(`${key}T00:00:00`);
+
+  const items = schedulesForDate(key).sort((a,b)=>{
+    const av = String(field(a,["start","jamMulai","jam_mulai"],""));
+    const bv = String(field(b,["start","jamMulai","jam_mulai"],""));
+    return av.localeCompare(bv);
+  });
+
+  // Perbarui jumlah jadwal sesuai tanggal yang dipilih.
+  $("todayScheduleCount").textContent = items.length;
+
+  // Perbarui tanggal pada bagian atas.
+  $("todayBadge").textContent = d.toLocaleDateString("id-ID",{
+    day:"numeric",
+    month:"long",
+    year:"numeric"
+  }).toUpperCase();
+
+  $("selectedDayTitle").textContent = d.toLocaleDateString("id-ID",{
+    weekday:"long",
+    day:"numeric",
+    month:"long",
+    year:"numeric"
+  });
+
+  $("selectedDaySubtitle").textContent = items.length
+    ? `${items.length} sesi mengajar pada tanggal ini.`
+    : "Tidak ada jadwal mengajar pada tanggal ini.";
+
+  render(items,key);
+}
 $("tutorPrevMonth").addEventListener("click",()=>{calendarCurrent.setMonth(calendarCurrent.getMonth()-1);renderTutorCalendar()});$("tutorNextMonth").addEventListener("click",()=>{calendarCurrent.setMonth(calendarCurrent.getMonth()+1);renderTutorCalendar()});
 function normalizePhone(raw){
  let n=String(raw||"").replace(/[^0-9]/g,"");
