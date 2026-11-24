@@ -1,11 +1,243 @@
 <!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Kelola Penilaian Orang Tua | Suryantara Education</title><style>
 :root{--navy:#0b1f3a;--gold:#d7aa3d;--bg:#f5f7fb;--text:#172033;--muted:#687386;--border:#e2e8f0}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text)}header{background:var(--navy);color:white;padding:18px 22px}main{max-width:1050px;margin:28px auto;padding:0 16px}h1{color:var(--navy)}.hint{color:var(--muted);line-height:1.6}.item{background:white;border:1px solid var(--border);border-radius:15px;padding:18px;margin:14px 0}.meta{font-size:12px;color:var(--muted);margin-bottom:10px}.stars{color:#bd9220;font-size:20px}.experience{white-space:pre-wrap;line-height:1.6;margin:12px 0}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row label{font-size:13px}.row button{border:0;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer}.approve{background:var(--navy);color:white}.reject{background:#feeceb;color:#9b2525}.status{font-size:12px;font-weight:700;background:#fff4d6;color:#79570d;padding:7px 10px;border-radius:20px}.note{width:min(100%,440px);padding:10px;border:1px solid var(--border);border-radius:8px}.empty{padding:25px;background:#fff;border-radius:12px;color:var(--muted)}a{color:#fff}
-</style></head><body><header><strong>SURYANTARA EDUCATION</strong> · <a href="admin-dashboard.html">Kembali ke Dashboard</a></header><main><h1>Kelola Penilaian Orang Tua</h1><p class="hint">Periksa setiap penilaian. Testimoni hanya dapat ditampilkan jika orang tua memberikan persetujuan, admin menyetujui, dan admin mencentang pilihan tampilkan.</p><div id="status" class="hint">Memuat data...</div><div id="list"></div></main><script>
+
+.moderation-section {
+  margin-top: 30px;
+}
+
+.moderation-section h2 {
+  color: var(--navy);
+  font-size: 19px;
+  margin-bottom: 6px;
+}
+
+.moderation-section > .hint {
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+.section-count {
+  display: inline-block;
+  margin-left: 7px;
+  padding: 4px 9px;
+  border-radius: 20px;
+  background: #edf2f8;
+  color: var(--navy);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.history-status {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.history-approved {
+  background: #e8f6ed;
+  color: #237343;
+}
+
+.history-rejected {
+  background: #feeceb;
+  color: #a12d2d;
+}
+
+.history-card {
+  opacity: .95;
+}
+
+.history-note {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 12px;
+}
+
+@media(max-width:600px) {
+  .item {
+    padding: 15px;
+  }
+
+  .note {
+    width: 100%;
+  }
+}
+
+</style></head><body><header><strong>SURYANTARA EDUCATION</strong> · <a href="admin-dashboard.html">Kembali ke Dashboard</a></header><main><h1>Kelola Penilaian Orang Tua</h1><p class="hint">Periksa setiap penilaian. Testimoni hanya dapat ditampilkan jika orang tua memberikan persetujuan, admin menyetujui, dan admin mencentang pilihan tampilkan.</p><div id="status" class="hint">Memuat data...</div>
+
+<section class="moderation-section">
+  <h2>🕒 Antrean Verifikasi</h2>
+  <p class="hint">Penilaian orang tua yang menunggu pemeriksaan Admin.</p>
+  <div id="pendingList"></div>
+</section>
+
+<section class="moderation-section">
+  <h2>📋 Riwayat Moderasi</h2>
+  <p class="hint">Penilaian yang sudah disetujui atau ditolak oleh Admin.</p>
+  <div id="historyList"></div>
+</section></main><script>
 const API_URL="https://script.google.com/macros/s/AKfycbyJMViFLWpmuHeHj8qPntVDfwHzM1WakDjwY8UTOnrH14PHOZQFnw0E-tIGpz57KPtS/exec";
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function getToken(){try{const a=JSON.parse(sessionStorage.getItem("suryantaraAuth")||"null");return a&&a.sessionToken||""}catch(e){return ""}}
 async function load(){const token=getToken();if(!token){document.getElementById("status").textContent="Sesi admin tidak ditemukan. Login kembali melalui akun admin.";return}try{const r=await fetch(`${API_URL}?action=adminGetParentSatisfactions&sessionToken=${encodeURIComponent(token)}`).then(x=>x.json());if(!r.success)throw new Error(r.message||"Gagal memuat");render(r.items||[])}catch(e){document.getElementById("status").textContent=e.message}}
-function render(items){const root=document.getElementById("list");document.getElementById("status").textContent=`Total penilaian: ${items.length}`;if(!items.length){root.innerHTML='<div class="empty">Belum ada penilaian orang tua.</div>';return}root.innerHTML=items.map(x=>`<article class="item" data-id="${esc(x.id)}"><div class="meta">${esc(x.student.name)} · ${esc(x.student.level)} · ID ${esc(x.id)}</div><div class="stars">${'★'.repeat(x.rating)}${'☆'.repeat(5-x.rating)} <span style="font-size:13px;color:#687386">${x.rating}/5</span></div><div class="experience">${esc(x.experience||"Tidak ada komentar tertulis.")}</div><div class="row"><span class="status">${esc(x.status)}</span><span class="meta">Izin publik: <b>${x.consent?'Ya':'Tidak'}</b></span><span class="meta">Sedang ditampilkan: <b>${x.displayed?'Ya':'Tidak'}</b></span></div><div class="row" style="margin-top:14px"><label><input type="checkbox" class="display-choice" ${x.displayed?'checked':''} ${!x.consent?'disabled':''}> Tampilkan di website (perlu izin orang tua)</label><input class="note" placeholder="Catatan admin (opsional)" value="${esc(x.adminNote)}"></div><div class="row" style="margin-top:12px"><button class="approve" onclick="moderate(this,'Disetujui')">Setujui / Simpan Pilihan</button><button class="reject" onclick="moderate(this,'Tidak Disetujui')">Tolak</button></div></article>`).join("")}
+
+function render(items) {
+  const pendingRoot = document.getElementById("pendingList");
+  const historyRoot = document.getElementById("historyList");
+
+  const allItems = items || [];
+
+  // Pisahkan penilaian berdasarkan status.
+  const pending = allItems.filter(x =>
+    String(x.status || "").trim() === "Menunggu Verifikasi"
+  );
+
+  const history = allItems.filter(x =>
+    String(x.status || "").trim() !== "Menunggu Verifikasi"
+  );
+
+  document.getElementById("status").textContent =
+    `Total penilaian: ${allItems.length} | Menunggu: ${pending.length} | Sudah dimoderasi: ${history.length}`;
+
+  // Membuat tampilan bintang.
+  function makeStars(rating) {
+    const value = Math.max(0, Math.min(5, Number(rating) || 0));
+    return "★".repeat(value) + "☆".repeat(5 - value);
+  }
+
+  // =====================================
+  // ANTREAN VERIFIKASI
+  // =====================================
+
+  if (!pending.length) {
+    pendingRoot.innerHTML =
+      '<div class="empty">Tidak ada penilaian yang menunggu verifikasi.</div>';
+  } else {
+    pendingRoot.innerHTML = pending.map(x => `
+      <article class="item" data-id="${esc(x.id)}">
+
+        <div class="meta">
+          ${esc(x.student.name)} · ${esc(x.student.level)} · ID ${esc(x.id)}
+        </div>
+
+        <div class="stars">
+          ${makeStars(x.rating)}
+          <span style="font-size:13px;color:#687386">
+            ${esc(x.rating)}/5
+          </span>
+        </div>
+
+        <div class="experience">
+          ${esc(x.experience || "Tidak ada komentar tertulis.")}
+        </div>
+
+        <div class="row">
+          <span class="status">Menunggu Verifikasi</span>
+          <span class="meta">
+            Izin publik: <b>${x.consent ? "Ya" : "Tidak"}</b>
+          </span>
+        </div>
+
+        <div class="row" style="margin-top:14px">
+          <label>
+            <input
+              type="checkbox"
+              class="display-choice"
+              ${x.displayed ? "checked" : ""}
+              ${!x.consent ? "disabled" : ""}
+            >
+            Tampilkan di website (perlu izin orang tua)
+          </label>
+
+          <input
+            class="note"
+            placeholder="Catatan Admin (opsional)"
+            value="${esc(x.adminNote || "")}"
+          >
+        </div>
+
+        <div class="row" style="margin-top:12px">
+          <button
+            class="approve"
+            onclick="moderate(this,'Disetujui')"
+          >
+            Setujui / Simpan Pilihan
+          </button>
+
+          <button
+            class="reject"
+            onclick="moderate(this,'Tidak Disetujui')"
+          >
+            Tolak
+          </button>
+        </div>
+
+      </article>
+    `).join("");
+  }
+
+  // =====================================
+  // RIWAYAT MODERASI
+  // =====================================
+
+  if (!history.length) {
+    historyRoot.innerHTML =
+      '<div class="empty">Belum ada penilaian yang dimoderasi.</div>';
+  } else {
+    historyRoot.innerHTML = history.map(x => {
+
+      const approved = x.status === "Disetujui";
+
+      return `
+        <article class="item history-card">
+
+          <div class="meta">
+            ${esc(x.student.name)} · ${esc(x.student.level)} · ID ${esc(x.id)}
+          </div>
+
+          <div class="stars">
+            ${makeStars(x.rating)}
+            <span style="font-size:13px;color:#687386">
+              ${esc(x.rating)}/5
+            </span>
+          </div>
+
+          <div class="experience">
+            ${esc(x.experience || "Tidak ada komentar tertulis.")}
+          </div>
+
+          <div class="row">
+            <span class="history-status ${
+              approved ? "history-approved" : "history-rejected"
+            }">
+              ${esc(x.status)}
+            </span>
+
+            <span class="meta">
+              Izin publik: <b>${x.consent ? "Ya" : "Tidak"}</b>
+            </span>
+
+            <span class="meta">
+              Ditampilkan: <b>${x.displayed ? "Ya" : "Tidak"}</b>
+            </span>
+          </div>
+
+          ${
+            x.adminNote
+              ? `<div class="history-note">
+                   Catatan Admin: ${esc(x.adminNote)}
+                 </div>`
+              : ""
+          }
+
+        </article>
+      `;
+    }).join("");
+  }
+}
+
 async function moderate(btn,decision){const card=btn.closest('.item');const id=card.dataset.id;const display=card.querySelector('.display-choice').checked;const note=card.querySelector('.note').value;btn.disabled=true;try{const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'adminModerateParentSatisfaction',sessionToken:getToken(),data:{id,decision,display,note}})}).then(x=>x.json());if(!r.success)throw new Error(r.message||'Gagal menyimpan');await load();}catch(e){alert(e.message)}finally{btn.disabled=false}}
 load();
 </script></body></html>
