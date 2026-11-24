@@ -436,7 +436,13 @@
       const data=await response.json();if(!data.success)throw new Error("Gagal memuat testimoni");
       testimonialGrid.innerHTML="";
       if(!data.items||!data.items.length){testimonialGrid.innerHTML='<p class="quote" style="grid-column:1/-1;text-align:center">Belum ada pengalaman orang tua yang ditampilkan.</p>';allTestimonials=[];renderTestimonials();return;}
-      data.items.forEach(item=>{const card=document.createElement("article");card.className="testimonial";const rating=Math.max(0,Math.min(5,Number(item.rating)||0));const stars=document.createElement("div");stars.className="avatar";const starText=document.createElement("span");starText.textContent="★".repeat(rating)+"☆".repeat(5-rating);const ratingText=document.createElement("span");ratingText.className="rating-number";ratingText.textContent=rating+"/5";stars.append(starText,ratingText);const quote=document.createElement("p");quote.className="quote";quote.textContent='“'+(item.experience||"")+'”';const person=document.createElement("p");person.className="person";person.textContent="Orang Tua Siswa";const role=document.createElement("p");role.className="role";role.textContent="Suryantara Education";card.append(stars,quote,person,role);testimonialGrid.appendChild(card)});
+      data.items.forEach(item=>{const card=document.createElement("article");card.className="testimonial";const rating=Math.max(0,Math.min(5,Number(item.rating)||0));const stars=document.createElement("div");stars.className="avatar";const starText=document.createElement("span");starText.textContent="★".repeat(rating)+"☆".repeat(5-rating);const ratingText=document.createElement("span");ratingText.className="rating-number";ratingText.textContent=rating+"/5";stars.append(starText,ratingText);const quote=document.createElement("p");quote.className="quote";quote.textContent='“'+(item.experience||"")+'”';
+const person=document.createElement("p");
+person.className="person";
+person.textContent = item.name
+  ? `${item.name} — ${item.label || "Orang Tua Siswa"}`
+  : (item.label || "Orang Tua Siswa");
+const role=document.createElement("p");role.className="role";role.textContent="Suryantara Education";card.append(stars,quote,person,role);testimonialGrid.appendChild(card)});
       allTestimonials=Array.from(testimonialGrid.children);renderTestimonials();
     }catch(error){testimonialGrid.innerHTML='<p class="quote" style="grid-column:1/-1;text-align:center">Testimoni belum dapat dimuat saat ini.</p>';allTestimonials=[];renderTestimonials();}
   }
