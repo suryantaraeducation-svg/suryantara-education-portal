@@ -432,7 +432,7 @@
   }
   async function loadPublicTestimonials(){
     try{
-      const response=await fetch("https://script.google.com/macros/s/AKfycbz-HXvuok1lfk5hEgKrBsxlADVfnkOpRY_lcbwZ5QNclotjHoUjuyUsbXg2BBly4hL6/exec?action=getPublicParentTestimonials");
+      const response=await fetch("https://script.google.com/macros/s/AKfycbyJMViFLWpmuHeHj8qPntVDfwHzM1WakDjwY8UTOnrH14PHOZQFnw0E-tIGpz57KPtS/exec?action=getPublicParentTestimonials");
       const data=await response.json();if(!data.success)throw new Error("Gagal memuat testimoni");
       testimonialGrid.innerHTML="";
       if(!data.items||!data.items.length){testimonialGrid.innerHTML='<p class="quote" style="grid-column:1/-1;text-align:center">Belum ada pengalaman orang tua yang ditampilkan.</p>';allTestimonials=[];renderTestimonials();return;}
