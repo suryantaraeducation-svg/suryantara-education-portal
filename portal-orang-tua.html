@@ -563,6 +563,51 @@
 .satisfaction-submit{background:var(--navy);color:#fff}.satisfaction-later{background:#eef2f7;color:var(--navy)}
 @media(max-width:600px){.satisfaction-card,.satisfaction-dialog{padding:18px}.satisfaction-stars button{font-size:29px}}
 
+/* =================================================
+   PERBAIKAN KOLOM PENGALAMAN PENILAIAN ORANG TUA
+   ================================================= */
+
+#satisfactionModalExperience,
+#satisfactionSectionExperience {
+    display: block;
+    width: 100%;
+    min-height: 120px;
+    padding: 14px 16px;
+    box-sizing: border-box;
+
+    border: 1px solid #dce3ec;
+    border-radius: 12px;
+
+    background: #ffffff;
+    color: #172033;
+
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+
+    resize: vertical;
+}
+
+#satisfactionModalExperience:focus,
+#satisfactionSectionExperience:focus {
+    outline: none;
+    border-color: #d7aa3d;
+    box-shadow: 0 0 0 3px rgba(215,170,61,.15);
+}
+
+#satisfactionModalExperience::placeholder,
+#satisfactionSectionExperience::placeholder {
+    color: #8993a3;
+}
+
+@media(max-width:600px) {
+    #satisfactionModalExperience,
+    #satisfactionSectionExperience {
+        min-height: 115px;
+        font-size: 14px;
+    }
+  }
+  
 </style>
 </head>
 <body class="parent-portal-page">
