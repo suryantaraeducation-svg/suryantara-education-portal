@@ -544,69 +544,299 @@
 @media(max-width:600px){.request-grid{grid-template-columns:1fr}.request-field.full{grid-column:auto}.schedule-request-card{padding:18px}}
 
 
-/* PENILAIAN ORANG TUA */
-.satisfaction-card{max-width:900px;margin:28px auto;padding:24px;background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow)}
-.satisfaction-card h3{margin:0 0 7px;color:var(--navy);font-family:Poppins,sans-serif;font-size:22px}
-.satisfaction-card p{color:var(--muted);font-size:13px;line-height:1.6}
-.satisfaction-stars{display:flex;gap:8px;margin:12px 0}
-.satisfaction-stars button{border:0;background:transparent;color:#cbd5e1;font-size:32px;cursor:pointer;padding:0 3px}
-.satisfaction-stars button.active{color:#d7aa3d}
-.satisfaction-card textarea{width:100%;min-height:100px;padding:12px;border:1px solid var(--border);border-radius:10px;font:14px Inter,sans-serif;resize:vertical}
-.satisfaction-consent{display:flex;gap:9px;align-items:flex-start;font-size:12px;color:var(--text);line-height:1.5;margin:12px 0}
-.satisfaction-status{font-size:12px;font-weight:700;color:#8a6718;background:#fff7df;padding:9px 12px;border-radius:9px;display:inline-block}
-.satisfaction-modal{position:fixed;inset:0;z-index:9999;background:rgba(7,22,42,.68);display:none;align-items:center;justify-content:center;padding:18px}
-.satisfaction-modal.show{display:flex}.satisfaction-dialog{width:min(520px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:20px;padding:26px;box-shadow:0 20px 60px #0003}
-.satisfaction-dialog h2{margin:0 0 8px;color:var(--navy);font-family:Poppins,sans-serif;font-size:22px}
-.satisfaction-dialog p{font-size:13px;color:var(--muted);line-height:1.6}
-.satisfaction-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-.satisfaction-actions button{border:0;border-radius:10px;padding:12px 17px;font-weight:800;cursor:pointer}
-.satisfaction-submit{background:var(--navy);color:#fff}.satisfaction-later{background:#eef2f7;color:var(--navy)}
-@media(max-width:600px){.satisfaction-card,.satisfaction-dialog{padding:18px}.satisfaction-stars button{font-size:29px}}
 
-/* =================================================
-   PERBAIKAN KOLOM PENGALAMAN PENILAIAN ORANG TUA
-   ================================================= */
+/* =====================================================
+   PENILAIAN ORANG TUA - SURYANTARA EDUCATION
+   ===================================================== */
 
+/* 1. KARTU PENILAIAN DI HALAMAN UTAMA */
+.satisfaction-card {
+    max-width: 900px;
+    margin: 28px auto;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+}
+
+.satisfaction-card h3 {
+    margin: 0 0 7px;
+    color: var(--navy);
+    font-family: Poppins, sans-serif;
+    font-size: 22px;
+}
+
+.satisfaction-card p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* 2. BINTANG PENILAIAN */
+.satisfaction-stars {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2px;
+    margin: 12px 0;
+}
+
+.satisfaction-stars button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #cbd5e1;
+    font-size: 30px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color .15s ease, transform .15s ease;
+}
+
+.satisfaction-stars button.active {
+    color: #d7aa3d;
+}
+
+.satisfaction-stars button:hover {
+    transform: scale(1.12);
+}
+
+/* 3. KOLOM PENGALAMAN */
+.satisfaction-card textarea,
 #satisfactionModalExperience,
 #satisfactionSectionExperience {
     display: block;
     width: 100%;
-    min-height: 120px;
+    min-height: 125px;
     padding: 14px 16px;
     box-sizing: border-box;
-
     border: 1px solid #dce3ec;
     border-radius: 12px;
-
-    background: #ffffff;
+    background: #fff;
     color: #172033;
-
     font-family: Inter, sans-serif;
     font-size: 14px;
     line-height: 1.7;
-
     resize: vertical;
 }
 
 #satisfactionModalExperience:focus,
-#satisfactionSectionExperience:focus {
+#satisfactionSectionExperience:focus,
+.satisfaction-card textarea:focus {
     outline: none;
     border-color: #d7aa3d;
     box-shadow: 0 0 0 3px rgba(215,170,61,.15);
 }
 
 #satisfactionModalExperience::placeholder,
-#satisfactionSectionExperience::placeholder {
+#satisfactionSectionExperience::placeholder,
+.satisfaction-card textarea::placeholder {
     color: #8993a3;
 }
 
+/* 4. PERSETUJUAN PUBLIKASI */
+.satisfaction-consent {
+    display: flex;
+    gap: 9px;
+    align-items: flex-start;
+    margin: 12px 0;
+    color: var(--text);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* 5. STATUS PENILAIAN */
+.satisfaction-status {
+    display: inline-block;
+    padding: 9px 12px;
+    border-radius: 9px;
+    background: #fff7df;
+    color: #8a6718;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* =====================================================
+   6. POP-UP PENILAIAN ORANG TUA
+   ===================================================== */
+
+.satisfaction-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: rgba(7,22,42,.68);
+}
+
+.satisfaction-modal.show {
+    display: flex;
+}
+
+/* Kotak utama pop-up */
+.satisfaction-dialog {
+    width: min(680px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 30px;
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.2);
+}
+
+/* Judul pop-up */
+.satisfaction-dialog h2 {
+    margin: 0 0 10px;
+    color: var(--navy);
+    font-family: Poppins, sans-serif;
+    font-size: 23px;
+    line-height: 1.4;
+}
+
+.satisfaction-dialog p {
+    margin: 0 0 14px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* =====================================================
+   7. AREA BINTANG PADA POP-UP
+   ===================================================== */
+
+/* Instruksi agar orang tua tahu bintang wajib dipilih */
+.satisfaction-dialog .rating-instruction {
+    margin: 18px 0 7px;
+    color: var(--navy);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+/* Bintang dibuat rapat dan mudah diklik */
+.satisfaction-dialog .satisfaction-stars {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin: 8px 0 18px;
+}
+
+.satisfaction-dialog .satisfaction-stars button {
+    width: 40px;
+    height: 42px;
+    padding: 0;
+    font-size: 32px;
+}
+
+/* =====================================================
+   8. TOMBOL POP-UP
+   ===================================================== */
+
+.satisfaction-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+}
+
+.satisfaction-actions button {
+    min-height: 44px;
+    padding: 12px 20px;
+    border: 0;
+    border-radius: 10px;
+    font-family: Inter, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.satisfaction-submit {
+    background: var(--navy);
+    color: #fff;
+}
+
+.satisfaction-submit:hover {
+    background: var(--navy2);
+}
+
+.satisfaction-later {
+    background: #eef2f7;
+    color: var(--navy);
+}
+
+.satisfaction-later:hover {
+    background: #e1e7ef;
+}
+
+.satisfaction-actions button:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+/* =====================================================
+   9. RESPONSIVE - TABLET DAN HP
+   ===================================================== */
+
 @media(max-width:600px) {
+
+    .satisfaction-card {
+        padding: 18px;
+    }
+
+    .satisfaction-dialog {
+        width: 100%;
+        max-height: 92vh;
+        padding: 20px;
+        border-radius: 16px;
+    }
+
+    .satisfaction-dialog h2 {
+        font-size: 20px;
+    }
+
+    .satisfaction-dialog p {
+        font-size: 13px;
+    }
+
+    .satisfaction-stars {
+        gap: 1px;
+    }
+
+    .satisfaction-stars button {
+        width: 35px;
+        height: 38px;
+        font-size: 28px;
+    }
+
+    .satisfaction-dialog .satisfaction-stars button {
+        width: 37px;
+        height: 40px;
+        font-size: 30px;
+    }
+
     #satisfactionModalExperience,
-    #satisfactionSectionExperience {
+    #satisfactionSectionExperience,
+    .satisfaction-card textarea {
         min-height: 115px;
         font-size: 14px;
     }
-  }
+
+    .satisfaction-actions {
+        flex-direction: column;
+    }
+
+    .satisfaction-actions button {
+        width: 100%;
+    }
+}
   
 </style>
 </head>
@@ -862,19 +1092,100 @@ dan dicatat oleh tutor.
   <div class="request-message" id="satisfactionSectionMessage" role="status"></div>
 </section>
 
-<div class="satisfaction-modal" id="satisfactionModal" role="dialog" aria-modal="true" aria-labelledby="satisfactionModalTitle">
- <div class="satisfaction-dialog">
-  <h2 id="satisfactionModalTitle">Bagaimana pengalaman Ayah/Bunda?</h2>
-  <p>Seberapa puas Anda dengan layanan Suryantara Education? Penilaian ini membantu kami terus berkembang.</p>
-  <div class="satisfaction-stars" id="satisfactionModalStars" aria-label="Pilih rating"></div>
-  <textarea id="satisfactionModalExperience" maxlength="2000" placeholder="Tuliskan pengalaman Anda selama menggunakan layanan kami (opsional)"></textarea>
-  <label class="satisfaction-consent"><input type="checkbox" id="satisfactionModalConsent"> Saya bersedia pengalaman tertulis saya ditampilkan di website setelah diverifikasi dan dipilih admin.</label>
-  <div class="satisfaction-actions">
-   <button type="button" class="satisfaction-submit" id="satisfactionModalSubmit">Kirim Penilaian</button>
-   <button type="button" class="satisfaction-later" id="satisfactionModalLater">Nanti</button>
+
+<div class="satisfaction-modal" id="satisfactionModal"
+     role="dialog" aria-modal="true"
+     aria-labelledby="satisfactionModalTitle">
+
+  <div class="satisfaction-dialog">
+
+    <div class="satisfaction-modal-header">
+      <span class="satisfaction-eyebrow">MASUKAN AYAH/BUNDA</span>
+
+      <h2 id="satisfactionModalTitle">
+        Bagaimana pengalaman Ayah/Bunda?
+      </h2>
+
+      <p>
+        Seberapa puas Anda dengan layanan Suryantara Education?
+        Penilaian Ayah/Bunda membantu kami terus berkembang.
+      </p>
+    </div>
+
+    <!-- RATING BINTANG -->
+    <div class="satisfaction-rating-field">
+
+      <div class="satisfaction-field-heading">
+        <label>Pilih tingkat kepuasan</label>
+        <span class="required-badge">WAJIB DIISI</span>
+      </div>
+
+      <p class="satisfaction-rating-hint">
+        Klik salah satu bintang sesuai pengalaman Ayah/Bunda.
+      </p>
+
+      <div class="satisfaction-stars"
+           id="satisfactionModalStars"
+           aria-label="Pilih rating"></div>
+
+      <div class="satisfaction-rating-scale">
+        <span>Kurang puas</span>
+        <span>Sangat puas</span>
+      </div>
+
+    </div>
+
+    <!-- KOLOM PENGALAMAN -->
+    <div class="satisfaction-experience-field">
+
+      <label for="satisfactionModalExperience">
+        Ceritakan pengalaman Ayah/Bunda
+        <span class="optional-label">(Opsional)</span>
+      </label>
+
+      <textarea
+        id="satisfactionModalExperience"
+        maxlength="2000"
+        rows="5"
+        placeholder="Contoh: Anak saya semakin memahami materi pelajaran. Tentornya sabar dan penjelasannya mudah dipahami..."
+      ></textarea>
+
+    </div>
+
+    <!-- PERSETUJUAN PUBLIKASI -->
+    <label class="satisfaction-consent">
+      <input type="checkbox" id="satisfactionModalConsent">
+
+      <span>
+        Saya bersedia pengalaman tertulis saya ditampilkan
+        di website Suryantara Education setelah diverifikasi
+        dan dipilih oleh admin.
+      </span>
+    </label>
+
+    <!-- TOMBOL -->
+    <div class="satisfaction-actions">
+
+      <button type="button"
+              class="satisfaction-submit"
+              id="satisfactionModalSubmit">
+        Kirim Penilaian
+      </button>
+
+      <button type="button"
+              class="satisfaction-later"
+              id="satisfactionModalLater">
+        Nanti
+      </button>
+
+    </div>
+
+    <div class="request-message"
+         id="satisfactionModalMessage"
+         role="status"
+         aria-live="polite"></div>
+
   </div>
-  <div class="request-message" id="satisfactionModalMessage" role="status"></div>
- </div>
 </div>
 
 </main>
