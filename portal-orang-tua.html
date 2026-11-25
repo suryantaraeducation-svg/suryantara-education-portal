@@ -606,6 +606,49 @@
     transform: scale(1.12);
 }
 
+  /* BINGKAI PENILAIAN BINTANG */
+.satisfaction-dialog .satisfaction-stars {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2px;
+
+    width: 100%;
+    min-height: 76px;
+    box-sizing: border-box;
+    padding: 12px 16px;
+    margin: 10px 0 18px;
+
+    border: 1px solid #dce3ec;
+    border-radius: 12px;
+    background: #ffffff;
+}
+
+.satisfaction-dialog .satisfaction-stars button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 38px;
+    height: 42px;
+    padding: 0;
+
+    border: 0;
+    background: transparent;
+    color: #cbd5e1;
+
+    font-size: 32px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.satisfaction-dialog .satisfaction-stars button.active {
+    color: #d7aa3d;
+}
+
+.satisfaction-dialog .satisfaction-stars button:hover {
+    transform: scale(1.08);
+}
 /* 3. KOLOM PENGALAMAN */
 .satisfaction-card textarea,
 #satisfactionModalExperience,
@@ -1120,19 +1163,12 @@ dan dicatat oleh tutor.
         <span class="required-badge">WAJIB DIISI</span>
       </div>
 
-      <p class="satisfaction-rating-hint">
-        Klik salah satu bintang sesuai pengalaman Ayah/Bunda.
-      </p>
-
+      
       <div class="satisfaction-stars"
            id="satisfactionModalStars"
            aria-label="Pilih rating"></div>
 
-      <div class="satisfaction-rating-scale">
-        <span>Kurang puas</span>
-        <span>Sangat puas</span>
-      </div>
-
+    
     </div>
 
     <!-- KOLOM PENGALAMAN -->
