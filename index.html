@@ -28,22 +28,83 @@
     a{color:inherit;text-decoration:none}
     button{font:inherit}
     .container{width:min(1200px,calc(100% - 44px));margin:auto}
-    /* HEADER */
-    .site-header{height:88px;background:#fff;position:sticky;top:0;z-index:50;box-shadow:0 2px 14px rgba(12,39,72,.06)}
-    .nav{height:100%;display:flex;align-items:center;justify-content:space-between;gap:22px}
-    .brand{display:flex;align-items:center;gap:10px;min-width:255px}
-    .brand-symbol{width:54px;height:54px;display:grid;place-items:center;position:relative;color:var(--navy);font-size:36px}
-    .brand-symbol:before{content:"";position:absolute;width:42px;height:42px;border:3px solid var(--gold);border-bottom-color:transparent;border-radius:50%;top:0;left:6px}
-    .brand-symbol span{position:relative;margin-top:13px}
-    .brand-text strong{display:block;font-size:22px;line-height:1;color:var(--navy);font-weight:900;letter-spacing:.4px}
-    .brand-text small{display:flex;align-items:center;gap:6px;margin-top:4px;color:var(--gold-dark);font-size:11px;font-weight:900;letter-spacing:2.3px}
-    .brand-text small:before,.brand-text small:after{content:"";height:1px;width:15px;background:var(--gold-dark)}
-    .nav-links{display:flex;align-items:center;gap:25px;font-size:14px;font-weight:800;color:#27374b}
-    .nav-links a{padding:10px 12px;border-radius:12px;transition:.2s}
-    .nav-links a:hover,.nav-links a.active{background:#edf2fa;color:var(--navy)}
-    .login-link{display:inline-flex;align-items:center;gap:9px;background:var(--navy);color:#fff;padding:13px 22px;border-radius:15px;font-size:14px;font-weight:800;white-space:nowrap;transition:.2s}
-    .login-link:hover{background:var(--navy-2);transform:translateY(-1px)}
-    .menu-toggle{display:none;border:0;background:#edf2fa;color:var(--navy);border-radius:10px;padding:10px 12px;font-size:20px}
+   
+    
+/* HEADER NAVBAR MINIMALIS */
+.site-header {
+  height: 100px;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 2px 14px rgba(12,39,72,.06);
+}
+
+.nav {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  text-decoration: none;
+}
+
+.brand img {
+  display: block;
+  width: auto;
+  height: 76px;
+  max-width: 280px;
+  object-fit: contain;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.login-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--navy);
+  color: #fff;
+  padding: 14px 34px;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: 800;
+  white-space: nowrap;
+  transition: .2s;
+}
+
+.login-link:hover {
+  background: var(--navy-2);
+  transform: translateY(-1px);
+}
+
+/* RESPONSIVE MOBILE */
+@media(max-width:680px) {
+  .site-header {
+    height: 76px;
+  }
+
+  .brand img {
+    height: 55px;
+    max-width: 190px;
+  }
+
+  .login-link {
+    font-size: 13px;
+    padding: 11px 19px;
+    border-radius: 11px;
+  }
+}
+
     /* HERO */
     .hero{background:var(--pale);border-radius:0 0 22px 22px;padding:26px 0 28px}
     .hero-grid{display:grid;grid-template-columns:1fr 1.05fr;align-items:center;gap:28px}
@@ -273,23 +334,25 @@
   </style>
 </head>
 <body>
+
 <header class="site-header">
   <div class="container nav">
+
+    <!-- LOGO SURYANTARA EDUCATION -->
     <a class="brand" href="#home" aria-label="Suryantara Education">
-      <span class="brand-symbol"><span>◒</span></span>
-      <span class="brand-text"><strong>SURYANTARA</strong><small>EDUCATION</small></span>
+      <img
+        src="images/logo-suryantara.png"
+        alt="Suryantara Education"
+      >
     </a>
-    <nav class="nav-links" id="navLinks">
-      <a class="active" href="#home">Home</a>
-      <a href="#program">Ruang Belajar</a>
-      <a href="#tentang">Layanan Orang Tua</a>
-      <a href="#testimoni">Testimoni</a>
-      <a href="#kontak">Kontak</a>
-    </nav>
+
+    <!-- TOMBOL LOGIN -->
     <div class="nav-right">
-      <a class="login-link" href="login.html">Login</a>
-      <button class="menu-toggle" id="menuToggle" aria-label="Buka menu">☰</button>
+      <a class="login-link" href="login.html">
+        Login
+      </a>
     </div>
+
   </div>
 </header>
 
@@ -410,12 +473,7 @@
 </footer>
 
 <script>
-  // MENU MOBILE
-  const menuToggle = document.getElementById("menuToggle");
-  const navLinks = document.getElementById("navLinks");
-  menuToggle.addEventListener("click", () => navLinks.classList.toggle("open"));
-  navLinks.querySelectorAll("a").forEach(link => link.addEventListener("click", () => navLinks.classList.remove("open")));
-
+  
   // TESTIMONI: hanya data yang disetujui dan dipilih admin.
   const testimonialGrid = document.getElementById("testimonialGrid");
   const dotsWrap = document.getElementById("testimonialDots");
