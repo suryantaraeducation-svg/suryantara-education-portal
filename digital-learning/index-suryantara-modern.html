@@ -64,7 +64,52 @@
     .btn-light{background:#fff;color:var(--navy)}
     .hero-visual{height:260px;align-self:end;display:flex;align-items:end;justify-content:center;position:relative}
     .hero-visual:before{content:"";position:absolute;width:85%;height:82%;bottom:0;right:4%;background:#ffedc5;border-radius:55% 55% 0 0}
-    .hero-visual img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;object-position:center bottom}
+    /* SLIDER FOTO HERO */
+.hero-visual {
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-visual .hero-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center bottom;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+}
+
+.hero-visual .hero-photo.active {
+    opacity: 1;
+}
+
+/* Titik indikator */
+.hero-photo-dots {
+    position: absolute;
+    z-index: 5;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+}
+
+.hero-photo-dots button {
+    width: 9px;
+    height: 9px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: #cbd5e1;
+    cursor: pointer;
+}
+
+.hero-photo-dots button.active {
+    background: #f5a000;
+    transform: scale(1.25);
+}
 
     /* SECTION TITLES */
     .section-title{text-align:center;margin-bottom:14px}
@@ -182,7 +227,7 @@
   <header class="navbar">
     <a class="brand" href="#home" aria-label="Suryantara Education">
       <!-- Ganti dengan logo resmi -->
-      <img src="SE.png" alt="Suryantara Education">
+      <img src="assets/SE.png" alt="Suryantara Education">
     </a>
     <nav class="nav-links" id="mainNav">
       <a class="active" href="#home">Home</a>
@@ -212,10 +257,32 @@
             </a>
           </div>
         </div>
-        <div class="hero-visual">
-          <!-- Ganti dengan foto siswa asli / foto promosi milik Suryantara -->
-          <img src="1.png" alt="Siswa Suryantara Education sedang belajar">
-        </div>
+        
+       <div class="hero-visual">
+
+          <img class="hero-photo active"
+               src="assets/hero-siswa.png"
+               alt="Siswa Suryantara Education sedang belajar">
+      
+          <img class="hero-photo"
+               src="assets/hero-siswa-2.png"
+               alt="Kegiatan belajar siswa">
+      
+          <img class="hero-photo"
+               src="assets/hero-siswa-3.png"
+               alt="Aktivitas siswa Suryantara Education">
+         <img class="hero-photo"
+               src="assets/hero-siswa-4.png"
+               alt="Aktivitas siswa Suryantara Education">
+      
+          <div class="hero-photo-dots">
+              <button class="active" aria-label="Foto 1"></button>
+              <button aria-label="Foto 2"></button>
+              <button aria-label="Foto 3"></button>
+              <button aria-label="Foto 4"></button>
+          </div>
+
+</div>
       </div>
     </section>
 
@@ -347,6 +414,50 @@
       }, 3000);
     })();
 
+    // SLIDER FOTO HERO OTOMATIS
+(() => {
+    const hero = document.querySelector('.hero-visual');
+
+    if (!hero) return;
+
+    const photos = hero.querySelectorAll('.hero-photo');
+    const dots = hero.querySelectorAll('.hero-photo-dots button');
+
+    let current = 0;
+    let timer;
+
+    function showPhoto(index) {
+        current = index;
+
+        photos.forEach((photo, i) => {
+            photo.classList.toggle('active', i === current);
+        });
+
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === current);
+        });
+    }
+
+    function startSlider() {
+        clearInterval(timer);
+
+        timer = setInterval(() => {
+            current = (current + 1) % photos.length;
+            showPhoto(current);
+        }, 3000);
+    }
+
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            showPhoto(index);
+            startSlider();
+        });
+    });
+
+    showPhoto(0);
+    startSlider();
+})();
+    
     // Slider foto Tentang Kami: otomatis, tombol panah, dan titik navigasi
     (() => {
       const slider = document.querySelector('.slider');
