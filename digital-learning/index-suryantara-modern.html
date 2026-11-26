@@ -35,8 +35,16 @@
 
     /* HERO */
     .hero{min-height:270px;position:relative;overflow:hidden;background:var(--cream);isolation:isolate}
-    .hero:before{content:"";position:absolute;z-index:-1;left:-5%;right:-5%;bottom:-105px;height:160px;
-      background:var(--navy);border-top:12px solid var(--gold);border-radius:50% 50% 0 0/35% 35% 0 0;transform:rotate(-1deg)}
+    /* Ornamen lengkung U: garis emas turun di tengah, lalu bidang navy mengikuti kurva */
+    .hero:before,.hero:after{content:"";position:absolute;z-index:-1;left:-4%;width:108%;height:104px;bottom:-1px;
+      background-repeat:no-repeat;background-position:center bottom;background-size:100% 100%;pointer-events:none}
+    .hero:before{
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 180' preserveAspectRatio='none'%3E%3Cpath fill='%23f5a000' d='M0 0 C400 178 1200 178 1600 0 L1600 180 L0 180 Z'/%3E%3C/svg%3E");
+    }
+    .hero:after{
+      height:94px;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 180' preserveAspectRatio='none'%3E%3Cpath fill='%23092d68' d='M0 18 C400 178 1200 178 1600 18 L1600 180 L0 180 Z'/%3E%3C/svg%3E");
+    }
     .hero-inner{min-height:270px;display:grid;grid-template-columns:1.25fr .85fr;align-items:center;gap:20px}
     .hero-copy{text-align:center;padding:24px 0 42px 5%}
     .eyebrow{display:flex;align-items:center;justify-content:center;gap:11px;color:var(--gold);
@@ -44,6 +52,10 @@
     .eyebrow:before,.eyebrow:after{content:"";height:3px;width:45px;background:var(--gold)}
     h1,h2,h3,p{margin-top:0}
     .hero h1{font:800 clamp(34px,4vw,46px)/1.08 var(--serif);color:var(--navy);max-width:720px;margin:0 auto 18px}
+    .hero-rotating-title{display:flex;align-items:center;justify-content:center}
+    .hero-rotating-title span{display:block;opacity:1;transform:translateY(0);transition:opacity .45s ease,transform .45s ease}
+    .hero-rotating-title span.is-changing{opacity:0;transform:translateY(12px)}
+    @media(prefers-reduced-motion:reduce){.hero-rotating-title span{transition:none}}
     .hero-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
     .btn{min-height:40px;padding:10px 24px;border-radius:22px;display:inline-flex;align-items:center;justify-content:center;
       gap:8px;text-decoration:none;font-size:13px;font-weight:800;border:1.5px solid var(--navy);transition:.2s}
@@ -191,7 +203,7 @@
       <div class="container hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Suryantara Digital Learning</p>
-          <h1>Platform Belajar Untuk Masa Depan Yang Lebih Baik</h1>
+          <h1 class="hero-rotating-title"><span id="heroHeadline" aria-live="polite">Platform Belajar Untuk Masa Depan Yang Lebih Baik</span></h1>
           <div class="hero-actions">
             <a class="btn btn-primary" href="daftar.html">Belum Punya Akun?</a>
             <a class="btn btn-light" href="https://wa.me/" target="_blank" rel="noopener">
@@ -302,6 +314,38 @@
       menuButton.setAttribute('aria-expanded', 'false');
       menuButton.textContent = '☰';
     }));
+
+    // Rotasi kalimat pembuka Hero setiap 3 detik
+    (() => {
+      const headline = document.getElementById('heroHeadline');
+      if (!headline) return;
+
+      const phrases = [
+        'Platform Belajar Untuk Masa Depan Yang Lebih Baik',
+        'Belajar Hari Ini, Bersinar Esok Hari',
+        'Temukan Potensi, Raih Prestasi',
+        'Belajar Lebih Mudah, Masa Depan Lebih Cerah',
+        'Pendampingan Belajar untuk Setiap Langkah'
+      ];
+
+      let current = 0;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      window.setInterval(() => {
+        current = (current + 1) % phrases.length;
+
+        if (reducedMotion) {
+          headline.textContent = phrases[current];
+          return;
+        }
+
+        headline.classList.add('is-changing');
+        window.setTimeout(() => {
+          headline.textContent = phrases[current];
+          headline.classList.remove('is-changing');
+        }, 450);
+      }, 3000);
+    })();
 
     // Slider foto Tentang Kami: otomatis, tombol panah, dan titik navigasi
     (() => {
