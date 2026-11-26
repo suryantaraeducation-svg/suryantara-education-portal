@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Suryantara Education - Belajar Hari Ini, Bersinar Esok Hari.">
+  <title>Suryantara Education | Platform Belajar</title>
+  <style>
+    :root{
+      --navy:#092d68;--navy2:#0b2748;--gold:#f5a000;--gold2:#ffb21a;
+      --ink:#14243b;--muted:#66758a;--cream:#fffdf8;--pale:#edf3fc;
+      --white:#fff;--line:#e2e8f0;--serif:Georgia,"Times New Roman",serif;
+      --sans:Inter,Arial,Helvetica,sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:#fff;color:var(--ink);font-family:var(--sans)}
+    a{color:inherit}
+    .container{width:min(1240px,calc(100% - 44px));margin-inline:auto}
+
+    /* NAVBAR */
+    .navbar{height:72px;background:#fff;display:flex;align-items:center;justify-content:space-between;
+      gap:24px;padding:8px max(22px,calc((100vw - 1320px)/2));border-bottom:1px solid #edf0f4;
+      position:relative;z-index:10}
+    .brand{display:flex;align-items:center;text-decoration:none;flex-shrink:0}
+    .brand img{width:245px;height:56px;object-fit:contain;object-position:left center}
+    .nav-links{display:flex;align-items:center;justify-content:center;gap:clamp(16px,3vw,42px);margin-left:auto}
+    .nav-links a{font-size:13px;font-weight:700;text-decoration:none;color:#15263e;white-space:nowrap;padding:12px 0;position:relative}
+    .nav-links a:hover,.nav-links a.active{color:var(--navy)}
+    .nav-links a.active:after{content:"";height:3px;width:30px;background:var(--gold);position:absolute;bottom:3px;left:0;border-radius:4px}
+    .login{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--navy);border-radius:18px;
+      padding:9px 19px;text-decoration:none;font-size:13px;font-weight:800;color:var(--navy);white-space:nowrap;margin-left:24px}
+    .login svg{width:17px;height:17px}
+    .menu-toggle{display:none;border:0;background:transparent;color:var(--navy);font-size:25px;cursor:pointer}
+
+    /* HERO */
+    .hero{min-height:270px;position:relative;overflow:hidden;background:var(--cream);isolation:isolate}
+    .hero:before{content:"";position:absolute;z-index:-1;left:-5%;right:-5%;bottom:-105px;height:160px;
+      background:var(--navy);border-top:12px solid var(--gold);border-radius:50% 50% 0 0/35% 35% 0 0;transform:rotate(-1deg)}
+    .hero-inner{min-height:270px;display:grid;grid-template-columns:1.25fr .85fr;align-items:center;gap:20px}
+    .hero-copy{text-align:center;padding:24px 0 42px 5%}
+    .eyebrow{display:flex;align-items:center;justify-content:center;gap:11px;color:var(--gold);
+      text-transform:uppercase;font-weight:800;font-size:14px;letter-spacing:.35px;margin:0 0 8px}
+    .eyebrow:before,.eyebrow:after{content:"";height:3px;width:45px;background:var(--gold)}
+    h1,h2,h3,p{margin-top:0}
+    .hero h1{font:800 clamp(34px,4vw,46px)/1.08 var(--serif);color:var(--navy);max-width:720px;margin:0 auto 18px}
+    .hero-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+    .btn{min-height:40px;padding:10px 24px;border-radius:22px;display:inline-flex;align-items:center;justify-content:center;
+      gap:8px;text-decoration:none;font-size:13px;font-weight:800;border:1.5px solid var(--navy);transition:.2s}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px #092d6820}
+    .btn-primary{background:var(--navy);color:#fff}
+    .btn-light{background:#fff;color:var(--navy)}
+    .hero-visual{height:260px;align-self:end;display:flex;align-items:end;justify-content:center;position:relative}
+    .hero-visual:before{content:"";position:absolute;width:85%;height:82%;bottom:0;right:4%;background:#ffedc5;border-radius:55% 55% 0 0}
+    .hero-visual img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;object-position:center bottom}
+
+    /* SECTION TITLES */
+    .section-title{text-align:center;margin-bottom:14px}
+    .section-title .eyebrow{margin-bottom:3px}
+    .section-title h2{font:800 clamp(29px,3.1vw,38px)/1.12 var(--serif);color:var(--navy);margin:0}
+    .section-title.light h2{color:#fff}
+
+    /* PACKAGES */
+    .packages{background:linear-gradient(120deg,#0b2c52,#09254a);padding:19px 0 16px;color:#fff}
+    .packages .section-title{margin-bottom:10px}
+    .package-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .package-card{min-height:116px;background:#fff;border:4px solid var(--gold);border-radius:15px;
+      padding:12px 12px 10px;text-align:center;text-decoration:none;color:var(--ink);display:flex;
+      flex-direction:column;align-items:center;justify-content:center;transition:.2s}
+    .package-card:hover{transform:translateY(-4px);box-shadow:0 9px 20px #0003}
+    .package-top{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:5px}
+    .package-icon{width:45px;height:45px;border-radius:50%;background:#fff1d0;color:var(--navy);
+      display:grid;place-items:center}
+    .package-icon svg{width:27px;height:27px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .package-card h3{font:800 25px/1 var(--serif);color:var(--navy);margin:0}
+    .package-detail{font-size:13px;text-decoration:underline;text-underline-offset:3px;margin:0 0 9px}
+    .package-card p{font-size:14px;font-weight:800;margin:0;color:#15243a}
+
+    /* ABOUT SLIDER */
+    .about{padding:17px 0 20px;background:#fff;position:relative;overflow:hidden}
+    .about:after{content:"";position:absolute;right:7%;top:28px;width:120px;height:110px;opacity:.4;
+      background-image:radial-gradient(#a9c6ed 2px,transparent 2.5px);background-size:16px 16px;pointer-events:none}
+    .about .section-title{margin-bottom:9px}
+    .about-grid{display:grid;grid-template-columns:1.02fr 1fr;align-items:center;gap:42px;position:relative;z-index:1}
+    .slider{position:relative;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#e9edf2;
+      box-shadow:0 5px 15px #10243b20}
+    .slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .45s}
+    .slide.active{opacity:1;visibility:visible}
+    .slide img{width:100%;height:100%;object-fit:cover;display:block}
+    .slide-caption{position:absolute;left:0;right:0;bottom:0;padding:28px 16px 12px;color:#fff;
+      font-size:12px;font-weight:700;background:linear-gradient(transparent,#071a32a8)}
+    .slide-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:38px;height:38px;
+      border:0;border-radius:50%;background:#fff;color:var(--navy);font-size:25px;line-height:1;
+      box-shadow:0 2px 9px #0002;cursor:pointer}
+    .slide-arrow:hover{background:var(--gold);color:#fff}
+    .slide-prev{left:10px}.slide-next{right:10px}
+    .dots{position:absolute;z-index:4;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:7px}
+    .dots button{width:8px;height:8px;padding:0;border:0;border-radius:10px;background:#ffffffb8;cursor:pointer}
+    .dots button.active{width:21px;background:var(--gold)}
+    .about-copy h2{font:800 31px/1.1 var(--serif);color:var(--navy);margin:0 0 9px}
+    .about-copy p{font-size:14px;line-height:1.55;color:#1e2d43;margin:0 0 10px}
+    .about-copy .btn{margin-top:2px;min-height:36px;padding:8px 18px}
+
+    /* TESTIMONIALS */
+    .testimonials{background:linear-gradient(120deg,#eef4fd,#e8f0fb);padding:10px 0 18px}
+    .testimonials .section-title{margin-bottom:12px}
+    .testimonials .section-title h2{font-size:35px}
+    .testimonial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .testimonial-card{min-height:108px;background:#fff;border-radius:14px;padding:13px 18px;
+      display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:start;box-shadow:0 3px 8px #14243b12}
+    .avatar{width:44px;height:44px;border-radius:50%;background:#12375e;color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px}
+    .quote{font-size:13px;font-style:italic;line-height:1.45;color:#1d2e49;margin:0 0 10px}
+    .person{font-size:13px;font-weight:800;color:#102d53;margin:0 0 3px}
+    .role{font-size:12px;color:#68788e;margin:0}
+
+    /* FOOTER */
+    footer{background:#0b2748;color:#d8e1ed;padding:25px 0 12px}
+    .footer-grid{display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr 1.2fr;gap:25px;align-items:start}
+    .footer-logo{font-size:25px;line-height:1.05;font-weight:900;letter-spacing:.4px;color:#fff}
+    .footer-logo span{display:block;color:var(--gold);font-size:13px;letter-spacing:4px;margin-top:5px}
+    .footer-tagline{font-size:13px;line-height:1.5;margin:10px 0 0}
+    .footer-column h4{font-size:13px;color:#fff;margin:0 0 9px}
+    .footer-column a{display:block;font-size:12px;color:#d0d9e5;text-decoration:none;margin:0 0 6px}
+    .footer-column a:hover{color:var(--gold)}
+    .social a{display:flex;align-items:center;gap:8px}
+    .social-icon{width:17px;height:17px;border:1.5px solid currentColor;border-radius:5px;display:inline-grid;place-items:center;font-size:10px;font-weight:900}
+    .copyright{border-top:1px solid #ffffff25;margin-top:17px;padding-top:11px;display:flex;justify-content:space-between;gap:15px;font-size:11px;color:#c0ccda}
+
+    @media(max-width:900px){
+      .navbar{padding-inline:20px}.brand img{width:205px}
+      .nav-links{gap:15px}.nav-links a{font-size:12px}.login{margin-left:5px;padding:8px 12px}
+      .hero-inner{grid-template-columns:1.2fr .8fr}.hero h1{font-size:36px}
+      .about-grid{gap:24px}.footer-grid{grid-template-columns:1.2fr 1fr 1fr}
+    }
+    @media(max-width:700px){
+      .navbar{height:66px}.brand img{width:190px;height:50px}
+      .menu-toggle{display:block;order:3}.login{margin-left:auto}
+      .nav-links{display:none;position:absolute;top:65px;left:0;right:0;background:#fff;padding:12px 22px 18px;
+        box-shadow:0 8px 16px #10243b18;flex-direction:column;align-items:stretch;gap:2px}
+      .nav-links.open{display:flex}.nav-links a{padding:10px 0;font-size:14px}
+      .nav-links a.active:after{bottom:4px}
+      .hero-inner{grid-template-columns:1fr;gap:0;min-height:300px}
+      .hero-copy{padding:25px 0 4px}.hero h1{font-size:34px}
+      .hero-visual{height:145px;margin-top:-2px}
+      .hero:before{bottom:-115px}
+      .package-grid{grid-template-columns:repeat(2,1fr);gap:9px}
+      .package-card{min-height:118px;padding:9px 7px}
+      .package-card h3{font-size:23px}.package-card p{font-size:12px}
+      .about-grid{grid-template-columns:1fr;gap:18px}
+      .about-copy h2{font-size:27px}
+      .testimonial-grid{grid-template-columns:1fr;gap:10px}
+      .testimonial-card{min-height:95px}
+      .footer-grid{grid-template-columns:repeat(2,1fr);gap:22px 16px}
+      .footer-brand{grid-column:1/-1}
+    }
+    @media(max-width:420px){
+      .container{width:calc(100% - 28px)}
+      .brand img{width:160px}.login{font-size:12px;padding:7px 10px}
+      .hero h1{font-size:30px}.eyebrow{font-size:11px;gap:7px}
+      .eyebrow:before,.eyebrow:after{width:26px}
+      .btn{width:100%;max-width:240px}
+      .package-icon{width:36px;height:36px}.package-icon svg{width:22px;height:22px}
+      .package-card h3{font-size:21px}.package-detail{font-size:12px}.package-card p{font-size:11px}
+      .copyright{flex-direction:column}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <a class="brand" href="#home" aria-label="Suryantara Education">
+      <!-- Ganti dengan logo resmi -->
+      <img src="assets/logo-suryantara.png" alt="Suryantara Education">
+    </a>
+    <nav class="nav-links" id="mainNav">
+      <a class="active" href="#home">Home</a>
+      <a href="#ruang-belajar">Ruang Belajar</a>
+      <a href="portal-orang-tua.html">Layanan Orang Tua</a>
+      <a href="#testimoni">Testimoni</a>
+      <a href="#kontak">Kontak</a>
+    </nav>
+    <a class="login" href="portal-orang-tua.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17" aria-hidden="true"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M13 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/></svg>
+      Login
+    </a>
+    <button class="menu-toggle" type="button" aria-label="Buka menu" aria-expanded="false">☰</button>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Suryantara Digital Learning</p>
+          <h1>Platform Belajar Untuk Masa Depan Yang Lebih Baik</h1>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="daftar.html">Belum Punya Akun?</a>
+            <a class="btn btn-light" href="https://wa.me/" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"/><path d="M9 8.5c.5 2 2 3.5 4.5 4.5l1-1 2 1c-.3 1.5-1.5 2-2.5 2-3.5-.5-6.5-3.5-7-7 0-1 .5-2.2 2-2.5l1 2-1 1Z"/></svg>
+              Konsultasi Gratis
+            </a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <!-- Ganti dengan foto siswa asli / foto promosi milik Suryantara -->
+          <img src="assets/hero-siswa.png" alt="Siswa Suryantara Education sedang belajar">
+        </div>
+      </div>
+    </section>
+
+    <section class="packages" id="ruang-belajar">
+      <div class="container">
+        <div class="section-title light">
+          <p class="eyebrow">Jenjang Pendidikan</p>
+          <h2>Pilihan Paket Belajar</h2>
+        </div>
+        <div class="package-grid">
+          <a class="package-card" href="paket-sd.html">
+            <div class="package-top"><span class="package-icon"><svg viewBox="0 0 24 24"><path d="m2 9 10-5 10 5-10 5L2 9Z"/><path d="M6 11v5c4 3 8 3 12 0v-5M22 9v6"/></svg></span><h3>SD</h3></div>
+            <span class="package-detail">Lihat Detail ›</span><p>Bangun Fondasi Belajar</p>
+          </a>
+          <a class="package-card" href="paket-smp.html">
+            <div class="package-top"><span class="package-icon"><svg viewBox="0 0 24 24"><path d="M3 5.5c3-1.5 6-.8 9 1.2v13c-3-2-6-2.7-9-1.2v-13Z"/><path d="M21 5.5c-3-1.5-6-.8-9 1.2v13c3-2 6-2.7 9-1.2v-13Z"/></svg></span><h3>SMP</h3></div>
+            <span class="package-detail">Lihat Detail ›</span><p>Kuasai Konsep &amp; Materi</p>
+          </a>
+          <a class="package-card" href="paket-sma.html">
+            <div class="package-top"><span class="package-icon"><svg viewBox="0 0 24 24"><path d="m12 2 2.5 2 3.2-.1.8 3 2.5 2-1.2 3 .5 3.2-3 1.2-1.8 2.7-3-1.2-3 .9-1.5-2.8-2.8-1.5.8-3-1-3 2.7-1.8.8-3 3.2.2L12 2Z"/><path d="m9 12 2 2 4-4M9 19l-1 3M15 19l1 3"/></svg></span><h3>SMA</h3></div>
+            <span class="package-detail">Lihat Detail ›</span><p>Raih Prestasi &amp; PTN</p>
+          </a>
+          <a class="package-card" href="paket-umum.html">
+            <div class="package-top"><span class="package-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1.5A4.5 4.5 0 0 1 7.5 14h3a4.5 4.5 0 0 1 4.5 4.5V20M17 5.5a3 3 0 0 1 0 5.8M18 14h1a3 3 0 0 1 3 3v3"/></svg></span><h3>UMUM</h3></div>
+            <span class="package-detail">Lihat Detail ›</span><p>Belajar Tanpa Batas</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="about" id="tentang-kami">
+      <div class="container">
+        <div class="section-title"><p class="eyebrow">Selayang Pandang</p></div>
+        <div class="about-grid">
+          <div class="slider" aria-label="Galeri Suryantara Education">
+            <div class="slide active"><img src="assets/tentang-1.jpg" alt="Pengajar Suryantara Education" loading="lazy"><div class="slide-caption">Pengajar mendampingi proses belajar siswa</div></div>
+            <div class="slide"><img src="assets/tentang-2.jpg" alt="Kegiatan belajar siswa" loading="lazy"><div class="slide-caption">Kegiatan belajar dan diskusi</div></div>
+            <div class="slide"><img src="assets/tentang-3.jpg" alt="Dokumentasi pembelajaran" loading="lazy"><div class="slide-caption">Belajar aktif dan menyenangkan</div></div>
+            <div class="slide"><img src="assets/tentang-4.jpg" alt="Aktivitas Suryantara Education" loading="lazy"><div class="slide-caption">Bersama tumbuh meraih prestasi</div></div>
+            <button class="slide-arrow slide-prev" type="button" aria-label="Foto sebelumnya">‹</button>
+            <button class="slide-arrow slide-next" type="button" aria-label="Foto berikutnya">›</button>
+            <div class="dots">
+              <button class="active" type="button" aria-label="Foto 1"></button><button type="button" aria-label="Foto 2"></button>
+              <button type="button" aria-label="Foto 3"></button><button type="button" aria-label="Foto 4"></button>
+            </div>
+          </div>
+          <div class="about-copy">
+            <h2>TENTANG KAMI</h2>
+            <p>Suryantara Education adalah platform belajar yang menyediakan pendampingan belajar berkualitas, terarah, dan personal untuk siswa SD, SMP, SMA, dan umum.</p>
+            <p>Kami berkomitmen membantu setiap siswa berkembang, memahami materi dengan lebih baik, serta meraih prestasi akademik maupun tujuan pendidikan berikutnya.</p>
+            <a class="btn btn-light" href="tentang-kami.html">Lihat Selengkapnya ›</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonials" id="testimoni">
+      <div class="container">
+        <div class="section-title">
+          <p class="eyebrow">Testimoni</p>
+          <h2>Mereka?</h2>
+        </div>
+        <div class="testimonial-grid">
+          <article class="testimonial-card"><div class="avatar">CV</div><div><p class="quote">“Penjelasannya sangat mudah dipahami dan pembahasannya sabar.”</p><p class="person">Clara Vella Aprilia</p><p class="role">Siswa SMA</p></div></article>
+          <article class="testimonial-card"><div class="avatar">MA</div><div><p class="quote">“Latihan soal dan pembahasannya sangat terarah. Saya jadi lebih percaya diri.”</p><p class="person">Muhammad Arifin</p><p class="role">Siswa SMA</p></div></article>
+          <article class="testimonial-card"><div class="avatar">IR</div><div><p class="quote">“Cara mengajarnya jelas, terstruktur, dan membuat anak lebih semangat belajar.”</p><p class="person">Ibu Rini</p><p class="role">Orang Tua Siswa SD</p></div></article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="kontak">
+    <div class="container">
+      <div class="footer-grid">
+        <div><div class="footer-logo">SURYANTARA<span>EDUCATION</span></div><p class="footer-tagline">Belajar Hari Ini,<br>Bersinar Esok Hari.</p></div>
+        <div class="footer-column"><h4>Navigasi</h4><a href="#home">Home</a><a href="#ruang-belajar">Ruang Belajar</a><a href="portal-orang-tua.html">Layanan Orang Tua</a><a href="#testimoni">Testimoni</a><a href="#kontak">Kontak</a></div>
+        <div class="footer-column"><h4>Program</h4><a href="paket-sd.html">SD</a><a href="paket-smp.html">SMP</a><a href="paket-sma.html">SMA</a><a href="program-osn-tka.html">OSN &amp; TKA</a></div>
+        <div class="footer-column social"><h4>Sosial Media</h4><a href="https://www.instagram.com/suryantara.education/" target="_blank" rel="noopener"><span class="social-icon">◎</span>Instagram</a><a href="https://www.tiktok.com/@suryantara.education" target="_blank" rel="noopener"><span class="social-icon">♪</span>TikTok</a><a href="https://www.threads.net/@suryantara.education" target="_blank" rel="noopener"><span class="social-icon">@</span>Threads</a></div>
+        <div class="footer-column"><h4>Informasi</h4><a href="mailto:">Hubungi Kami</a><a href="kebijakan-privasi.html">Kebijakan Privasi</a></div>
+      </div>
+      <div class="copyright"><span>© 2026 Suryantara Education. All Rights Reserved.</span><span>Belajar Hari Ini, Bersinar Esok Hari.</span></div>
+    </div>
+  </footer>
+
+  <script>
+    // Menu mobile
+    const menuButton = document.querySelector('.menu-toggle');
+    const nav = document.querySelector('.nav-links');
+    menuButton.addEventListener('click', () => {
+      const opened = nav.classList.toggle('open');
+      menuButton.setAttribute('aria-expanded', String(opened));
+      menuButton.textContent = opened ? '×' : '☰';
+    });
+    nav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+      nav.classList.remove('open');
+      menuButton.setAttribute('aria-expanded', 'false');
+      menuButton.textContent = '☰';
+    }));
+
+    // Slider foto Tentang Kami: otomatis, tombol panah, dan titik navigasi
+    (() => {
+      const slider = document.querySelector('.slider');
+      if (!slider) return;
+      const slides = [...slider.querySelectorAll('.slide')];
+      const dots = [...slider.querySelectorAll('.dots button')];
+      let active = 0, timer;
+
+      function show(index) {
+        active = (index + slides.length) % slides.length;
+        slides.forEach((slide, i) => slide.classList.toggle('active', i === active));
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === active));
+      }
+      function start() {
+        stop();
+        timer = setInterval(() => show(active + 1), 4500);
+      }
+      function stop() { if (timer) clearInterval(timer); }
+
+      slider.querySelector('.slide-prev').addEventListener('click', () => { show(active - 1); start(); });
+      slider.querySelector('.slide-next').addEventListener('click', () => { show(active + 1); start(); });
+      dots.forEach((dot, i) => dot.addEventListener('click', () => { show(i); start(); }));
+      slider.addEventListener('mouseenter', stop);
+      slider.addEventListener('mouseleave', start);
+      slider.addEventListener('focusin', stop);
+      slider.addEventListener('focusout', start);
+      show(0);
+      start();
+    })();
+  </script>
+</body>
+</html>

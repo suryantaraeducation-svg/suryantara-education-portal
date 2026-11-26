@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Suryantara Education - Bimbingan belajar online dan privat untuk SD, SMP, SMA, serta umum.">
+  <title>Suryantara Education | Belajar Hari Ini, Bersinar Esok Hari</title>
+
+  <style>
+    :root {
+      --navy: #092b68;
+      --navy-dark: #0b223d;
+      --gold: #f5a000;
+      --gold-bright: #ffb000;
+      --black: #050505;
+      --white: #ffffff;
+      --muted: #718096;
+      --line: #e2e8f0;
+      --page: #f5f7fb;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Arial, Helvetica, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--white);
+      background: var(--black);
+      font-family: var(--sans);
+    }
+    a { color: inherit; }
+    button { font: inherit; }
+
+    /* HEADER */
+    .site-header {
+      min-height: 74px;
+      padding: 8px clamp(18px, 5vw, 58px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      background: #fff;
+      color: #1d2939;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      min-width: 0;
+      text-decoration: none;
+    }
+    .brand img {
+      display: block;
+      width: clamp(190px, 25vw, 270px);
+      max-height: 60px;
+      object-fit: contain;
+      object-position: left center;
+    }
+    .login-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #26364b;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+      padding: 10px 4px;
+    }
+    .login-link svg { width: 20px; height: 20px; }
+
+    /* HERO */
+    .hero {
+      min-height: 255px;
+      margin: 0 3px;
+      padding: 18px 22px 34px;
+      border-radius: 20px;
+      background: #dedede;
+      color: var(--navy);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-inner { width: min(100%, 900px); }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 0 0 8px;
+      color: var(--gold);
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+    }
+    .eyebrow::before, .eyebrow::after {
+      content: "";
+      width: 45px;
+      height: 3px;
+      background: var(--gold);
+      display: inline-block;
+    }
+    .hero h1 {
+      margin: 0 auto 26px;
+      max-width: 850px;
+      color: var(--navy);
+      font-family: var(--serif);
+      font-size: clamp(34px, 4.7vw, 48px);
+      font-weight: 800;
+      line-height: 1.08;
+    }
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .btn {
+      min-width: 195px;
+      min-height: 39px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 9px 22px;
+      border: 2px solid var(--navy);
+      border-radius: 16px;
+      font-family: var(--serif);
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform .18s ease, background .18s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--navy); color: #fff; }
+    .btn-outline { background: #fff; color: #111; border-color: #60718d; }
+
+    /* GENERAL SECTION HEADING */
+    .dark-section {
+      background: var(--black);
+      color: #fff;
+    }
+    .section-heading {
+      text-align: center;
+      margin: 0 0 12px;
+    }
+    .section-heading .eyebrow { margin-bottom: 2px; }
+    .section-heading h2 {
+      margin: 0;
+      color: var(--navy);
+      font-family: var(--serif);
+      font-size: clamp(30px, 4vw, 43px);
+      line-height: 1.12;
+    }
+
+    /* PAKET */
+    .packages {
+      padding: 30px 12px 22px;
+    }
+    .package-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 5px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .package-card {
+      min-height: 134px;
+      padding: 8px 10px 12px;
+      border: 6px solid var(--gold);
+      border-radius: 11px;
+      background: #fff;
+      color: #111;
+      text-align: center;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .package-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px #f5a00030;
+    }
+    .package-card h3 {
+      margin: 0 0 13px;
+      color: #080808;
+      font-family: var(--serif);
+      font-size: 28px;
+      line-height: 1.1;
+    }
+    .package-detail {
+      margin-bottom: 12px;
+      color: #111;
+      font-size: 16px;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .package-card p {
+      margin: 0;
+      color: #111;
+      font-family: var(--serif);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    /* TENTANG KAMI - FOTO SLIDER */
+    .about {
+      padding: 10px 20px 28px;
+    }
+    .about .section-heading { margin-bottom: 12px; }
+    .about-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(260px, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .photo-slider {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      border: 3px solid #c7c7c7;
+      border-radius: 15px;
+      background: #171717;
+      box-shadow: 0 2px 5px #fff2;
+    }
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .45s ease;
+    }
+    .slide.active { opacity: 1; visibility: visible; }
+    .slide img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    .slide-caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 28px 16px 13px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      background: linear-gradient(transparent, #000b);
+    }
+    .slider-arrow {
+      position: absolute;
+      z-index: 2;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 50%;
+      color: #fff;
+      background: #061d3dcc;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+    }
+    .slider-arrow:hover { background: var(--navy); }
+    .slider-prev { left: 10px; }
+    .slider-next { right: 10px; }
+    .slider-dots {
+      position: absolute;
+      z-index: 3;
+      left: 0;
+      right: 0;
+      bottom: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      pointer-events: none;
+    }
+    .slider-dots button {
+      pointer-events: auto;
+      width: 8px;
+      height: 8px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: #ffffff9c;
+      cursor: pointer;
+    }
+    .slider-dots button.active {
+      width: 22px;
+      border-radius: 8px;
+      background: var(--gold);
+    }
+    .about-copy { padding: 2px 0; }
+    .about-copy h3 {
+      margin: 0 0 12px;
+      color: var(--navy);
+      font-family: var(--serif);
+      font-size: 27px;
+    }
+    .about-copy p {
+      margin: 0 0 12px;
+      color: #e3e7ed;
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    /* TESTIMONI */
+    .testimonials {
+      padding: 0 0 8px;
+    }
+    .testimonials .section-heading {
+      padding: 0 12px 32px;
+      margin: 0;
+    }
+    .testimonials .section-heading h2 {
+      color: var(--gold-bright);
+      font-size: clamp(30px, 3.8vw, 38px);
+    }
+    .testimonial-area {
+      padding: 14px 18px;
+      background: #f5f7fb;
+      color: #1c2a3b;
+    }
+    .testimonial-grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .testimonial-card {
+      min-height: 188px;
+      padding: 20px 21px;
+      border: 1px solid #e0e6ef;
+      border-radius: 15px;
+      background: #fff;
+      box-shadow: 0 3px 10px #0b223d08;
+    }
+    .avatar {
+      width: 39px;
+      height: 39px;
+      margin-bottom: 13px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #12375e;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .testimonial-quote {
+      min-height: 43px;
+      margin: 0 0 12px;
+      color: #68788e;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .testimonial-name {
+      margin: 0 0 5px;
+      color: #17365a;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .testimonial-role {
+      margin: 0;
+      color: #8290a3;
+      font-size: 11px;
+    }
+
+    /* FOOTER */
+    .site-footer {
+      padding: 42px 20px 12px;
+      background: var(--navy-dark);
+      color: #d4dce7;
+      border-top: 6px solid #fff;
+    }
+    .footer-grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 28px;
+    }
+    .footer-brand strong {
+      display: block;
+      color: #fff;
+      font-size: 19px;
+      letter-spacing: 1px;
+    }
+    .footer-brand span {
+      display: block;
+      margin-top: 7px;
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 3px;
+    }
+    .footer-brand p {
+      margin: 14px 0 0;
+      color: #c3cfdd;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .footer-column h4 {
+      margin: 0 0 17px;
+      color: #fff;
+      font-size: 12px;
+    }
+    .footer-column a {
+      display: block;
+      width: fit-content;
+      margin: 0 0 13px;
+      color: #c3cfdd;
+      font-size: 11px;
+      text-decoration: none;
+    }
+    .footer-column a:hover { color: var(--gold); }
+    .footer-bottom {
+      max-width: 1280px;
+      margin: 27px auto 0;
+      padding-top: 17px;
+      border-top: 1px solid #ffffff1c;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      color: #b7c3d2;
+      font-size: 10px;
+    }
+
+    /* TABLET & MOBILE */
+    @media (max-width: 760px) {
+      .site-header { min-height: 68px; padding: 7px 16px; }
+      .brand img { width: clamp(165px, 35vw, 220px); max-height: 52px; }
+      .hero { min-height: 240px; padding: 28px 18px; }
+      .hero h1 { font-size: clamp(31px, 6vw, 42px); }
+      .package-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+      .package-card { min-height: 130px; }
+      .about-content { grid-template-columns: 1fr; }
+      .about-copy h3 { margin-top: 5px; }
+      .testimonial-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 480px) {
+      .site-header { gap: 8px; }
+      .brand img { width: 170px; }
+      .login-link { gap: 6px; font-size: 14px; }
+      .hero { min-height: 250px; }
+      .eyebrow { font-size: 12px; gap: 8px; }
+      .eyebrow::before, .eyebrow::after { width: 27px; height: 2px; }
+      .hero h1 { margin-bottom: 22px; font-size: 32px; }
+      .hero-actions { gap: 10px; }
+      .btn { width: min(100%, 235px); min-height: 40px; }
+      .packages { padding: 26px 10px 20px; }
+      .package-card { min-height: 126px; border-width: 4px; padding: 9px 5px; }
+      .package-card h3 { font-size: 24px; margin-bottom: 11px; }
+      .package-detail { font-size: 14px; margin-bottom: 10px; }
+      .package-card p { font-size: 13px; }
+      .about { padding: 10px 13px 25px; }
+      .about-copy h3 { font-size: 24px; }
+      .about-copy p { font-size: 14px; }
+      .testimonials .section-heading { padding-bottom: 25px; }
+      .testimonial-area { padding: 13px 12px; }
+      .testimonial-grid { grid-template-columns: 1fr; gap: 10px; }
+      .testimonial-card { min-height: 0; padding: 17px; }
+      .testimonial-quote { min-height: 0; }
+      .site-footer { padding: 30px 17px 12px; }
+      .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 25px 16px; }
+      .footer-bottom { flex-direction: column; font-size: 10px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- GANTI assets/logo-suryantara.png DENGAN FILE LOGO RESMI -->
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Suryantara Education - Beranda">
+      <img src="assets/logo-suryantara.png" alt="Suryantara Education">
+    </a>
+    <a class="login-link" href="portal-orang-tua.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M10 17l5-5-5-5"></path><path d="M15 12H3"></path><path d="M13 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"></path>
+      </svg>
+      Login
+    </a>
+  </header>
+
+  <main id="home">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="eyebrow">Suryantara Digital Learning</p>
+        <h1>Platform Belajar Untuk Masa Depan Yang Lebih Baik</h1>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="daftar.html">Belum Punya Akun?</a>
+          <a class="btn btn-outline" href="https://wa.me/" target="_blank" rel="noopener">Konsultasi Gratis</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PILIHAN PAKET BELAJAR -->
+    <section class="packages dark-section" id="ruang-belajar">
+      <div class="section-heading">
+        <p class="eyebrow">Jenjang Pendidikan</p>
+        <h2>Pilihan Paket Belajar</h2>
+      </div>
+      <div class="package-grid">
+        <a class="package-card" href="paket-sd.html">
+          <h3>SD</h3>
+          <span class="package-detail">Lihat Detail</span>
+          <p>Bangun Fondasi Belajar</p>
+        </a>
+        <a class="package-card" href="paket-smp.html">
+          <h3>SMP</h3>
+          <span class="package-detail">Lihat Detail</span>
+          <p>Kuasai Konsep &amp; Materi</p>
+        </a>
+        <a class="package-card" href="paket-sma.html">
+          <h3>SMA</h3>
+          <span class="package-detail">Lihat Detail</span>
+          <p>Raih Prestasi &amp; PTN</p>
+        </a>
+        <a class="package-card" href="paket-umum.html">
+          <h3>UMUM</h3>
+          <span class="package-detail">Lihat Detail</span>
+          <p>Belajar Tanpa Batas</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- TENTANG KAMI: FOTO DAPAT BERPINDAH OTOMATIS / MANUAL -->
+    <section class="about dark-section" id="tentang-kami">
+      <div class="section-heading">
+        <p class="eyebrow">Selayang Pandang</p>
+      </div>
+      <div class="about-content">
+        <div class="photo-slider" aria-label="Galeri kegiatan Suryantara Education">
+          <div class="slide active">
+            <img src="assets/tentang-1.jpg" alt="Kegiatan pembelajaran Suryantara Education" loading="lazy">
+            <div class="slide-caption">Kegiatan belajar dan pendampingan siswa</div>
+          </div>
+          <div class="slide">
+            <img src="assets/tentang-2.jpg" alt="Foto kegiatan siswa Suryantara Education" loading="lazy">
+            <div class="slide-caption">Belajar aktif, bertumbuh, dan berprestasi</div>
+          </div>
+          <div class="slide">
+            <img src="assets/tentang-3.jpg" alt="Dokumentasi pengajar Suryantara Education" loading="lazy">
+            <div class="slide-caption">Pendampingan belajar oleh pengajar</div>
+          </div>
+          <div class="slide">
+            <img src="assets/tentang-4.jpg" alt="Suasana kegiatan belajar lainnya" loading="lazy">
+            <div class="slide-caption">Membangun pengalaman belajar yang bermakna</div>
+          </div>
+
+          <button class="slider-arrow slider-prev" type="button" aria-label="Foto sebelumnya">&#8249;</button>
+          <button class="slider-arrow slider-next" type="button" aria-label="Foto berikutnya">&#8250;</button>
+          <div class="slider-dots" aria-label="Pilih foto">
+            <button class="active" type="button" aria-label="Tampilkan foto 1"></button>
+            <button type="button" aria-label="Tampilkan foto 2"></button>
+            <button type="button" aria-label="Tampilkan foto 3"></button>
+            <button type="button" aria-label="Tampilkan foto 4"></button>
+          </div>
+        </div>
+
+        <div class="about-copy">
+          <h3>TENTANG KAMI</h3>
+          <p>
+            Suryantara Education merupakan layanan bimbingan belajar yang membantu
+            siswa memahami pelajaran dengan lebih mudah, terarah, dan menyenangkan.
+          </p>
+          <p>
+            Kami mendampingi proses belajar sesuai jenjang dan kebutuhan siswa,
+            mulai dari penguatan konsep hingga persiapan menghadapi ujian dan
+            kompetisi akademik.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONI -->
+    <section class="testimonials" id="testimoni">
+      <div class="section-heading dark-section">
+        <p class="eyebrow">Testimoni</p>
+        <h2>Mereka?</h2>
+      </div>
+      <div class="testimonial-area">
+        <div class="testimonial-grid">
+          <article class="testimonial-card">
+            <div class="avatar">CV</div>
+            <p class="testimonial-quote">“Penjelasannya sangat mudah dipahami dan pembahasannya sabar.”</p>
+            <p class="testimonial-name">Clara Vella Aprilia</p>
+            <p class="testimonial-role">Siswa SMA</p>
+          </article>
+          <article class="testimonial-card">
+            <div class="avatar">MA</div>
+            <p class="testimonial-quote">“Latihan soal dan pembahasannya sangat terarah. Saya jadi lebih percaya diri.”</p>
+            <p class="testimonial-name">Muhammad Arifin</p>
+            <p class="testimonial-role">Siswa SMA</p>
+          </article>
+          <article class="testimonial-card">
+            <div class="avatar">IR</div>
+            <p class="testimonial-quote">“Cara mengajarnya jelas, terstruktur, dan membuat anak lebih semangat belajar.”</p>
+            <p class="testimonial-name">Ibu Rini</p>
+            <p class="testimonial-role">Orang Tua Siswa SD</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" id="kontak">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <strong>SURYANTARA</strong>
+        <span>EDUCATION</span>
+        <p>Belajar Hari Ini, Bersinar Esok Hari.</p>
+      </div>
+      <div class="footer-column">
+        <h4>Navigasi</h4>
+        <a href="#home">Home</a>
+        <a href="#ruang-belajar">Ruang Belajar</a>
+        <a href="portal-orang-tua.html">Layanan Orang Tua</a>
+        <a href="#testimoni">Testimoni</a>
+        <a href="#kontak">Kontak</a>
+      </div>
+      <div class="footer-column">
+        <h4>Program</h4>
+        <a href="paket-sd.html">SD</a>
+        <a href="paket-smp.html">SMP</a>
+        <a href="paket-sma.html">SMA</a>
+        <a href="program-osn-tka.html">OSN &amp; TKA</a>
+      </div>
+      <div class="footer-column">
+        <h4>Sosial Media</h4>
+        <a href="https://www.instagram.com/suryantara.education/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.tiktok.com/@suryantara.education" target="_blank" rel="noopener">TikTok</a>
+        <a href="https://www.threads.net/@suryantara.education" target="_blank" rel="noopener">Threads</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Suryantara Education. All Rights Reserved.</span>
+      <span>Belajar Hari Ini, Bersinar Esok Hari.</span>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const slider = document.querySelector('.photo-slider');
+      if (!slider) return;
+
+      const slides = [...slider.querySelectorAll('.slide')];
+      const dots = [...slider.querySelectorAll('.slider-dots button')];
+      const previous = slider.querySelector('.slider-prev');
+      const next = slider.querySelector('.slider-next');
+      let current = 0;
+      let timer;
+
+      function showSlide(index) {
+        current = (index + slides.length) % slides.length;
+        slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
+      }
+
+      function startAutoSlide() {
+        stopAutoSlide();
+        timer = setInterval(() => showSlide(current + 1), 4500);
+      }
+
+      function stopAutoSlide() {
+        if (timer) clearInterval(timer);
+      }
+
+      previous.addEventListener('click', () => {
+        showSlide(current - 1);
+        startAutoSlide();
+      });
+      next.addEventListener('click', () => {
+        showSlide(current + 1);
+        startAutoSlide();
+      });
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          showSlide(i);
+          startAutoSlide();
+        });
+      });
+
+      slider.addEventListener('mouseenter', stopAutoSlide);
+      slider.addEventListener('mouseleave', startAutoSlide);
+      slider.addEventListener('focusin', stopAutoSlide);
+      slider.addEventListener('focusout', startAutoSlide);
+
+      showSlide(0);
+      startAutoSlide();
+    })();
+  </script>
+</body>
+</html>
