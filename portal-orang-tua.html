@@ -1038,7 +1038,16 @@ Klik tanggal yang memiliki jadwal untuk melihat detail kegiatan belajar.
               </option>
             </select>
           </div>
-      
+
+          
+          <!-- PILIH SISWA -->
+          <div class="request-field full">
+            <label for="requestStudent">Permintaan untuk siswa</label>
+            <select id="requestStudent" required>
+              <option value="">Memuat daftar siswa...</option>
+            </select>
+          </div>
+
           <!-- SESI RUTIN -->
           <div class="request-field full" id="sessionField">
             <label for="requestSession">
@@ -1233,11 +1242,11 @@ const historyPanel=document.getElementById("historyPanel");
 const loadingState=document.getElementById("loadingState");
 const errorState=document.getElementById("errorState");
 let current=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+let students=[];
 let schedules=[];
 let histories=[];
 let meetLink="";
 let selectedKey="";
-
 function getAuth(){
     try{
         const raw=sessionStorage.getItem("suryantaraAuth");
@@ -1398,54 +1407,257 @@ function firstValue(object, keys, fallback=""){
     return fallback;
 }
 
+
 function showDetails(key){
-    selectedKey=key;
+    selectedKey = key;
     renderCalendar();
-    const date=new Date(key+"T00:00:00");
-    const daySchedules=schedulesForDate(key);
-    const dayHistories=historiesForDate(key);
-    const completed=dayHistories.length>0;
-    const dateLabel=date.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 
-    document.getElementById("historyDate").textContent=dateLabel.toUpperCase();
-    document.getElementById("historyTitle").textContent=daySchedules.length || completed ? "Detail Kegiatan Belajar" : "Tidak Ada Kegiatan Belajar";
+    const date = new Date(key + "T00:00:00");
+    const daySchedules = schedulesForDate(key);
+    const dayHistories = historiesForDate(key);
 
-    const times=[...new Set(daySchedules.map(s=>timeText(s.start || s.jamMulai,s.end || s.jamSelesai)))];
-    document.getElementById("historyTime").textContent=times.length ? times.join(" • ") : "Belum ada jadwal atau riwayat pada tanggal ini";
+    const dateLabel = date.toLocaleDateString("id-ID", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
 
-    let html="";
+    document.getElementById("historyDate").textContent =
+        dateLabel.toUpperCase();
+
+    document.getElementById("historyTitle").textContent =
+        daySchedules.length || dayHistories.length
+            ? "Detail Kegiatan Belajar"
+            : "Tidak Ada Kegiatan Belajar";
+
+    const times = [
+        ...new Set(
+            daySchedules.map(s =>
+                timeText(
+                    s.start || s.jamMulai,
+                    s.end || s.jamSelesai
+                )
+            )
+        )
+    ];
+
+    document.getElementById("historyTime").textContent =
+        times.length
+            ? times.join(" • ")
+            : "Belum ada jadwal atau riwayat pada tanggal ini";
+
+    const detailContent = document.getElementById("detailContent");
+
     if(!daySchedules.length && !dayHistories.length){
-        html+=`<div class="history-box result" style="grid-column:1/-1"><strong>📅 Belum ada kegiatan</strong><p style="font-size:14px">Tidak ada jadwal les atau riwayat pembelajaran yang tercatat pada tanggal ini.</p></div>`;
-    }
+        detailContent.innerHTML = `
+            <div class="history-box result"
+                 style="grid-column:1/-1">
+                <strong>📅 Belum Ada Kegiatan</strong>
+                <p style="font-size:14px">
+                    Tidak ada jadwal les atau riwayat pembelajaran
+                    yang tercatat pada tanggal ini.
+                </p>
+            </div>
+        `;
+    } else {
 
+        // Kelompokkan kegiatan berdasarkan ID siswa.
+        const grouped = {};
 
-    if(dayHistories.length){
-        html+=`<div class="history-box note"><strong>📘 Riwayat & Catatan Tutor</strong>`;
-        dayHistories.forEach((h,index)=>{
-            const topic=firstValue(h,["topic","topik","topikBelajar","topik_belajar"],"");
-            const activity=firstValue(h,["activity","activities","aktivitas","kegiatan"],"");
-            const result=firstValue(h,["result","hasil","hasilBelajar","hasil_belajar"],"");
-            const note=firstValue(h,["tutorNote","note","catatan","catatanTutor","catatan_tutor"],"");
-            const subject=firstValue(h,["program","subject","mataPelajaran","mata_pelajaran"],"");
-            html+=`<div class="schedule-meta">${dayHistories.length>1?`<strong>Sesi ${index+1}</strong><br>`:""}`;
-            if(subject) html+=`<b>Mata pelajaran:</b> ${escapeHTML(subject)}<br>`;
-            if(topic) html+=`<b>Topik:</b> ${escapeHTML(topic)}<br>`;
-            if(activity) html+=`<b>Aktivitas:</b> ${escapeHTML(activity)}<br>`;
-            if(result) html+=`<b>Hasil belajar:</b> ${escapeHTML(result)}<br>`;
-            if(note) html+=`<b>Catatan tutor:</b> ${escapeHTML(note)}<br>`;
-            if(!topic && !activity && !result && !note && !subject) html+=`Riwayat sesi tercatat, tetapi detailnya belum tersedia.`;
-            html+=`</div>`;
+        function getStudentGroup(idSiswa, namaFallback){
+            const id = normalizeId(idSiswa) || "tanpa-id";
+
+            if(!grouped[id]){
+                const student = students.find(
+                    s => normalizeId(s.id) === id
+                );
+
+                grouped[id] = {
+                    name:
+                        student?.name ||
+                        namaFallback ||
+                        "Siswa",
+                    schedules: [],
+                    histories: []
+                };
+            }
+
+            return grouped[id];
+        }
+
+        daySchedules.forEach(s => {
+            const group = getStudentGroup(
+                s.idSiswa,
+                s.student
+            );
+
+            group.schedules.push(s);
         });
-        html+=`</div>`;
-    }else if(daySchedules.length){
-        html+=`<div class="history-box note"><strong>📝 Riwayat Pembelajaran</strong><p style="font-size:14px">Catatan, aktivitas, dan hasil belajar akan tampil setelah tutor menyelesaikan sesi dan menyimpan riwayatnya.</p></div>`;
+
+        dayHistories.forEach(h => {
+            const group = getStudentGroup(
+                h.idSiswa,
+                h.student
+            );
+
+            group.histories.push(h);
+        });
+
+        let html = "";
+
+        Object.values(grouped).forEach(group => {
+
+            html += `
+                <div class="history-box result"
+                     style="grid-column:1/-1">
+
+                    <strong>
+                        👤 ${escapeHTML(group.name)}
+                    </strong>
+            `;
+
+            // Jadwal siswa.
+            if(group.schedules.length){
+                html += `
+                    <div class="schedule-meta">
+                        <b>📅 Jadwal Belajar</b>
+                    </div>
+                `;
+
+                group.schedules.forEach(s => {
+                    html += `
+                        <div class="schedule-meta"
+                             style="padding:10px 0;border-bottom:1px solid var(--border)">
+
+                            <b>Mata pelajaran:</b>
+                            ${escapeHTML(s.program || "-")}<br>
+
+                            <b>Waktu:</b>
+                            ${escapeHTML(timeText(
+                                s.start || s.jamMulai,
+                                s.end || s.jamSelesai
+                            ))}<br>
+
+                            <b>Tentor:</b>
+                            ${escapeHTML(s.tutor || "-")}<br>
+
+                            <b>Status:</b>
+                            ${escapeHTML(s.status || "-")}
+                        </div>
+                    `;
+                });
+            }
+
+            // Riwayat belajar siswa.
+            if(group.histories.length){
+                html += `
+                    <div class="schedule-meta"
+                         style="margin-top:14px">
+                        <b>📘 Riwayat & Catatan Tutor</b>
+                    </div>
+                `;
+
+                group.histories.forEach((h, index) => {
+                    const topic = firstValue(
+                        h,
+                        ["topic","topik","topikBelajar","topik_belajar"],
+                        ""
+                    );
+
+                    const activity = firstValue(
+                        h,
+                        ["activity","activities","aktivitas","kegiatan"],
+                        ""
+                    );
+
+                    const result = firstValue(
+                        h,
+                        ["result","hasil","hasilBelajar","hasil_belajar"],
+                        ""
+                    );
+
+                    const note = firstValue(
+                        h,
+                        ["tutorNote","note","catatan","catatanTutor","catatan_tutor"],
+                        ""
+                    );
+
+                    const subject = firstValue(
+                        h,
+                        ["program","subject","mataPelajaran","mata_pelajaran"],
+                        ""
+                    );
+
+                    html += `
+                        <div class="schedule-meta"
+                             style="padding:10px 0;border-bottom:1px solid var(--border)">
+
+                            ${group.histories.length > 1
+                                ? `<b>Sesi ${index + 1}</b><br>`
+                                : ""
+                            }
+
+                            ${subject
+                                ? `<b>Mata pelajaran:</b> ${escapeHTML(subject)}<br>`
+                                : ""
+                            }
+
+                            ${topic
+                                ? `<b>Topik:</b> ${escapeHTML(topic)}<br>`
+                                : ""
+                            }
+
+                            ${activity
+                                ? `<b>Aktivitas:</b> ${escapeHTML(activity)}<br>`
+                                : ""
+                            }
+
+                            ${result
+                                ? `<b>Hasil belajar:</b> ${escapeHTML(result)}<br>`
+                                : ""
+                            }
+
+                            ${note
+                                ? `<b>Catatan tutor:</b> ${escapeHTML(note)}`
+                                : ""
+                            }
+
+                            ${!topic && !activity && !result && !note && !subject
+                                ? "Riwayat sesi tercatat, tetapi detailnya belum tersedia."
+                                : ""
+                            }
+                        </div>
+                    `;
+                });
+            } else if(group.schedules.length){
+                html += `
+                    <div class="schedule-meta"
+                         style="margin-top:12px">
+                        Catatan, aktivitas, dan hasil belajar
+                        akan tampil setelah tutor menyelesaikan
+                        sesi dan menyimpan riwayatnya.
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+        });
+
+        detailContent.innerHTML = html;
     }
 
-    document.getElementById("detailContent").innerHTML=html;
     historyPanel.classList.add("show");
-    setTimeout(()=>historyPanel.scrollIntoView({behavior:"smooth",block:"start"}),50);
+
+    setTimeout(() => {
+        historyPanel.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }, 50);
 }
-async function fetchJSON(url){
+
+  async function fetchJSON(url){
     const response=await fetch(url,{method:"GET"});
     if(!response.ok) throw new Error(`Server mengembalikan status ${response.status}`);
     return await response.json();
@@ -1648,8 +1860,9 @@ setInterval(() => {
 }, 20000);
 
 
+
 async function loadData(){
-    if(!auth || !auth.idSiswa){
+    if(!auth || !auth.idSiswa || !auth.sessionToken){
         loadingState.style.display="none";
         errorState.style.display="block";
         errorState.textContent="Sesi login tidak ditemukan. Silakan login kembali sebagai Orang Tua.";
@@ -1657,130 +1870,86 @@ async function loadData(){
     }
 
     try{
-        /*
-         * SEKARANG PORTAL HANYA MEMINTA DATA UNTUK
-         * SATU ID SISWA YANG SEDANG LOGIN.
-         */
-                  const idSiswa = String(
-    auth.idSiswa ||
-    new URLSearchParams(window.location.search).get("idSiswa") ||
-    ""
-).trim();
-
-if (!idSiswa) {
-    throw new Error("ID siswa tidak ditemukan. Silakan login kembali.");
-}
-
-const data = await fetchJSON(
-    `${API_URL}?action=getParentPortal` +
-    `&idSiswa=${encodeURIComponent(idSiswa)}` +
-    `&sessionToken=${encodeURIComponent(auth.sessionToken || "")}`
-);
+        // Mengambil seluruh data keluarga melalui API baru.
+        const data = await fetchJSON(
+            `${API_URL}?action=getParentFamilyPortal` +
+            `&sessionToken=${encodeURIComponent(auth.sessionToken)}`
+        );
 
         if(!data || !data.success){
             throw new Error(
                 data && data.message
                     ? data.message
-                    : "Data portal tidak dapat dimuat."
+                    : "Data keluarga tidak dapat dimuat."
             );
         }
 
-        const student = data.student || {};
-        meetLink = student.meetLink || "";
+        // Simpan seluruh data anak.
+        students = Array.isArray(data.students)
+            ? data.students
+            : [];
 
-        schedules =
-            Array.isArray(data.schedules)
-                ? data.schedules
-                : [];
+        schedules = Array.isArray(data.schedules)
+            ? data.schedules
+            : [];
 
-        histories =
-            Array.isArray(data.histories)
-                ? data.histories
-                : [];
+        histories = Array.isArray(data.histories)
+            ? data.histories
+            : [];
+
+        if(!students.length){
+            throw new Error("Belum ada siswa yang terhubung dengan akun keluarga ini.");
+        }
+
+        // Link Meet disimpan sebagai cadangan.
+        meetLink = students[0].meetLink || "";
+
+        // Isi daftar sesi permintaan jadwal.
+        fillRequestStudents();
         fillRequestSessions();
         updateRequestFields();
 
-        // -------------------------------------------------
-        // IDENTITAS SISWA
-        // Tidak lagi menunggu data jadwal untuk mengetahui
-        // nama siswa.
-        // -------------------------------------------------
+        // Identitas keluarga.
+        const namaAnak = students
+            .map(s => s.name)
+            .filter(Boolean);
 
-        const nama =
-            student.name ||
-            auth.namaSiswa ||
-            auth.studentName ||
-            "Siswa";
-
-        const program =
-            [
-                student.subject,
-                student.level,
-                student.className
-            ]
-            .filter(Boolean)
-            .join(" · ") ||
-            "Program les";
-
-        const welcome =
-            document.getElementById("welcomeStudentName");
-
-        const summaryStudent =
-            document.getElementById("summaryStudent");
-
-        const summaryProgram =
-            document.getElementById("summaryProgram");
+        const welcome = document.getElementById("welcomeStudentName");
 
         if(welcome){
-            welcome.textContent = nama;
-        }
-
-        if(summaryStudent){
-            summaryStudent.textContent = nama;
-        }
-
-        if(summaryProgram){
-            summaryProgram.textContent = program;
+            welcome.textContent = namaAnak.join(" • ");
         }
 
         if(portalUser){
-            portalUser.textContent = nama;
+            portalUser.textContent = "Keluarga Suryantara";
         }
 
+        // Perbarui kalender dan ringkasan.
         renderCalendar();
         renderHomeSummary();
-        const meetButton = document.getElementById("meetButton");
-
-        if (meetButton && meetLink) {
-    meetButton.href = meetLink;
-    meetButton.style.display = "inline-flex";
-}
 
         loadingState.style.display="none";
 
-        if(!schedules.length){
+        if(!schedules.length && !histories.length){
             errorState.style.display="block";
             errorState.textContent =
-                "Belum ada jadwal les untuk akun siswa ini.";
+                "Belum ada jadwal atau riwayat belajar untuk seluruh siswa dalam akun keluarga ini.";
         }else{
             errorState.style.display="none";
         }
 
     }catch(error){
-
-        console.error(
-            "Gagal memuat portal:",
-            error
-        );
+        console.error("Gagal memuat portal keluarga:", error);
 
         loadingState.style.display="none";
         errorState.style.display="block";
 
         errorState.textContent =
-            "Data portal belum dapat dimuat. " +
-            "Periksa koneksi atau Apps Script, lalu coba lagi.";
+            "Data keluarga belum dapat dimuat. " +
+            (error.message || "Periksa koneksi atau Apps Script.");
     }
 }
+
 
 
 document.getElementById("prevMonth").addEventListener("click",()=>{
@@ -1801,6 +1970,7 @@ document.getElementById("nextMonth").addEventListener("click",()=>{
 // PERMINTAAN PERUBAHAN / JADWAL TAMBAHAN
 // -----------------------------------------------------
 const requestTypeEl=document.getElementById("requestType");
+const requestStudentEl = document.getElementById("requestStudent");
 const requestSessionEl=document.getElementById("requestSession");
 const sessionFieldEl=document.getElementById("sessionField");
 const requestDateEl=document.getElementById("requestDate");
@@ -1819,7 +1989,26 @@ const startTimeFieldEl = document.getElementById("startTimeField");
 const endTimeFieldEl = document.getElementById("endTimeField");
 const requestMessageEl=document.getElementById("requestMessage");
 const requestSubmitEl=document.getElementById("requestSubmit");
-function fillRequestSessions(){
+
+  
+function fillRequestStudents(){
+    requestStudentEl.innerHTML =
+        '<option value="">Pilih siswa...</option>';
+
+    students.forEach(student => {
+        const option = document.createElement("option");
+
+        option.value = String(student.id || "");
+        option.textContent = student.name || "Siswa";
+
+        requestStudentEl.appendChild(option);
+    });
+
+    // Jangan otomatis memilih anak tertentu.
+    // Orang tua harus menentukan anak tujuan permintaan.
+}
+
+  function fillRequestSessions(){
   const currentValue=requestSessionEl.value;
   requestSessionEl.innerHTML='<option value="">Pilih sesi...</option>';
   schedules.forEach(s=>{
