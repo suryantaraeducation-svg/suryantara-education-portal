@@ -2154,10 +2154,7 @@ if(!selectedStudentId){
   let idJadwal=type==="Jadwal Tambahan"?"":requestSessionEl.value;
   let tutor=selected?(selected.dataset.tutor||""):"";
   let tanggalAsli=chosenDate;
-  
-  } else if(type!=="Jadwal Tambahan"&&!idJadwal){
-    show
-if(type==="Dibatalkan"){
+ if(type === "Dibatalkan"){
   const chosen = new Date(`${chosenDate}T00:00:00`);
 
   const candidates = schedules.filter(s => {
@@ -2174,12 +2171,18 @@ if(type==="Dibatalkan"){
   });
 
   if(candidates.length === 0){
-    showRequestMessage("Tanggal yang dipilih tidak memiliki jadwal rutin. Pilih tanggal les yang benar.", false);
+    showRequestMessage(
+      "Tanggal yang dipilih tidak memiliki jadwal rutin. Pilih tanggal les yang benar.",
+      false
+    );
     return;
   }
 
   if(candidates.length > 1){
-    showRequestMessage("Pada tanggal tersebut ada lebih dari satu jadwal rutin. Hubungi admin untuk memastikan sesi yang dimaksud.", false);
+    showRequestMessage(
+      "Pada tanggal tersebut ada lebih dari satu jadwal rutin. Hubungi admin untuk memastikan sesi yang dimaksud.",
+      false
+    );
     return;
   }
 
@@ -2191,8 +2194,19 @@ if(type==="Dibatalkan"){
     showRequestMessage("ID jadwal tidak ditemukan. Silakan hubungi admin.", false);
     return;
   }
-RequestMessage("Pilih sesi rutin yang ingin diganti.",false);return;
-  }
+
+} else if(type === "Jadwal Tambahan" && !idJadwal){
+
+  showRequestMessage("Pilih tanggal dan jam untuk jadwal tambahan.", false);
+  return;
+
+} else if(type !== "Jadwal Tambahan" && !idJadwal){
+
+  showRequestMessage("Pilih sesi rutin yang ingin diganti.", false);
+  return;
+
+}
+
  
     const data = {
       idSiswa: selectedStudentId,
