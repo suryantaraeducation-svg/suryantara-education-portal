@@ -2008,23 +2008,42 @@ function fillRequestStudents(){
     // Orang tua harus menentukan anak tujuan permintaan.
 }
 
-  function fillRequestSessions(){
-  const currentValue=requestSessionEl.value;
-  requestSessionEl.innerHTML='<option value="">Pilih sesi...</option>';
-  schedules.forEach(s=>{
-    // Sesi pengganti/tambahan adalah kejadian satu kali, bukan jadwal rutin
-    // yang dapat dipilih sebagai sumber permintaan baru.
+  
+function fillRequestSessions(){
+  const currentValue = requestSessionEl.value;
+  const selectedStudentId = normalizeId(requestStudentEl.value);
+
+  requestSessionEl.innerHTML =
+    '<option value="">Pilih sesi...</option>';
+
+  schedules.forEach(s => {
+    // Hanya tampilkan jadwal milik anak yang dipilih.
+    if(normalizeId(s.idSiswa) !== selectedStudentId) return;
+
+    // Sesi pengganti/tambahan tidak menjadi sumber
+    // permintaan baru.
     if(s.scheduleType) return;
-    const opt=document.createElement("option");
-    opt.value=String(s.id||"");
-    const date=s.date?String(s.date):String(s.day||"Jadwal rutin");
-    opt.textContent=`${date} · ${s.start||"--:--"}–${s.end||"--:--"} · ${s.tutor||"Tentor"}`;
-    opt.dataset.date=s.date||"";
-    opt.dataset.tutor=s.tutor||"";
+
+    const opt = document.createElement("option");
+
+    opt.value = String(s.id || "");
+    opt.textContent =
+      `${s.date || s.day || "Jadwal rutin"} · ` +
+      `${s.start || "--:--"}–${s.end || "--:--"} · ` +
+      `${s.tutor || "Tentor"}`;
+
+    opt.dataset.date = s.date || "";
+    opt.dataset.tutor = s.tutor || "";
+    opt.dataset.idSiswa = s.idSiswa || "";
+
     requestSessionEl.appendChild(opt);
   });
-  if(currentValue)requestSessionEl.value=currentValue;
+
+  if(currentValue){
+    requestSessionEl.value = currentValue;
+  }
 }
+
 
 function updateRequestFields() {
   const type = requestTypeEl.value;
@@ -2098,12 +2117,27 @@ function updateRequestFields() {
         : "Ajukan Jadwal Tambahan";
 }
 requestTypeEl.addEventListener("change",updateRequestFields);
+  
+requestStudentEl.addEventListener("change", () => {
+  requestSessionEl.value = "";
+  requestDateEl.value = "";
+  requestReplacementDateEl.value = "";
+
+  fillRequestSessions();
+});
+
 requestSessionEl.addEventListener("change",()=>{const opt=requestSessionEl.selectedOptions[0];if(opt&&opt.dataset.date){const k=dateKey(opt.dataset.date);if(k)requestDateEl.value=k;}});
 document.getElementById("scheduleRequestForm").addEventListener("submit",async ev=>{
   ev.preventDefault();
   requestMessageEl.className="request-message";requestMessageEl.textContent="";
   const type=requestTypeEl.value;
   const chosenDate=requestDateEl.value;
+  const selectedStudentId = normalizeId(requestStudentEl.value);
+
+if(!selectedStudentId){
+  showRequestMessage("Pilih siswa terlebih dahulu.", false);
+  return;
+}
   const start=requestStartEl.value,end=requestEndEl.value;
   if(!chosenDate){showRequestMessage("Pilih tanggal les terlebih dahulu.",false);return;}
   if (type === "Ganti Hari" && !requestReplacementDateEl.value) {
@@ -2123,6 +2157,8 @@ document.getElementById("scheduleRequestForm").addEventListener("submit",async e
   if(type==="Dibatalkan"){
     const chosen=new Date(`${chosenDate}T00:00:00`);
     const candidates=schedules.filter(s=>{
+      const candidates=schedules.filter(s=>{
+      if(normalizeId(s.idSiswa) !== selectedStudentId) return false;
       const status=String(s.status||"Aktif").trim().toLowerCase();
       if(status==="dibatalkan") return false;
       const explicitDate=dateKey(s.date||s.tanggal||"");
@@ -2140,7 +2176,7 @@ document.getElementById("scheduleRequestForm").addEventListener("submit",async e
   }
  
     const data = {
-      idSiswa: auth.idSiswa,
+      idSiswa: selectedStudentId,
       jenis: type,
       idJadwal: idJadwal,
     
